@@ -9,3 +9,8 @@
 .project
 .classpath
 org.eclipse.*.prefs
+*/.settings/*
+
+.DS_Store
+
+*/target/*
