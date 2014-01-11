@@ -1,0 +1,528 @@
+ -----
+ ユーザーガイド
+ -----
+ 杉澤 浩二
+ -----
+ 2009/10/21
+ -----
+
+~~ http://maven.apache.org/doxia/references/apt-format.html
+
+使い方
+
+ ここでは、本プロダクトの使い方を簡単な例を使って説明します。\
+ 各機能の詳細は {{{./api-release/index.html}Javadoc}} をご覧ください。
+
+*はじめの一歩
+
+ 以下は、文字列配列のリストで CSV ファイルへアクセスするもっとも簡単なコード例です。\
+ 文字列配列のリストでアクセスするにはハンドラとして StringArrayListHandler を使用します。
+
++-----------------------------------------------------------------------------+
+// 入力
+List<String[]> list = Csv.load(new File("example.csv"), new CsvConfig(), new StringArrayListHandler());
+
+// 出力
+Csv.save(list, new File("example.csv"), new CsvConfig(), new StringArrayListHandler());
++-----------------------------------------------------------------------------+
+
+ 次は POJO オブジェクトで CSV へアクセスする場合のコード例です。\
+ POJO オブジェクトでの CSV アクセスは、Csv ユーティリティでもできますが CsvManager を使用する方が簡単です。
+
++-----------------------------------------------------------------------------+
+CsvManager csvManager = CsvManagerFactory.newCsvManager();	// CsvManager を取得します。
+
+// 入力
+List<Customer> customers = csvManager.load(Customer.class).from(new File("customers.csv"));
+
+// 出力
+csvManager.save(customers, Customer.class).to(new File("customers.csv"));
++-----------------------------------------------------------------------------+
+
+ 次節以降では Csv 統合アクセスユーティリティや CsvManager 統合アクセスインターフェースを使用する上で、必要不可欠な CSV 形式情報 (CsvConfig) やデータアクセスハンドラ (CsvHandler) などについて説明していきます。
+
+*CsvConfig
+
+ CsvConfig は、区切り文字や囲み文字など CSV 形式に関する設定情報を管理します。
+
++-----------------------------------------------------------------------------+
+// デフォルトでは区切り文字(,)のみが有効な状態で、囲み文字(")やエスケープ文字(\)は無効となっています。
+CsvConfig cfg = new CsvConfig();
+
+// 区切り文字と囲み文字、エスケープ文字を指定して CSV 形式設定情報を構築した場合は、
+// 自動的に無効化が解除され有効となります。
+CsvConfig cfg = new CsvConfig(',', '"', '"');
+
+// 区切り文字としてタブ文字(\t)を指定する例です。但し、囲み文字(")やエスケープ文字(\)は無効となったままです。
+CsvConfig cfg = new CsvConfig('\t');
++-----------------------------------------------------------------------------+
+
+ CsvConfig でその他の高度な設定を行う場合は、CsvConfig のインスタンス化後に設定を行います。
+
++-----------------------------------------------------------------------------+
+CsvConfig cfg = new CsvConfig();
+cfg.setQuoteDisabled(false);                         // デフォルトでは無効となっている囲み文字を有効にします。
+cfg.setEscapeDisabled(false);                        // デフォルトでは無効となっているエスケープ文字を有効にします。
+cfg.setBreakString("\n");                            // 項目値中の改行を \n で置換えます。
+cfg.setNullString("NULL");                           // null 値扱いする文字列を指定します。
+cfg.setIgnoreLeadingWhitespaces(true);               // 項目値前のホワイトスペースを除去します。
+cfg.setIgnoreTrailingWhitespaces(true);              // 項目値後のホワイトスペースを除去します。
+cfg.setIgnoreEmptyLines(true);                       // 空行を無視するようにします。
+cfg.setIgnoreLinePatterns(Pattern.compile("^#.*$")); // 正規表現による無視する行パターンを設定します。(この例では # で始まる行)
+cfg.setSkipLines(1);                                 // 最初の1行目をスキップして読込みます。
+
+// Csv 統合アクセスユーティリティでの使用例
+List<String[]> list = Csv.load(new File("example.csv"), cfg, new StringArrayListHandler());
+// CsvManager 統合アクセスインターフェースでの使用例
+List<Customer> customers = CsvManagerFactory.newCsvManager().config(cfg).load(Customer.class).from(new File("customers.csv"));
++-----------------------------------------------------------------------------+
+
+*CsvHandler
+
+ CsvHandler は CSV データへのアクセスとオブジェクト変換を実質的に管理するデータアクセスハンドラです。
+
+**StringArrayListHandler
+
+ StringArrayListHandler は、文字列配列のリストで CSV データへのアクセスを可能とするハンドラです。
+
++-----------------------------------------------------------------------------+
+// 入力
+List<String[]> list = Csv.load(file, cfg, new StringArrayListHandler());
+
+// 出力
+Csv.save(list, file, cfg, new StringArrayListHandler());
++-----------------------------------------------------------------------------+
+
+**ResultSetHandler
+
+ ResultSetHandler は、データベースの結果セットで CSV データへのアクセスを可能とするハンドラです。
+
++-----------------------------------------------------------------------------+
+// 入力
+ResultSet rs = Csv.load(file, cfg, new ResultSetHandler());
+
+// 出力
+Csv.save(rs, file, cfg, new ResultSetHandler());
++-----------------------------------------------------------------------------+
+
+**ColumnNameMapListHandler
+
+ ColumnNameMapListHandler は、CSV ヘッダ行の項目名と CSV データの項目値とのマップオブジェクトのリストで CSV データへのアクセスを可能とするハンドラです。
+
++-----------------------------------------------------------------------------+
+// 入力
+List<Map<String, String>> list = Csv.load(file, cfg, new ColumnNameMapListHandler());
+
+// 出力
+Csv.save(list, file, cfg, new ColumnNameMapListHandler());
++-----------------------------------------------------------------------------+
+
+**ColumnPositionMapListHandler
+
+ ColumnPositionMapListHandler は、CSV ヘッダ行の項目位置と CSV データの項目値とのマップオブジェクトのリストで CSV データへのアクセスを可能とするハンドラです。
+
++-----------------------------------------------------------------------------+
+// 入力
+List<Map<Integer, String>> list = Csv.load(file, cfg, new ColumnPositionMapListHandler());
+
+// 出力
+Csv.save(list, file, cfg, new ColumnPositionMapListHandler());
++-----------------------------------------------------------------------------+
+
+**BeanListHandler
+
+ BeanListHandler は、POJO オブジェクトのリストで CSV データへのアクセスを可能とするハンドラです。\
+ このハンドラは CSV ヘッダ行の項目名と POJO オブジェクトのフィールド名を対応付けて処理します。
+
++-----------------------------------------------------------------------------+
+// 入力
+List<Customer> customers = Csv.load(file, cfg, new BeanListHandler<Customer>(Customer.class));
+
+// 出力
+Csv.save(customers, file, cfg, new BeanListHandler<Customer>(Customer.class));
++-----------------------------------------------------------------------------+
+
+ 特定の項目のみを対象としたい場合や、特定の項目のみを非対象としたい場合は次の例のように指定することで可能です。
+
++-----------------------------------------------------------------------------+
+// 特定の項目だけ対象とせずに入力 (この例では name と fullname を非対象)
+List<Customer> customers = Csv.load(file, cfg, new BeanListHandler<Customer>(Customer.class).excludes("name", "fullname"));
+
+// 特定の項目だけ対象として出力 (この例では age と sex のみ対象)
+Csv.save(customers, file, cfg, new BeanListHandler<Customer>(Customer.class).includes("age", "sex"));
++-----------------------------------------------------------------------------+
+
+**ColumnNameMappingBeanListHandler
+
+ ColumnNameMappingBeanListHandler は、BeanListHandler と同じく POJO オブジェクトのリストで CSV データへのアクセスを可能とするハンドラです。
+ このハンドラは CSV ヘッダ行の項目名と POJO オブジェクトのフィールド名の対応付け情報をもとに処理します。
+
++-----------------------------------------------------------------------------+
+// 入力
+List<Customer> customers = Csv.load(file, cfg, new ColumnNameMappingBeanListHandler<Customer>(Customer.class));
+
+// 出力
+Csv.save(customers, file, cfg, new ColumnNameMappingBeanListHandler<Customer>(Customer.class));
++-----------------------------------------------------------------------------+
+
+ ヘッダ行が存在しない CSV ⇔ POJO オブジェクトをマッピングする場合は、addColumn を使用して項目列と POJO オブジェクトフィールドの関係を明示的に定義します。
+
++-----------------------------------------------------------------------------+
+// 入力
+List<Customer> customers = Csv.load(file, cfg,
+        new ColumnNameMappingBeanListHandler<Customer>(Customer.class)
+            .addColumn("名前", "name")
+            .addColumn("フルネーム", "fullname")
+    );
+
+// 出力
+Csv.save(customers, file, cfg,
+        new ColumnNameMappingBeanListHandler<Customer>(Customer.class)
+            .addColumn("年齢", "age")
+            .addColumn("性別", "sex")
+    );
++-----------------------------------------------------------------------------+
+
+**ColumnPositionMappingBeanListHandler
+
+ ColumnPositionMappingBeanListHandler は、BeanListHandler と同じく POJO オブジェクトのリストで CSV データへのアクセスを可能とするハンドラです。
+ このハンドラは CSV ヘッダ行の項目位置と POJO オブジェクトのフィールド名の対応付け情報をもとに処理します。
+
++-----------------------------------------------------------------------------+
+// 入力
+List<Customer> customers = Csv.load(file, cfg, new ColumnPositionMappingBeanListHandler<Customer>(Customer.class));
+
+// 出力
+Csv.save(customers, file, cfg, new ColumnPositionMappingBeanListHandler<Customer>(Customer.class));
++-----------------------------------------------------------------------------+
+
+ ヘッダ行が存在しない CSV ⇔ POJO オブジェクトをマッピングする場合は、addColumn を使用して項目列と POJO オブジェクトフィールドの関係を明示的に定義します。
+
++-----------------------------------------------------------------------------+
+// 入力
+List<Customer> customers = Csv.load(file, cfg,
+        new ColumnPositionMappingBeanListHandler<Customer>(Customer.class)
+            .addColumn(1, "name")
+            .addColumn(3, "fullname")
+    );
+
+// 出力
+Csv.save(customers, file, cfg,
+        new ColumnPositionMappingBeanListHandler<Customer>(Customer.class)
+            .addColumn(0, "age")
+            .addColumn(1, "sex")
+    );
++-----------------------------------------------------------------------------+
+
+**CsvEntityListHandler
+
+ CsvEntityListHandler は、CSV 用のアノテーション CsvEntity で注釈付けされた POJO オブジェクトのリストで CSV データへのアクセスを可能とするハンドラです。
+ このハンドラは CSV ヘッダ行の項目と POJO オブジェクトの CsvColumn アノテーションで指定された項目の対応付け情報をもとに処理します。
+
++-----------------------------------------------------------------------------+
+// 入力
+List<Customer> customers = Csv.load(file, cfg, new CsvEntityListHandler<Customer>(Customer.class));
+
+// 出力
+Csv.save(customers, file, cfg, new CsvEntityListHandler<Customer>(Customer.class));
++-----------------------------------------------------------------------------+
+
+*CsvFilter
+
+ CsvFilter は、条件と一致する CSV データや POJO オブジェクトのみをロードまたはセーブさせるためのデータフィルタです。\
+ データフィルタには CSV の行データを対象とするものと POJO オブジェクトを対象にするものの二系統があり、CsvHandler や CsvManager で使用します。(※ ResultSetHandler を除く)
+
+  * CSV 行データを対象するデータフィルタ - CsvValueFilter / CsvNamedValueFilter
+
+  * POJO オブジェクトを対象とするデータフィルタ - BeanFilter
+
+ ※ CsvManager や一部の CsvHandler は両系統のデータフィルタを同時に使用することが可能です。
+
+**CsvValueFilter
+
+ CSV の項目位置で条件を指定するデータフィルタです。\
+ 以下の CsvHandler と CsvManager で使用できます。
+
+  * StringArrayListHandler
+
+  * ColumnPositionMapListHandler
+
+  * ColumnPositionMappingBeanListHandler
+
+  * CsvColumnPositionMappingBeanManager
+
+ ※ このデータフィルタは CSV の生値である文字列を使用して指定された判定基準値と比較します。
+
++-----------------------------------------------------------------------------+
+// CsvHandler でデータフィルタを使用する例
+
+※ 単一条件を指定する場合は、CsvExpressions の使用が適しています。
+new StringArrayListHandler()
+        .filter(CsvExpressions.in(0, "佐藤", "鈴木"));
+
+※ 複雑な条件を指定する場合は、SimpleCsvValueFilter の使用が適しています。
+new StringArrayListHandler()
+        .filter(new SimpleCsvValueFilter()
+            .in(0, "佐藤", "鈴木")
+            .eq(2, "東京都")
+        );
+
+// CsvManager でデータフィルタを使用する例
+
+※ 単一条件を指定する場合は、CsvExpressions の使用が適しています。
+new CsvColumnPositionMappingBeanManager()
+        .load(Customer.class)
+        .filter(CsvExpressions.in(0, "佐藤", "鈴木"))
+        .offset(0)
+        .limit(1000)
+        .from(reader);
+
+※ 複雑な条件を指定する場合は、SimpleCsvValueFilter の使用が適しています。
+new CsvColumnPositionMappingBeanManager()
+        .load(Customer.class)
+        .filter(new SimpleCsvValueFilter()
+            .in(0, "佐藤", "鈴木")
+            .eq(2, "東京都")
+        )
+        .offset(0)
+        .limit(1000)
+        .from(reader);
++-----------------------------------------------------------------------------+
+
+**CsvNamedValueFilter
+
+ CSV の項目位置または項目名で条件を指定するデータフィルタです。\
+ 以下の CsvHandler と CsvManager で使用できます。
+
+  * ColumnNameMapListHandler
+
+  * BeanListHandler
+
+  * ColumnNameMappingBeanListHandler
+
+  * CsvEntityListHandler
+
+  * CsvBeanManager
+
+  * CsvColumnNameMappingBeanManager
+
+  * CsvEntityManager
+
+ ※ このデータフィルタは CSV の生値である文字列を使用して指定された判定基準値と比較します。
+
++-----------------------------------------------------------------------------+
+// CsvHandler でデータフィルタを使用する例
+
+※ 単一条件を指定する場合は、CsvExpressions の使用が適しています。
+new ColumnNameMapListHandler()
+        .filter(CsvExpressions.in("姓", "佐藤", "鈴木"));
+
+※ 複雑な条件を指定する場合は、SimpleCsvNamedValueFilter の使用が適しています。
+new ColumnNameMapListHandler()
+        .filter(new SimpleCsvNamedValueFilter()
+            .in("姓", "佐藤", "鈴木")
+            .eq("都道府県", "東京都")
+        );
+
+// CsvManager でデータフィルタを使用する例
+
+※ 単一条件を指定する場合は、CsvExpressions の使用が適しています。
+new CsvColumnNameMappingBeanManager()
+        .load(Customer.class)
+        .filter(CsvExpressions.in("姓", "佐藤", "鈴木"))
+        .offset(0)
+        .limit(1000)
+        .from(reader);
+
+※ 複雑な条件を指定する場合は、SimpleCsvNamedValueFilter の使用が適しています。
+new CsvColumnNameMappingBeanManager()
+        .load(Customer.class)
+        .filter(new SimpleCsvNamedValueFilter()
+            .in("姓", "佐藤", "鈴木")
+            .eq("都道府県", "東京都")
+        )
+        .offset(0)
+        .limit(1000)
+        .from(reader);
++-----------------------------------------------------------------------------+
+
+**BeanFilter
+
+ POJO オブジェクトのフィールド名で条件を指定するデータフィルタです。\
+ 以下の CsvHandler と CsvManager で使用できます。
+
+  * BeanListHandler
+
+  * ColumnNameMappingBeanListHandler
+
+  * ColumnPositionMappingBeanListHandler
+
+  * CsvEntityListHandler
+
+  * CsvBeanManager
+
+  * CsvColumnNameMappingBeanManager
+
+  * CsvColumnPositionMappingBeanManager
+
+  * CsvEntityManager
+
+ ※ このデータフィルタは POJO オブジェクトのフィールド値を使用して指定された判定基準値と比較します。
+
++-----------------------------------------------------------------------------+
+// CsvHandler でデータフィルタを使用する例
+
+※ 単一条件を指定する場合は、BeanExpressions の使用が適しています。
+new CsvEntityListHandler<Customer>(Customer.class)
+        .filter(BeanExpressions.in("name", "佐藤", "鈴木"));
+
+※ 複雑な条件を指定する場合は、SimpleBeanFilter の使用が適しています。
+new CsvEntityListHandler<Customer>(Customer.class)
+        .filter(new SimpleBeanFilter()
+            .in("name", "佐藤", "鈴木")
+            .eq("prefecture", "東京都")
+            .between("age", 20, 60)
+        );
+
+// CsvManager でデータフィルタを使用する例
+
+※ 単一条件を指定する場合は、BeanExpressions の使用が適しています。
+new CsvEntityManager()
+        .load(Customer.class)
+        .filter(BeanExpressions.in("name", "佐藤", "鈴木"))
+        .offset(0)
+        .limit(1000)
+        .from(reader);
+
+※ 複雑な条件を指定する場合は、SimpleBeanFilter の使用が適しています。
+new CsvEntityManager()
+        .load(Customer.class)
+        .filter(new SimpleBeanFilter()
+            .in("name", "佐藤", "鈴木")
+            .eq("prefecture", "東京都")
+            .between("age", 20, 60)
+        )
+        .offset(0)
+        .limit(1000)
+        .from(reader);
++-----------------------------------------------------------------------------+
+
+*Csv
+
+ Csv ユーティリテイは、前節で説明した CsvConfig や CsvHandler を使用してファイルやストリームなどのリソースと CSV データアクセスを行う統合アクセスユーティリティです。
+ サポートされるリソースはファイルやストリーム、文字ストリーム (Reader / Writer) だけでなく ZIP や LHA などの圧縮形式のデータもサポートします。
+
+ 以下は、文字列配列のリストで ZIP 圧縮形式で圧縮された CSV ファイルへアクセスする場合のコード例です。
+
++-----------------------------------------------------------------------------+
+// 入力
+ZipFile zipFile = new ZipFile(new File("example.zip"));
+try {
+    List<String[]> list = Csv.load(zipFile, cfg, handler);
+} finally {
+    zipFile.close();
+}
+
+// 出力
+ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(new File("example.zip")));
+try {
+    // example.csv というエントリ名で ZIP 圧縮形式へ出力します。
+    Csv.save(list, zos, cfg, handler, "example.csv");
+} finally {
+    zos.close();
+}
++-----------------------------------------------------------------------------+
+
+ 特定の ZIP エントリのみを対象とする場合はエントリフィルタを使用します。
+
++-----------------------------------------------------------------------------+
+// 入力
+ZipFile zipFile = new ZipFile(new File("example.zip"));
+try {
+    // この例では、エントリ名が ".csv" で終わるエントリのみを対象とします。
+    List<String[]> list = Csv.load(zipFile, cfg, handler, new SuffixEntryNameFilter(".csv"));
+} finally {
+    zipFile.close();
+}
++-----------------------------------------------------------------------------+
+
+*CsvManager
+
+ CsvManager は POJO オブジェクトのリストで CSV データへのアクセスを簡単にするための統合アクセスインターフェースです。
+
++-----------------------------------------------------------------------------+
+CsvManager csvManager = CsvManagerFactory.newCsvManager();	// CsvManager を取得します。
+
+// 入力
+List<Customer> customers = csvManager.load(Customer.class).from(new File("customers.csv"));
+
+// 出力
+csvManager.save(customers, Customer.class).to(new File("customers.csv"));
++-----------------------------------------------------------------------------+
+
+ OrangeSignal CSV の標準では CsvManagerFactory から CsvManager を取得しますが、\
+ CsvManager の実装を直接インスタンス化したり、@Resource による注入も可能です。
+
++-----------------------------------------------------------------------------+
+// CsvEntityManager を直接インスタンス化して入力
+List<Customer> customers = new CsvEntityManager().load(Customer.class).from(new File("customers.csv"));
+
+// CsvBeanManager を直接インスタンス化して出力
+new CsvBeanManager().save(customers, Customer.class).to(new File("customers.csv"));
++-----------------------------------------------------------------------------+
+
+===============================================================================
+
+ この節では、使用するケースの少ない CSV に対するローレベルアクセス機能について説明を記載します。
+
+*CsvReader
+
+ CsvReader は文字入力ストリーム (java.io.Reader) から行データを読取って、CSV トークンのリストとして返す CSV 文字入力ストリームです。
+ CsvReader は CsvConfig で指定された CSV 形式情報をもとに物理行・論理行を適切に処理します。
+
+ CsvReader で行データを読込む方法には readTokens メソッド、readValues メソッドのいずれかを使用します。
+ readTokens メソッドは CSV トークン単位に行番号の範囲や囲み文字に囲まれていたかどうかなどの詳細な情報を返します。
+ ただ単に CSV の値である文字列が欲しい場合は readValues の使用が適しています。\
+ 以下にコード例を記載します。
+
++-----------------------------------------------------------------------------+
+// readTokens() メソッドで CSV データを読込む場合
+CsvReader reader = new CsvReader(new StringReader(...), cfg);
+try {
+   List<CsvToken> tokens;
+   while ((tokens = reader.readTokens()) != null) {
+       System.out.println(String.format("物理行番号: %d-%d", reader.getStartLineNumber(), reader.getEndLineNumber()));
+       System.out.println(String.format("論理行番号: %d", reader.getLineNumber()));
+       ...
+       for (CsvToken token : tokens) {
+           System.out.println(token.getValue());
+           System.out.println(token.getStartLineNumber());
+           System.out.println(token.getEndLineNumber());
+           System.out.println(token.isEnclosed());
+       }
+   }
+} finally {
+    reader.close();
+}
+
+// readValues() メソッドで CSV データを読込む場合
+CsvReader reader = new CsvReader(new StringReader(...), cfg);
+try {
+   List<String> values;
+   while ((values = reader.readValues()) != null) {
+       ...
+       for (String value : values) {
+           System.out.println(value);
+       }
+   }
+} finally {
+    reader.close();
+}
++-----------------------------------------------------------------------------+
+
+*CsvWriter
+
+ CsvWriter は文字出力ストリーム (java.io.Writer) へ CSV トークンを行データとして書込む CSV 文字出力ストリームです。
+ CsvWriter は CsvConfig で指定された CSV 形式情報をもとに CSV 形式を適切に処理します。
+
+ 以上で使い方の説明を終了します。

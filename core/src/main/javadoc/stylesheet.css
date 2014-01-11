@@ -1,0 +1,93 @@
+@charset "UTF-8";
+
+/*
+ * Copyright (c) 2010 OrangeSignal.com All rights reserved.
+ * 
+ * これは Apache ライセンス Version 2.0 (以下、このライセンスと記述) に
+ * 従っています。このライセンスに準拠する場合以外、このファイルを使用
+ * してはなりません。このライセンスのコピーは以下から入手できます。
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0.txt
+ * 
+ * 適用可能な法律がある、あるいは文書によって明記されている場合を除き、
+ * このライセンスの下で配布されているソフトウェアは、明示的であるか暗黙の
+ * うちであるかを問わず、「保証やあらゆる種類の条件を含んでおらず」、
+ * 「あるがまま」の状態で提供されるものとします。
+ * このライセンスが適用される特定の許諾と制限については、このライセンス
+ * を参照してください。
+ */
+
+/* OrangeSignal javadoc スタイルシート */
+
+body {
+	color: white;
+	background-color: #0f0f0f;
+	font: 12px "Meiryo UI", Verdana, Arial, "Century Gothic", "MS UI Gothic", "Hiragino Kaku Gothic Pro", Osaka, Sans-Serif;
+}
+
+/* 水平線 */
+hr {
+	border-width: 1px 0px 0px 0px;
+	border-style: solid;
+	border-color: #ff9900;
+	height: 1px;
+}
+
+/* アンカー */
+a       { color: #ff9900; text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* 見出し */
+h1 {
+	font-family: Verdana;
+	font-size: 35px;
+	letter-spacing: -2px;
+}
+
+/* テーブルの色 */
+table { border: none; }
+td    { border: none; border-bottom: 1px dotted gray; }
+th    { border: none; }
+.TableHeadingColor th {
+	padding-top: 2px;
+	padding-bottom: 2px;
+	background: url(resources/TableHeading-background.gif) top repeat-x #ff9900;
+	border-top: 1px solid #ff9900;
+	border-bottom: 1px solid #ff9900;
+	color: black;
+	font-size: 16px;
+	height: 20px;
+}
+.TableHeadingColor th font { font: inherit !important; }
+
+.TableSubHeadingColor { background: transparent; }
+.TableRowColor { background: transparent; }
+.TableRowColor a {
+	border-bottom: none;
+	color: #ff9900;
+	font-weight: normal;
+}
+tr.TableRowColor:hover { background: #525252; }
+
+/* 左側のフレームのリストに使用するフォント */
+.FrameTitleFont        { font-size: 120%; font-weight: bold; }
+.FrameTitleFont a      { color: #ff9900; }
+.FrameHeadingFont      { font-weight: bold; font-size: 95%; }
+.FrameItemFont         { line-height: 130%; font-size:  95%; }
+.FrameItemFont a       { color: #ffffcc; }
+.FrameItemFont a:hover { border-bottom: none; text-decoration: underline; }
+
+/* ナビゲーションバーのフォントと色 */
+.NavBarCell1 { background-color: transparent; border: none; } 
+.NavBarCell1Rev { 
+	color: #ff9900;
+	background-color: #ffffcc;
+	border: 1px solid #ff9900;
+	padding: 0;
+	margin: 0;
+} 
+.NavBarCell1 a { color: white; text-decoration: none; }
+.NavBarFont1Rev {}
+.NavBarCell2 { background-color: transparent; border: none; }
+.NavBarCell2 a { color: #ff9900; font-size: 90%; }
+.NavBarCell3 { border: none; }

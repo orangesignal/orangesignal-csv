@@ -1,0 +1,137 @@
+ -----
+マイグレーション
+ -----
+ 杉澤 浩二
+ -----
+ 2013/09/01
+ -----
+
+~~ http://maven.apache.org/doxia/references/apt-format.html
+
+マイグレーション
+
+ CSV が期待通りにパースされなかったり、かゆいところに手が届く機能が欲しいなど、\
+ 他の CSV ライブラリから OrangeSignal CSV へ移行する場合のコード例を記載します。
+
+*opencsv
+
+ 行単位の読込み
+
++-----------------------------------------------------------------------------+
+// opencsv
+CSVReader reader = new CSVReader(new FileReader("yourfile.csv"));
+String [] nextLine;
+while ((nextLine = reader.readNext()) != null) {
+    System.out.println(nextLine[0] + nextLine[1] + "etc...");
+}
+
+// OrangeSignal CSV
+CsvReader reader = new CsvReader(new FileReader("yourfile.csv"));
+List<String> values;
+while ((values = reader.readValues()) != null) {
+    String [] nextLine = values.toArray(new String[0]);
+    System.out.println(nextLine[0] + nextLine[1] + "etc...");
+}
+
+※OrangeSignal CSV の CsvReader では物理行番号および論理行番号をサポートしています。
+  また CSV トークン単位での物理行番号もサポートしています。
++-----------------------------------------------------------------------------+
+
+ 一括読込み
+
++-----------------------------------------------------------------------------+
+// opencsv
+CSVReader reader = new CSVReader(new FileReader("yourfile.csv"));
+List myEntries = reader.readAll();
+
+// OrangeSignal CSV
+List<String[]> myEntries = Csv.load(new FileReader("yourfile.csv"), new CsvConfig(), new StringArrayListHandler());
+
+※OrangeSignal CSV では、CsvConfig やハンドラを設定することで多様な形式・種類の CSV に対応可能となります。
++-----------------------------------------------------------------------------+
+
+ CSV 形式指定
+
++-----------------------------------------------------------------------------+
+// opencsv
+CSVReader reader = new CSVReader(new FileReader("yourfile.csv"), '\t');
+
+// OrangeSignal CSV
+CsvReader reader = new CsvReader(new FileReader("yourfile.csv"), new CsvConfig('\t'));
+
+※CsvConfig により非常に細かい CSV 形式の設定が可能となります。
++-----------------------------------------------------------------------------+
+
+ 行単位の書込み
+
++-----------------------------------------------------------------------------+
+// opencsv
+CSVWriter writer = new CSVWriter(new FileWriter("yourfile.csv"), '\t');
+String[] entries = "first#second#third".split("#");
+writer.writeNext(entries);
+writer.close();
+
+// OrangeSignal CSV
+CsvWriter writer = new CsvWriter(new FileWriter("yourfile.csv"), new CsvConfig('\t'));
+String[] entries = "first#second#third".split("#");
+writer.	writeValues(Arrays.asList(entries));
+writer.close();
++-----------------------------------------------------------------------------+
+
+ 一括書込み
+
++-----------------------------------------------------------------------------+
+// opencsv
+java.sql.ResultSet myResultSet = ....
+writer.writeAll(myResultSet, includeHeaders);
+
+// OrangeSignal CSV
+java.sql.ResultSet myResultSet = ....
+Csv.save(myResultSet, writer, new CsvConfig(), new ResultSetHandler());
++-----------------------------------------------------------------------------+
+
+ POJO アクセス
+
++-----------------------------------------------------------------------------+
+// opencsv
+ColumnPositionMappingStrategy strat = new ColumnPositionMappingStrategy();
+strat.setType(YourOrderBean.class);
+String[] columns = new String[] {"name", "orderNumber", "id"}; // the fields to bind do in your JavaBean
+strat.setColumnMapping(columns);
+
+CsvToBean csv = new CsvToBean();
+List list = csv.parse(strat, yourReader);
+
+// OrangeSignal CSV
+List<YourOrderBean> list = new CsvColumnPositionMappingBeanManager()
+	.load(YourOrderBean.class)
+	.column("name")
+	.column("orderNumber")
+	.column("id")
+	.from(yourReader);
+
+※OrangeSignal CSV では、filter、offset、limit、order なども可能となります。また、POJO から CSV への出力も可能となります。
++-----------------------------------------------------------------------------+
+
+POM 設定 (Apache Maven 2 / 3 使用時)
+
++-----------------------------------------------------------------------------+
+// opencsv
+<dependency>
+	<groupId>net.sf.opencsv</groupId>
+	<artifactId>opencsv</artifactId>
+	<version>2.0</version>
+</dependency>
+
+// OrangeSignal CSV
+<repository>
+	<id>orangesignal</id>
+	<url>http://orangesignal.sourceforge.jp/maven2</url>
+</repository>
+
+<dependency>
+	<groupId>com.orangesignal</groupId>
+	<artifactId>orangesignal-csv</artifactId>
+	<version>1.4.0</version>
+</dependency>
++-----------------------------------------------------------------------------+
