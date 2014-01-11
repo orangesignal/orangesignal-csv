@@ -12,6 +12,7 @@ Links
 License
 -------
 
-Copyright (c) 2009-2014 OrangeSignal.com All rights reserved.
+Copyright (c) 2009-2014 OrangeSignal.com All rights reserved.  
+Licensed under the [Apache License, Version 2.0][Apache]
 
 [Apache]: http://www.apache.org/licenses/LICENSE-2.0
