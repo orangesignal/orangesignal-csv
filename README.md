@@ -1,6 +1,8 @@
 OrangeSignal CSV
 ================
 
+OrangeSignal CSV は CSV 入出力操作を簡易化させる高機能で便利なライブラリを提供します。
+
 Links
 -----
 
