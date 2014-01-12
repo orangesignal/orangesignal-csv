@@ -34,12 +34,17 @@
 	<developers>
 		<developer>
 			<id>sugisawa</id>
-			<name>杉澤 浩二</name>
+			<name>Koji Sugisawa</name>
+			<url>https://github.com/orangesignal</url>
 			<email>sugisawa@users.sourceforge.jp</email>
-			<url>http://sourceforge.jp/users/sugisawa/</url>
 			<timezone>+9</timezone>
 		</developer>
 	</developers>
+
+	<issueManagement>
+		<system>GitHub Issues</system>
+		<url>https://github.com/orangesignal/orangesignal-csv/issues</url>
+	</issueManagement>
 
 	<ciManagement>
 		<system>jenkins</system>
@@ -47,8 +52,9 @@
 	</ciManagement>
 
 	<scm>
-		<url>https://github.com/orangesignal/orangesignal-csv.git</url>
-		<developerConnection>git@github.com:orangesignal/orangesignal-csv.git</developerConnection>
+		<url>https://github.com/orangesignal/orangesignal-csv</url>
+		<connection>scm:git:git://github.com/orangesignal/orangesignal-csv.git</connection>
+		<developerConnection>scm:git:git@github.com:orangesignal/orangesignal-csv.git</developerConnection>
 	</scm>
 
 	<properties>
