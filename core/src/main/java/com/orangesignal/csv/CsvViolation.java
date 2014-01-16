@@ -15,9 +15,8 @@
  * を参照してください。
  */
 
-package com.orangesignal.csv.validation;
+package com.orangesignal.csv;
 
-import com.orangesignal.csv.CsvToken;
 
 /**
  * 区切り文字形式データ違反の説明情報を提供します。
@@ -33,13 +32,6 @@ public interface CsvViolation {
 	 * @return 違反の詳細な説明
 	 */
 	String getMessage();
-
-	/**
-	 * 違反の論理行番号を返します。
-	 *
-	 * @return 違反の論理行番号
-	 */
-	int getLineNumber();
 
 	/**
 	 * 違反した区切り文字形式データトークンを返します。

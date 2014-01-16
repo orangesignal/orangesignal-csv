@@ -24,7 +24,9 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 /**
@@ -44,6 +46,24 @@ public class CsvReader implements Closeable {
 	 * 区切り文字形式情報を保持します。
 	 */
 	private CsvConfig cfg;
+
+	/**
+	 * 区切り文字形式データトークン検証機能を保持します。
+	 * @since 2.0.0
+	 */
+	private CsvValidator validator;
+
+	/**
+	 * 最後の区切り文字形式データ違反の説明情報群を保持します。
+	 * @since 2.0.0
+	 */
+	private Set<CsvViolation> lastViolations;
+
+	/**
+	 * すべての区切り文字形式データ違反の説明情報群を保持します。
+	 * @since 2.0.0
+	 */
+	private Set<CsvViolation> violations;
 
 	/**
 	 * 終端文字を含む行バッファを保持します。
@@ -180,6 +200,54 @@ public class CsvReader implements Closeable {
 	 */
 	public CsvReader(final Reader in) {
 		this(in, DEFAULT_CHAR_BUFFER_SIZE, new CsvConfig());
+	}
+
+	// ------------------------------------------------------------------------
+	// Validation
+
+	/**
+	 * 区切り文字形式データトークン検証機能を返します。
+	 * 区切り文字形式データトークン検証機能が設定されていない場合は {@code null} を返します。
+	 * 
+	 * @return 区切り文字形式データトークン検証機能。または {@code null}
+	 * @since 2.0.0
+	 */
+	public CsvValidator getValidator() {
+		return validator;
+	}
+
+	/**
+	 * 区切り文字形式データトークン検証機能を設定します。
+	 * 
+	 * @param validator 区切り文字形式データトークン検証機能
+	 * @since 2.0.0
+	 */
+	public void setValidator(final CsvValidator validator) {
+		synchronized (this) {
+			this.validator = validator;
+		}
+	}
+
+	/**
+	 * 最後の区切り文字形式データ違反の説明情報群を返します。
+	 * 区切り文字形式データトークン検証機能が設定されていない場合は {@code null} を返します。
+	 * 
+	 * @return 最後の区切り文字形式データ違反の説明情報群。または {@code null}
+	 * @since 2.0.0
+	 */
+	public Set<CsvViolation> getLastViolations() {
+		return lastViolations;
+	}
+
+	/**
+	 * すべての区切り文字形式データ違反の説明情報群を返します。
+	 * 区切り文字形式データトークン検証機能が設定されていない場合は {@code null} を返します。
+	 * 
+	 * @return すべての区切り文字形式データ違反の説明情報群。または {@code null}
+	 * @since 2.0.0
+	 */
+	public Set<CsvViolation> getViolations() {
+		return violations;
 	}
 
 	// ------------------------------------------------------------------------
@@ -325,7 +393,18 @@ public class CsvReader implements Closeable {
 				line = null;
 				skiped = true;
 			}
-			return readCsvTokens();
+
+			final List<CsvToken> results = readCsvTokens();
+			if (validator != null) {
+				lastViolations = validator.validate(results, this);
+				if (lastViolations != null && !lastViolations.isEmpty()) {
+					if (violations == null) {
+						violations = new LinkedHashSet<CsvViolation>();
+					}
+					violations.addAll(lastViolations);
+				}
+			}
+			return results;
 		}
 	}
 
@@ -611,6 +690,8 @@ public class CsvReader implements Closeable {
 			in = null;
 			cfg = null;
 			line = null;
+			lastViolations = null;
+			violations = null;
 		}
 	}
 
