@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * 区切り文字形式データトークンを検証します。
+ * 区切り文字形式データを検証します。
  * 
  * @author 杉澤 浩二
  * @since 2.0.0
@@ -39,7 +39,21 @@ public interface CsvValidator {
  * 型チェック
  * URL, email, etc...
  */
-//	Set<CsvViolation> validate(List<String> values);
+
+	/**
+	 * 
+	 * @param tokens 区切り文字形式データトークン
+	 * @param reader 区切り文字形式入力ストリーム
+	 * @return
+	 */
 	Set<CsvViolation> validate(List<CsvToken> tokens, CsvReader reader);
+
+	/**
+	 * 
+	 * @param values CSV トークンの値リスト
+	 * @param writer 区切り文字形式出力ストリーム
+	 * @return
+	 */
+	Set<CsvViolation> validate(List<String> values, CsvWriter writer);
 
 }
