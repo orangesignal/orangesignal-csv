@@ -1,18 +1,23 @@
 OrangeSignal CSV
 ================
 
-OrangeSignal CSV は CSV 入出力操作を簡易化させる高機能で便利なライブラリを提供します。
+OrangeSignal CSV is a very flexible csv (comma-separated values) read and write library for Java.
 
-Links
------
+Features
+--------
 
-* <http://orangesignal.sourceforge.jp/csv/>
-* <http://orangesignal.sourceforge.jp/csv/api-release/index.html>
+* 
+
+System Requirements
+-------------------
+
+* JDK6 or JRE6 later
 
 License
 -------
 
+* [Apache License, Version 2.0][Apache]
+
 Copyright (c) 2009-2014 OrangeSignal.com All rights reserved.  
-Licensed under the [Apache License, Version 2.0][Apache]
 
 [Apache]: http://www.apache.org/licenses/LICENSE-2.0
