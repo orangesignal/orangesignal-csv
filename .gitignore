@@ -1,9 +1,14 @@
+# Java Files
 *.class
-
-# Package Files #
 *.jar
-*.war
-*.ear
+
+# Maven Files
+target/*
+core/target/*
+legacy/target/*
+
+# MacOS Files
+.DS_Store
 
 # Eclipse Files #
 .project
@@ -11,6 +16,6 @@
 org.eclipse.*.prefs
 */.settings/*
 
-.DS_Store
-
-*/target/*
+# IntelliJ Files
+*.iml
+.idea/*
