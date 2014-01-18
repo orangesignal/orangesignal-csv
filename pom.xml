@@ -191,6 +191,7 @@
 				<configuration>
 					<splitindex>true</splitindex>
 					<docfilessubdirs>true</docfilessubdirs>
+					<header>${project.name}</header>
 				</configuration>
 				<executions>
 					<execution>
