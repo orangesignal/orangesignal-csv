@@ -1,0 +1,12 @@
+OrangeSignal CSV
+================
+
+
+Core
+====
+jlha.jar: 必須
+
+
+Test
+====
+(no extra dependency)

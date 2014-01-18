@@ -1,0 +1,14 @@
+OrangeSignal CSV 変更履歴
+========================================
+http://orangesignal.sourceforge.jp/csv/
+
+
+バージョン 2.0.0
+----------------
+
+全般
+* パッケージ名を com.orangesignal へ変更しました。
+* com.orangesignal.csv.bean パッケージを追加しました。
+* com.orangesignal.csv.io パッケージを追加しました。
+* 実装が曖昧なクラスの機能を com.orangesignal.csv.bean パッケージへ抽出しました。
+* CsvBeanReader や CsvEntityReader、CsvEntityWriter など区切り文字形式データアクセスの特定用途向けのストリームクラスを com.orangesignal.csv.io パッケージへ追加しました。

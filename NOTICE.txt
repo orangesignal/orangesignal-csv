@@ -1,0 +1,5 @@
+OrangeSignal CSV
+Copyright 2009-2014 OrangeSignal.com
+
+The binary distributions includes the following third party software:
+JLHA (http://homepage1.nifty.com/dangan/Content/Program/Java/jLHA/jLHA.html).
