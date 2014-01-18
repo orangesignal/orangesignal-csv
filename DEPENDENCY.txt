@@ -4,7 +4,7 @@ OrangeSignal CSV
 
 Core
 ====
-jlha.jar: 必須
+jlha.jar: required
 
 
 Test
