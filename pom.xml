@@ -221,6 +221,17 @@
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<version>2.4</version>
+				<configuration>
+					<descriptors>
+						<descriptor>src/main/assembly/jar-with-dependencies.xml</descriptor>
+						<descriptor>src/main/assembly/bin.xml</descriptor>
+					</descriptors>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-site-plugin</artifactId>
 				<version>3.3</version>
 				<configuration>
@@ -247,19 +258,14 @@
 				<reportSets>
 					<reportSet>
 						<reports>
-							<report>dependency-management</report>
 							<report>plugin-management</report>
 							<report>plugins</report>
-<!-- 
-							<report>index</report>
- -->
 							<report>scm</report>
 							<report>summary</report>
 							<report>project-team</report>
 							<report>license</report>
 							<report>mailing-list</report>
 							<report>dependencies</report>
-							<report>dependency-convergence</report>
 							<report>issue-tracking</report>
 							<report>cim</report>
 						</reports>
