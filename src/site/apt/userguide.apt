@@ -3,7 +3,7 @@
  -----
  杉澤 浩二
  -----
- 2009/10/21
+ 2014/01/19
  -----
 
 ~~ http://maven.apache.org/doxia/references/apt-format.html
@@ -11,7 +11,7 @@
 使い方
 
  ここでは、本プロダクトの使い方を簡単な例を使って説明します。\
- 各機能の詳細は {{{./api-release/index.html}Javadoc}} をご覧ください。
+ 各機能の詳細は {{{./apidocs/index.html}Javadoc}} をご覧ください。
 
 *はじめの一歩
 
