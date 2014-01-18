@@ -3,6 +3,7 @@
 	<id>bin</id>
 	<formats>
 		<format>zip</format>
+		<format>tar.gz</format>
 	</formats>
 	<includeSiteDirectory>false</includeSiteDirectory>
 	<fileSets>
