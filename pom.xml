@@ -16,7 +16,7 @@
 
 	<name>OrangeSignal CSV</name>
 	<url>http://orangesignal.github.io/orangesignal-csv/</url>
-	<description><![CDATA[OrangeSignal CSV は CSV 入出力操作を簡易化させる高機能で便利なライブラリを提供します。]]></description>
+	<description><![CDATA[OrangeSignal CSV is a very flexible csv (comma-separated values) read and write library for Java.]]></description>
 	<inceptionYear>2009</inceptionYear>
 
 	<licenses>
