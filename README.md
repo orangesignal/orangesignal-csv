@@ -3,7 +3,7 @@ OrangeSignal CSV
 
 OrangeSignal CSV is a very flexible csv (comma-separated values) read and write library for Java.
 
-The binary distributions includes the following third party software:
+The binary distributions includes the following third party software:  
 JLHA (http://homepage1.nifty.com/dangan/Content/Program/Java/jLHA/jLHA.html).
 
 Features
