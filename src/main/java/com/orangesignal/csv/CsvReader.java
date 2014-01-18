@@ -1,0 +1,671 @@
+/*
+ * Copyright (c) 2013 OrangeSignal.com All rights reserved.
+ *
+ * これは Apache ライセンス Version 2.0 (以下、このライセンスと記述) に
+ * 従っています。このライセンスに準拠する場合以外、このファイルを使用
+ * してはなりません。このライセンスのコピーは以下から入手できます。
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ * 適用可能な法律がある、あるいは文書によって明記されている場合を除き、
+ * このライセンスの下で配布されているソフトウェアは、明示的であるか暗黙の
+ * うちであるかを問わず、「保証やあらゆる種類の条件を含んでおらず」、
+ * 「あるがまま」の状態で提供されるものとします。
+ * このライセンスが適用される特定の許諾と制限については、このライセンス
+ * を参照してください。
+ */
+
+package com.orangesignal.csv;
+
+import java.io.BufferedReader;
+import java.io.Closeable;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Pattern;
+
+/**
+ * 区切り文字形式入力ストリームを提供します。
+ *
+ * @author 杉澤 浩二
+ * @see <a href="http://www.ietf.org/rfc/rfc4180.txt">RFC-4180 Common Format and MIME Type for Comma-Separated Values (CSV) Files</a>
+ */
+public class CsvReader implements Closeable {
+
+	/**
+	 * 文字入力ストリームを保持します。
+	 */
+	private Reader in;
+
+	/**
+	 * 区切り文字形式情報を保持します。
+	 */
+	private CsvConfig cfg;
+
+	/**
+	 * 終端文字を含む行バッファを保持します。
+	 */
+	private String line;
+
+	/**
+	 * 次行の先頭文字を保持します。
+	 */
+	private int nextChar = -1;
+
+	/**
+	 * 行バッファの位置を保持します。
+	 */
+	private int pos;
+
+	/**
+	 * 行読込みのスキップを行ったかどうかを保持します。
+	 */
+	private boolean skiped;
+
+	/**
+	 * トークンの開始物理行番号の現在値を保持します。
+	 */
+	private int startTokenLineNumber = 0;
+
+	/**
+	 * トークンの終了物理行番号の現在値を保持します。
+	 */
+	private int endTokenLineNumber = 0;
+
+	/**
+	 * 開始物理行番号の現在値を保持します。
+	 */
+	private int startLineNumber = 0;
+
+	/**
+	 * 終了物理行番号の現在値を保持します。
+	 */
+	private int endLineNumber = 0;
+
+	/**
+	 * 論理行番号の現在値を保持します。
+	 */
+	private int lineNumber = 0;
+
+	/**
+	 * ファイルの終わりに達したかどうかを保持します。
+	 */
+	private boolean endOfFile;
+
+	/**
+	 * 論理行の終わりに達したかどうかを保持します。
+	 */
+	private boolean endOfLine;
+
+	/**
+	 * 直前の文字が復帰文字かどうかを保持します。
+	 */
+	private boolean cr = false;
+
+	/**
+	 * BOM (Byte Order Mark) を除去するかどうかを保持します。
+	 */
+	private final boolean utf8bom;
+
+	/**
+	 * 復帰文字です。
+	 */
+	private static final char CR = '\r';
+
+	/**
+	 * 改行文字です。
+	 */
+	private static final char LF = '\n';
+
+	private static final int DEFAULT_CHAR_BUFFER_SIZE = 8192;
+
+	// ------------------------------------------------------------------------
+	// コンストラクタ
+
+	/**
+	 * 指定されたバッファーサイズと指定された区切り文字形式情報を使用して、このクラスを構築するコンストラクタです。
+	 *
+	 * @param in 文字入力ストリーム
+	 * @param sz 入力バッファのサイズ
+	 * @param cfg 区切り文字形式情報
+	 * @throws IllegalArgumentException {@code sz} が {@code 0} 以下の場合。または、{@code cfg} が {@code null} の場合。
+	 * または、{@code cfg} の区切り文字および囲み文字、エスケープ文字の組合せが不正な場合
+	 */
+	public CsvReader(final Reader in, final int sz, final CsvConfig cfg) {
+		if (cfg == null) {
+			throw new IllegalArgumentException("CsvConfig must not be null");
+		}
+		cfg.validate();
+		this.in = new BufferedReader(in, sz);
+		this.cfg = cfg;
+		final String s;
+		if (in instanceof InputStreamReader) {
+			s = ((InputStreamReader) in).getEncoding();
+		} else {
+			s = Charset.defaultCharset().name();
+		}
+		this.utf8bom = s.toLowerCase().matches("^utf\\-{0,1}8$");
+	}
+
+	/**
+	 * デフォルトのバッファーサイズと指定された区切り文字形式情報を使用して、このクラスを構築するコンストラクタです。
+	 *
+	 * @param in 文字入力ストリーム
+	 * @param cfg 区切り文字形式情報
+	 * @throws IllegalArgumentException {@code cfg} が {@code null} の場合
+	 * または、{@code cfg} の区切り文字および囲み文字、エスケープ文字の組合せが不正な場合
+	 */
+	public CsvReader(final Reader in, final CsvConfig cfg) {
+		this(in, DEFAULT_CHAR_BUFFER_SIZE, cfg);
+	}
+
+	/**
+	 * 指定されたバッファーサイズとデフォルトの区切り文字形式情報を使用して、このクラスを構築するコンストラクタです。
+	 *
+	 * @param in 文字入力ストリーム
+	 * @param sz 入力バッファのサイズ
+	 * @throws IllegalArgumentException {@code sz} が {@code 0} 以下の場合
+	 */
+	public CsvReader(final Reader in, final int sz) {
+		this(in, sz, new CsvConfig());
+	}
+
+	/**
+	 * デフォルトのバッファーサイズとデフォルトの区切り文字形式情報を使用して、このクラスを構築するコンストラクタです。
+	 *
+	 * @param in 文字入力ストリーム
+	 */
+	public CsvReader(final Reader in) {
+		this(in, DEFAULT_CHAR_BUFFER_SIZE, new CsvConfig());
+	}
+
+	// ------------------------------------------------------------------------
+
+	/**
+	 * 開始物理行番号の現在値を取得します。
+	 *
+	 * @return 現在の開始物理行番号
+	 */
+	public int getStartLineNumber() { return startLineNumber; }
+
+	/**
+	 * 終了物理行番号の現在値を取得します。
+	 *
+	 * @return 現在の終了物理行番号
+	 */
+	public int getEndLineNumber() { return endLineNumber; }
+
+	/**
+	 * 論理行番号の現在値を取得します。
+	 *
+	 * @return 現在の論理行番号
+	 */
+	public int getLineNumber() { return lineNumber; }
+
+	/**
+	 * Checks to make sure that the stream has not been closed
+	 */
+	private void ensureOpen() throws IOException {
+		if (in == null) {
+			throw new IOException("Reader closed");
+		}
+	}
+
+	private static final int BOM = 0xFEFF;
+
+	/**
+	 * 物理行を読込んで行バッファへセットします。
+	 *
+	 * @return 行の終端文字を含まない行文字列
+	 * @throws IOException 入出力例外が発生した場合
+	 */
+	private String cacheLine() throws IOException {
+		// 行バッファを構築します。
+		final StringBuilder buf = new StringBuilder();
+		int c;
+		if (nextChar != -1) {
+			c = nextChar;
+			nextChar = -1;
+		} else {
+			c = in.read();
+			// BOM (Byte Order Mark) を除去する場合は BOM を読み飛ばします。
+			if (lineNumber == 0 && line == null && utf8bom && c == BOM) {
+				c = in.read();
+			}
+		}
+
+		int i = -1;	// CR または LF の出現位置
+		while (c != -1) {
+			buf.append((char) c);
+			if (c == CR) {
+				i = buf.length();
+				nextChar = in.read();
+				if (nextChar == LF) {
+					buf.append((char) nextChar);
+					nextChar = -1;
+				}
+				break;
+			} else if (c == LF) {
+				i = buf.length();
+				break;
+			}
+			c = in.read();
+		}
+		line = buf.toString();
+		pos = 0;
+
+		if (i != -1) {
+			return buf.substring(0, i - 1);
+		}
+		return line;
+	}
+
+	/**
+	 * 単一の文字を読み込みます。
+	 *
+	 * @return 読み込まれた文字。ストリームの終わりに達した場合は {@code -1}
+	 * @throws IOException 入出力エラーが発生した場合
+	 */
+	private int read() throws IOException {
+		synchronized (this) {
+			ensureOpen();
+			if (endOfFile) {
+				return -1;
+			}
+			if (line == null || line.length() <= pos) {
+				cacheLine();
+			}
+			if (line.length() == 0) {
+				return -1;
+			}
+			return line.charAt(pos++);
+		}
+	}
+
+	/**
+	 * <p>論理行を読込み CSV トークンの値をリストして返します。</p>
+	 * このメソッドは利便性のために提供しています。
+	 *
+	 * @return CSV トークンの値をリスト。ストリームの終わりに達している場合は {@code null}
+	 * @throws IOException 入出力エラーが発生した場合
+	 */
+	public List<String> readValues() throws IOException {
+		final List<CsvToken> tokens = readTokens();
+		if (tokens == null) {
+			return null;
+		}
+		final List<String> results = new ArrayList<String>(tokens.size());
+		for (final CsvToken token : tokens) {
+			results.add(token.getValue());
+		}
+		return results;
+	}
+
+	/**
+	 * 論理行を読込み CSV トークンをリストして返します。
+	 *
+	 * @return CSV トークンのリスト。ストリームの終わりに達している場合は {@code null}
+	 * @throws IOException 入出力エラーが発生した場合
+	 */
+	public List<CsvToken> readTokens() throws IOException {
+		synchronized (this) {
+			ensureOpen();
+			if (endOfFile) {
+				return null;
+			}
+			if (!skiped) {
+				for (int i = 0; i < cfg.getSkipLines(); i++) {
+					cacheLine();
+					endTokenLineNumber++;
+					lineNumber++;
+				}
+				line = null;
+				skiped = true;
+			}
+			return readCsvTokens();
+		}
+	}
+
+	/**
+	 * 論理行を読込み、行カウンタを処理して CSV トークンのリストを返します。
+	 *
+	 * @return CSV トークンのリスト
+	 * @throws IOException 入出力エラーが発生した場合
+	 */
+	private List<CsvToken> readCsvTokens() throws IOException {
+		final List<CsvToken> results = new ArrayList<CsvToken>();
+		endTokenLineNumber++;
+		startLineNumber = endTokenLineNumber;
+		endOfLine = false;
+		do {
+			if (line == null || line.length() <= pos) {
+				String _line = cacheLine();
+
+				// 空行を無視する場合の処理を行います。
+				if (cfg.isIgnoreEmptyLines()) {
+					boolean ignore = true;
+					while (ignore && line.length() > 0) {
+						ignore = false;
+						if (isWhitespaces(_line)) {
+							ignore = true;
+							endTokenLineNumber++;
+							startLineNumber = endTokenLineNumber;
+							lineNumber++;
+							_line = cacheLine();
+						}
+					}
+				}
+
+				// 無視する行パターンを処理します。
+				if (cfg.getIgnoreLinePatterns() != null) {
+					boolean ignore = true;
+					while (ignore && line.length() > 0) {
+						ignore = false;
+						for (final Pattern p : cfg.getIgnoreLinePatterns()) {
+							if (p != null && p.matcher(_line).matches()) {
+								ignore = true;
+								endTokenLineNumber++;
+								startLineNumber = endTokenLineNumber;
+								lineNumber++;
+								_line = cacheLine();
+								break;
+							}
+						}
+					}
+				}
+			}
+			startTokenLineNumber = endTokenLineNumber;
+			results.add(readCsvToken());
+		} while (!endOfLine);
+		endLineNumber = endTokenLineNumber;
+		lineNumber++;
+
+		if (cfg.isIgnoreEmptyLines() && (line.isEmpty() || isWhitespaces(line)) && results.size() == 1) {
+			return null;
+		}
+
+		return results;
+	}
+
+	/**
+	 * CSV トークンを読込みます。
+	 *
+	 * @return CSV トークン
+	 * @throws IOException 入出力エラーが発生した場合
+	 */
+	private CsvToken readCsvToken() throws IOException {
+		final StringBuilder buf = new StringBuilder();
+		// 囲み文字設定が有効な場合
+		boolean inQuote = false;	// 囲み項目を処理中であるかどうか
+		boolean enclosed = false;	// 囲み項目の可能性を示唆します。
+		boolean escaped = false;	// 直前の文字がエスケープ文字かどうか(囲み文字の中)
+		boolean _escaped = false;	// 直前の文字がエスケープ文字かどうか(囲み文字の外)
+
+		endTokenLineNumber = startTokenLineNumber;
+
+		while (true) {
+			final int c = read();
+			if (cr) {
+				cr = false;
+				escaped = false;
+				if (c == LF) {
+					if (inQuote) {
+						buf.append((char) c);
+					}
+					continue;
+				}
+			} else if (_escaped && c == cfg.getSeparator()) {
+				buf.append((char) c);
+				_escaped = false;
+				continue;
+			}
+			_escaped = false;
+			if (c == -1) {
+				endOfLine = true;
+//				if (!endOfFile) {
+//					endLineNumber++;
+//				}
+				endOfFile = true;
+				break;
+			}
+
+			// 囲み文字の外(外側)の場合
+			if (!inQuote) {
+				// 区切り文字
+				if (c == cfg.getSeparator()) {
+					break;
+				// CR
+				} else if (c == CR) {
+					endOfLine = true;
+					cr = true;
+					break;
+				// LF
+				} else if (c == LF) {
+					endOfLine = true;
+					break;
+				// 囲み文字
+				} else if (!cfg.isQuoteDisabled() && !enclosed && c == cfg.getQuote()) {
+					if (isWhitespaces(buf)) {
+						inQuote = true;
+					}
+				// エスケープ文字
+				} else if (cfg.isQuoteDisabled() && !cfg.isEscapeDisabled() && c == cfg.getEscape()) {
+					_escaped = true;
+				}
+			// 囲み文字の中(内側)の場合
+			} else {
+				// 囲み文字とエスケープ文字が同一の場合
+				if (!cfg.isEscapeDisabled() && cfg.getQuote() == cfg.getEscape()) {
+					// 直前の文字がエスケープ文字の場合
+					if (escaped) {
+						// エスケープ文字直後が区切り文字の場合
+						if (c == cfg.getSeparator()) {
+							break;
+						} else if (c == CR) {
+							endOfLine = true;
+							cr = true;
+							break;
+						} else if (c == LF) {
+							endOfLine = true;
+							break;
+						} else if (c == cfg.getEscape()) {
+							escaped = false;
+							buf.append((char) c);
+							continue;
+						}
+					// 直前の文字がない場合や直前の文字がエスケープ文字ではない場合に、現在の文字がエスケープ文字(囲み文字と同一)の場合
+					} else if (c == cfg.getEscape()) {
+						escaped = true;
+						buf.append((char) c);
+						continue;
+					}
+				}
+
+				// 囲み文字
+				if (c == cfg.getQuote()) {
+					if (escaped) {
+						// 直前がエスケープ文字の場合
+						escaped = false;
+					} else {
+						inQuote = false;
+						enclosed = true;
+					}
+				// CR
+				} else if (c == CR) {
+					cr = true;
+					endTokenLineNumber++;
+				// LF
+				} else if (c == LF) {
+					endTokenLineNumber++;
+				}
+
+				if (!cfg.isEscapeDisabled() && c == cfg.getEscape()) {
+					escaped = true;
+				} else {
+					escaped = false;
+				}
+			}
+
+			buf.append((char) c);
+		}
+
+		if (escaped) {
+			enclosed = true;
+		}
+
+		String value = buf.toString();
+
+		// 囲み項目かどうかの判定
+		if (enclosed) {
+			// 最後の " 以降にホワイトスペース以外の文字がある場合は囲み項目ではない
+			final int i = value.lastIndexOf(cfg.getQuote()) + 1;
+			assert i > 0;
+			if (i < value.length() && !isWhitespaces(value.substring(i + 1))) {
+				enclosed = false;
+			}
+		}
+
+		if (cfg.isIgnoreLeadingWhitespaces() || enclosed) {
+			value = removeLeadingWhitespaces(value);
+		}
+		if (cfg.isIgnoreTrailingWhitespaces() || enclosed) {
+			value = removeTrailingWhitespaces(value);
+		}
+		if (enclosed) {
+			// 囲み文字を除去します。
+			value = value.substring(1, value.length() - 1);
+			// テキスト内の改行文字列を置換する必要がある場合は置換を行います。
+			if (cfg.getBreakString() != null) {
+				value = value.replaceAll("\r\n|\r|\n", cfg.getBreakString());
+			}
+			// エスケープ文字が有効な場合は非エスケープ化します。
+			if (!cfg.isEscapeDisabled()) {
+				value = unescapeQuote(value);
+			}
+		} else {
+			if (cfg.getNullString() != null) {
+				if (cfg.isIgnoreCaseNullString()) {
+					if (cfg.getNullString().equalsIgnoreCase(value)) {
+						value = null;
+					}
+				} else {
+					if (cfg.getNullString().equals(value)) {
+						value = null;
+					}
+				}
+			}
+			if (value != null && !cfg.isEscapeDisabled()) {
+				value = unescapeSeparator(value);
+			}
+		}
+
+		return new SimpleCsvToken(value, startTokenLineNumber, endTokenLineNumber, enclosed);
+	}
+
+	/**
+	 * 指定された CSV トークンを非エスケープ化して返します。
+	 *
+	 * @param value CSV トークン
+	 * @return 変換された CSV トークン
+	 */
+	private String unescapeQuote(final String value) {
+		return value.replace(
+				new StringBuilder(2).append(cfg.getEscape()).append(cfg.getQuote()),
+				new StringBuilder(1).append(cfg.getQuote())
+			);
+	}
+
+	private String unescapeSeparator(final String value) {
+		return value.replace(
+				new StringBuilder(2).append(cfg.getEscape()).append(cfg.getSeparator()),
+				new StringBuilder(1).append(cfg.getSeparator())
+			);
+	}
+
+	// ------------------------------------------------------------------------
+
+/*
+	public void reset() throws IOException {
+		synchronized (in) {
+			ensureOpen();
+			in.reset();
+			line = null;
+			nextChar = -1;
+			pos = 0;
+			skiped = false;
+			startTokenLineNumber = endTokenLineNumber = startLineNumber = endLineNumber = lineNumber = 0;
+			endOfFile = false;
+			endOfLine = false;
+			cr = false;
+		}
+	}
+*/
+
+	@Override
+	public void close() throws IOException {
+		synchronized (this) {
+			in.close();
+			in = null;
+			cfg = null;
+			line = null;
+		}
+	}
+
+	// ------------------------------------------------------------------------
+
+	/**
+	 * 指定された文字列がホワイトスペースのみで構成されているかどうかを返します。
+	 *
+	 * @param value 文字列
+	 * @return 指定された文字列がホワイトスペースのみで構成されている場合は {@code true}。それ以外の場合は {@code false}
+	 */
+	private static boolean isWhitespaces(final CharSequence value) {
+		final int len = value.length();
+		for (int i = 0; i < len; i++) {
+			if (!Character.isWhitespace(value.charAt(i))) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	private static String removeLeadingWhitespaces(final String value) {
+		final int len = value.length();
+		int pos = -1;
+		for (int i = 0; i < len; i++) {
+			if (!Character.isWhitespace(value.charAt(i))) {
+				pos = i;
+				break;
+			}
+		}
+		if (pos == -1) {
+			return "";
+		}
+		if (pos > 0) {
+			return value.substring(pos);
+		}
+		return value;
+	}
+
+	private static String removeTrailingWhitespaces(final String value) {
+		final int start = value.length() - 1;
+		int pos = -1;
+		for (int i = start; i >= 0; i--) {
+			if (!Character.isWhitespace(value.charAt(i))) {
+				pos = i;
+				break;
+			}
+		}
+		if (pos == -1) {
+			return "";
+		}
+		if (pos != start) {
+			return value.substring(0, pos + 1);
+		}
+		return value;
+	}
+
+}
