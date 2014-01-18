@@ -7,6 +7,8 @@ target/*
 core/target/*
 legacy/target/*
 
+cobertura.ser
+
 # MacOS Files
 .DS_Store
 
