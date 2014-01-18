@@ -3,7 +3,7 @@
  -----
  杉澤 浩二
  -----
- 2009/10/20
+ 2014/01/18
  -----
 
 ~~ http://maven.apache.org/doxia/references/apt-format.html
@@ -137,7 +137,7 @@ OrangeSignal CSV とは
 
 ダウンロード
 
-  OrangeSignal CSV は、OrangeSignal の{{{http://sourceforge.jp/projects/orangesignal/releases/}ダウンロードページ}}からダウンロードできます。
+  OrangeSignal CSV は、OrangeSignal の{{{https://github.com/orangesignal/orangesignal-csv/releases}ダウンロードページ}}からダウンロードできます。
 
 使い方
 
