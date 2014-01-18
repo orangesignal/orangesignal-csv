@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="${project.name}">
+
 	<skin>
-		<groupId>jp.sf.orangesignal.maven.skins</groupId>
-		<artifactId>maven-orangesignal-skin</artifactId>
-		<version>0.9.0</version>
+		<groupId>org.apache.maven.skins</groupId>
+		<artifactId>maven-fluido-skin</artifactId>
+		<version>1.3.1</version>
 	</skin>
+
 	<bannerLeft>
 		<name>${project.name}</name>
 		<href>${project.url}</href>
@@ -15,27 +17,19 @@
 		</links>
 		<menu name="ホーム">  
 			<item name="概要"               href="index.html" />
-			<item name="ダウンロード"       href="http://sourceforge.jp/projects/orangesignal/releases/" />
+			<item name="ダウンロード"       href="https://github.com/orangesignal/orangesignal-csv/releases" />
 			<item name="ユーザーガイド"     href="userguide.html" />
 			<item name="Javadoc (リリース)" href="api-release/index.html" />
-		</menu>
-		<menu name="サポート">
-			<item name="フォーラム (掲示板)" href="http://sourceforge.jp/projects/orangesignal/forums/" />
-			<item name="メーリングリスト"    href="mail-lists.html" />
-			<item name="課題追跡"            href="issue-tracking.html" />
 		</menu>
 		<menu name="開発者向け">
 			<item name="課題追跡"           href="issue-tracking.html"  />
 			<item name="プロジェクトチーム" href="team-list.html"  />
 			<item name="ソースリポジトリ"   href="source-repository.html"  />
-			<item name="Javadoc (SVN 最新)" href="apidocs/index.html" />
+			<item name="Javadoc (開発)" href="apidocs/index.html" />
 		</menu>
 		<menu ref="reports" />
 <!-- 
 		<menu ref="parent" />
  -->
 	</body>
-	<poweredBy>
-		<logo name="SourceForge.JP" href="http://sourceforge.jp/" img="http://sourceforge.jp/sflogo.php?group_id=4386&amp;type=1"  />
-	</poweredBy>
 </project>
