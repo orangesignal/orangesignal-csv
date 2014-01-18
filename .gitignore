@@ -16,6 +16,9 @@ legacy/target/*
 org.eclipse.*.prefs
 */.settings/*
 
-# IntelliJ Files
+# IDEA artifacts and output dirs
 *.iml
-.idea/*
+*.ipr
+*.iws
+.idea
+atlassian-ide-plugin.xml
