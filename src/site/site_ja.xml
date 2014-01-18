@@ -6,6 +6,13 @@
 		<artifactId>reflow-maven-skin</artifactId>
 		<version>1.0.0</version>
 	</skin>
+<!-- 
+	<custom>
+		<reflowSkin>
+			<theme>bootswatch-cyborg</theme>
+		</reflowSkin>
+	</custom>
+ -->
 
 	<bannerLeft>
 		<name>${project.name}</name>
@@ -13,7 +20,7 @@
 	</bannerLeft>
 	<body>
 		<links>
-			<item name="OrangeSignal" href="../" />
+			<item name="GitHub" href="https://github.com/orangesignal/orangesignal-csv" />
 		</links>
 		<menu name="ホーム">  
 			<item name="概要"               href="index.html" />
