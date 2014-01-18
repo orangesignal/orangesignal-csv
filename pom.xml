@@ -183,10 +183,6 @@
 				<artifactId>maven-javadoc-plugin</artifactId>
 				<version>2.9.1</version>
 				<configuration>
-<!-- 
-					<charset>UTF-8</charset>
-					<source>1.6</source>
- -->
 					<splitindex>true</splitindex>
 					<docfilessubdirs>true</docfilessubdirs>
 				</configuration>
@@ -266,22 +262,13 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>cobertura-maven-plugin</artifactId>
-				<version>2.0</version>
+				<version>2.6</version>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
 				<version>2.9.1</version>
 				<configuration>
-					<javaApiLinks>
-						<property>
-							<name>api_1.6</name>
-							<value>http://docs.oracle.com/javase/6/docs/api/</value>
-						</property>
-					</javaApiLinks>
-					<detectLinks>true</detectLinks>
-					<charset>UTF-8</charset>
-					<source>${maven.compile.source}</source>
 					<splitindex>true</splitindex>
 					<docfilessubdirs>true</docfilessubdirs>
 				</configuration>
