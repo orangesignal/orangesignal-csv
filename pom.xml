@@ -15,7 +15,7 @@
 	</modules>
 
 	<name>OrangeSignal CSV</name>
-	<url>http://orangesignal.sourceforge.jp/csv/</url>
+	<url>http://orangesignal.github.io/orangesignal-csv/</url>
 	<description><![CDATA[OrangeSignal CSV は CSV 入出力操作を簡易化させる高機能で便利なライブラリを提供します。]]></description>
 	<inceptionYear>2009</inceptionYear>
 
@@ -36,7 +36,6 @@
 			<id>sugisawa</id>
 			<name>Koji Sugisawa</name>
 			<url>https://github.com/orangesignal</url>
-			<email>sugisawa@users.sourceforge.jp</email>
 			<timezone>+9</timezone>
 		</developer>
 	</developers>
@@ -56,6 +55,21 @@
 		<connection>scm:git:git://github.com/orangesignal/orangesignal-csv.git</connection>
 		<developerConnection>scm:git:git@github.com:orangesignal/orangesignal-csv.git</developerConnection>
 	</scm>
+
+	<distributionManagement>
+		<snapshotRepository>
+			<id>sonatype-nexus-snapshots</id>
+			<name>Sonatype Nexus Snapshots Repository</name>
+			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+			<uniqueVersion>false</uniqueVersion>
+		</snapshotRepository>
+		<repository>
+			<id>sonatype-nexus-staging</id>
+			<name>Sonatype Nexus Staging Repository</name>
+			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
+			<uniqueVersion>false</uniqueVersion>
+		</repository>
+	</distributionManagement>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -84,6 +98,30 @@
 			</plugin>
 		</plugins>
 	</build>
+
+	<profiles>
+		<profile>
+			<id>sign</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-gpg-plugin</artifactId>
+						<version>1.4</version>
+						<executions>
+							<execution>
+								<id>sign-artifacts</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>sign</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 
 	<repositories>
 		<repository>
