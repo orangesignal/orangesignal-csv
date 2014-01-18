@@ -231,6 +231,19 @@
 				<configuration>
 					<locales>ja</locales>
 				</configuration>
+				<dependencies>
+					<dependency>
+						<groupId>lt.velykis.maven.skins</groupId>
+						<artifactId>reflow-velocity-tools</artifactId>
+						<version>1.0.0</version>
+					</dependency>
+					<!-- Reflow skin requires Velocity >= 1.7  -->
+					<dependency>
+						<groupId>org.apache.velocity</groupId>
+						<artifactId>velocity</artifactId>
+						<version>1.7</version>
+					</dependency>
+				</dependencies>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -268,16 +281,13 @@
 				<reportSets>
 					<reportSet>
 						<reports>
-							<report>plugin-management</report>
-							<report>plugins</report>
-							<report>scm</report>
 							<report>summary</report>
-							<report>project-team</report>
+							<report>dependency-info</report>
 							<report>license</report>
-							<report>mailing-list</report>
-							<report>dependencies</report>
+							<report>scm</report>
 							<report>issue-tracking</report>
-							<report>cim</report>
+							<report>dependencies</report>
+							<report>distribution-management</report>
 						</reports>
 					</reportSet>
 				</reportSets>
