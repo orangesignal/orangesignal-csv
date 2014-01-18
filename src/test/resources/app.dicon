@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.4//EN" "http://www.seasar.org/dtd/components24.dtd">
+<components>
+	<include path="j2ee.dicon"/>
+
+	<component name="cfg" class="com.orangesignal.csv.CsvConfig" instance="prototype">
+		<property name="separator">','</property>
+		<property name="quote">'"'</property>
+		<property name="escape">'\\'</property>
+		<property name="quoteDisabled">false</property>
+		<property name="escapeDisabled">false</property>
+		<property name="breakString">"\n"</property>
+		<property name="nullString">"NULL"</property>
+		<property name="ignoreCaseNullString">true</property>
+		<property name="ignoreLeadingWhitespaces">true</property>
+		<property name="ignoreTrailingWhitespaces">true</property>
+		<property name="ignoreEmptyLines">true</property>
+		<property name="skipLines">0</property>
+		<property name="quotePolicy">@com.orangesignal.csv.QuotePolicy@MINIMAL</property>
+		<property name="lineSeparator">"\r\n"</property>
+	</component>
+
+	<component name="numberFormat" class="java.text.DecimalFormat" instance="prototype">
+		<arg>"0.00"</arg>
+	</component>
+	<component name="dateFormat" class="java.text.SimpleDateFormat" instance="prototype">
+		<arg>"yyyy/MM/dd"</arg>
+	</component>
+
+	<component name="handler" class="com.orangesignal.csv.handlers.ColumnNameMappingBeanListHandler" instance="prototype">
+		<arg>@com.orangesignal.csv.entity.Price@class</arg>
+		<property name="columnMapping">
+			#{
+				"シンボル" : "symbol",
+				"名称"     : "name",
+				"価格"     : "price",
+				"出来高"   : "volume",
+				"日付"     : "date"
+			}
+		</property>
+		<property name="valueParserMapping">
+			#{
+				"price" : numberFormat,
+				"date"  : dateFormat
+			}
+		</property>
+		<property name="valueFormatterMapping">
+			#{
+				"価格" : numberFormat,
+				"日付"  : dateFormat
+			}
+		</property>
+		<property name="offset" >0</property>
+		<property name="limit">1000</property>
+	</component>
+
+	<component name="manager" class="com.orangesignal.csv.manager.CsvBeanManager" instance="prototype">
+		<arg>cfg</arg>
+	</component>
+
+</components>
