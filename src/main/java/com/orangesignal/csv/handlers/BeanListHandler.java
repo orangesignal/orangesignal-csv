@@ -34,7 +34,7 @@ import com.orangesignal.csv.io.CsvBeanWriter;
  * Java プログラム要素のリストと区切り文字形式データアクセスを行うハンドラを提供します。
  * 
  * @author 杉澤 浩二
- * @see {@link com.orangesignal.csv.manager.CsvBeanManager}
+ * @see com.orangesignal.csv.manager.CsvBeanManager
  */
 public class BeanListHandler<T> extends AbstractBeanListHandler<T, CsvBeanTemplate<T>, BeanListHandler<T>> implements CsvBeanOperation<BeanListHandler<T>> {
 

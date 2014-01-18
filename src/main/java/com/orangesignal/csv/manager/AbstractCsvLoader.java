@@ -59,7 +59,7 @@ public abstract class AbstractCsvLoader<T, O extends AbstractCsvBeanTemplate<T, 
 	 * コンストラクタです。
 	 *
 	 * @param cfg 区切り文字形式情報
-	 * @return 区切り文字形式データリストのデータアクセスハンドラ
+	 * @param handler 区切り文字形式データリストのデータアクセスハンドラ
 	 * @throws IllegalArgumentException {@code cfg} または {@code handler} が {@code null} の場合
 	 * @since 1.3.0
 	 */

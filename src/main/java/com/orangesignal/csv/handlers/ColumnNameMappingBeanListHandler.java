@@ -35,7 +35,7 @@ import com.orangesignal.csv.io.CsvColumnNameMappingBeanWriter;
  * 区切り文字形式データの項目名を基準として Java プログラム要素のリストと区切り文字形式データアクセスを行うハンドラを提供します。
  * 
  * @author 杉澤 浩二
- * @see {@link com.orangesignal.csv.manager.CsvColumnNameMappingBeanManager}
+ * @see com.orangesignal.csv.manager.CsvColumnNameMappingBeanManager
  */
 public class ColumnNameMappingBeanListHandler<T> extends AbstractBeanListHandler<T, CsvColumnNameMappingBeanTemplate<T>, ColumnNameMappingBeanListHandler<T>> implements CsvColumnNameMappingBeanOperation<ColumnNameMappingBeanListHandler<T>> {
 

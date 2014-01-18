@@ -80,7 +80,7 @@ public class CsvEntityWriter<T> implements Closeable, Flushable {
 	 * このメソッドは利便性のために提供しています。
 	 * 
 	 * @param writer 区切り文字形式出力ストリーム
-	 * @param entityClass 区切り文字形式データ注釈要素 {@link CsvEntity} で注釈付けされた Java プログラム要素の型
+	 * @param template Java プログラム要素操作の簡素化ヘルパー
 	 * @return 新しい {@link CsvEntityWriter} のインスタンス
 	 * @throws IllegalArgumentException {@code writer} または {@code template} が {@code null} の場合。
 	 */
@@ -189,7 +189,7 @@ public class CsvEntityWriter<T> implements Closeable, Flushable {
 	 * 指定された Java プログラム要素を区切り文字形式で書き込みます。
 	 * {@code null} が指定された場合は空行が書き込まれます。
 	 * 
-	 * @param bean 書き込む Java プログラム要素。または {@code null}
+	 * @param entity 書き込む Java プログラム要素。または {@code null}
 	 * @return データの出力を行った場合は {@code true} それ以外の場合 (フィルタにより書き込みがスキップされた場合) は {@code false}
 	 * @throws IOException 入出力エラーが発生した場合
 	 */
