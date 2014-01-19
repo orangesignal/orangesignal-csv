@@ -1,9 +1,4 @@
-//start of Disconnectable.java
-//TEXT_STYLE:CODE=Shift_JIS(Japanese):RET_CODE=CRLF
-
 /**
- * Disconnectable.java
- * 
  * Copyright (C) 2001-2002  Michel Ishizuka  All rights reserved.
  * 
  * 以下の条件に同意するならばソースとバイナリ形式の再配布と使用を
@@ -31,45 +26,22 @@
 
 package jp.gr.java_conf.dangan.io;
 
-//import classes and interfaces
-
-//import exceptions
 import java.io.IOException;
 
 /**
- * 接続を解除できるストリームのための
- * インターフェイス。<br>
- * このインターフェイスを実装するストリームは
- * close() は disconnect() を呼ぶべきである。<br>
+ * 接続を解除できるストリームのための インターフェイス。<br>
+ * このインターフェイスを実装するストリームは close() は disconnect() を呼ぶべきである。<br>
  * 
- * <pre>
- * -- revision history --
- * $Log: Disconnectable.java,v $
- * Revision 1.0  2002/07/24 00:00:00  dangan
- * add to version control
- * [maintenance]
- *     タブ廃止
- *     ライセンス文の修正
- *     ソース整備
- *
- * </pre>
- * 
- * @author  $Author: dangan $
+ * @author $Author: dangan $
  * @version $Revision: 1.0 $
  */
-public interface Disconnectable{
+public interface Disconnectable {
 
-    //------------------------------------------------------------------
-    //  original method
-    //------------------------------------------------------------------
-    //  public abstract void disconnect()
-    //------------------------------------------------------------------
-    /**
-     * 接続されていたストリームとの接続を解除する。
-     * 
-     * @exception IOException 入出力エラーが発生した場合
-     */
-    public abstract void disconnect() throws IOException;
+	/**
+	 * 接続されていたストリームとの接続を解除する。
+	 * 
+	 * @exception IOException 入出力エラーが発生した場合
+	 */
+	void disconnect() throws IOException;
 
 }
-//end of Disconnectable.java
