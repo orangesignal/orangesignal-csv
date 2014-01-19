@@ -1,9 +1,4 @@
-//start of BitOutputStream.java
-//TEXT_STYLE:CODE=Shift_JIS(Japanese):RET_CODE=CRLF
-
 /**
- * BitOutputStream.java
- * 
  * Copyright (C) 2001-2002  Michel Ishizuka  All rights reserved.
  * 
  * 以下の条件に同意するならばソースとバイナリ形式の再配布と使用を
@@ -31,18 +26,11 @@
 
 package jp.gr.java_conf.dangan.io;
 
-//import classes and interfaces
+import java.io.IOException;
 import java.io.OutputStream;
 
-//import exceptions
-import java.io.IOException;
-import java.lang.NullPointerException;
-import java.lang.IllegalArgumentException;
-
-
 /**
- * 接続された出力ストリームにビットデータを出力するための
- * 出力ストリームクラス。<br>
+ * 接続された出力ストリームにビットデータを出力するための 出力ストリームクラス。<br>
  * 
  * <pre>
  * -- revision history --
@@ -50,7 +38,7 @@ import java.lang.IllegalArgumentException;
  * Revision 1.1  2002/12/05 00:00:00  dangan
  * [maintenance]
  *     ソース整備
- *
+ * 
  * Revision 1.0  2002/09/11 00:00:00  dangan
  * add to version control
  * [change]
@@ -59,335 +47,253 @@ import java.lang.IllegalArgumentException;
  * [maintenance]
  *     タブ廃止
  *     ライセンス文の修正
- *
+ * 
  * </pre>
  * 
- * @author  $Author: dangan $
+ * @author $Author: dangan $
  * @version $Revision: 1.1 $
  */
-public class BitOutputStream extends OutputStream{
+public class BitOutputStream extends OutputStream {
 
+	/**
+	 * デフォルトおキャッシュサイズ
+	 */
+	private static final int DefaultCacheSize = 1024;
 
-    //------------------------------------------------------------------
-    //  class field
-    //------------------------------------------------------------------
-    //  default
-    //------------------------------------------------------------------
-    //  private static final int DefaultCacheSize
-    //------------------------------------------------------------------
-    /**
-     * デフォルトおキャッシュサイズ
-     */
-    private static final int DefaultCacheSize = 1024;
+	/**
+	 * 接続された出力ストリーム
+	 */
+	private OutputStream out;
 
+	/**
+	 * 速度低下抑止用バイト配列
+	 */
+	private byte[] cache;
 
-    //------------------------------------------------------------------
-    //  instance field
-    //------------------------------------------------------------------
-    //  sink
-    //------------------------------------------------------------------
-    //  private OutputStream out
-    //------------------------------------------------------------------
-    /**
-     * 接続された出力ストリーム
-     */
-    private OutputStream out;
+	/**
+	 * cacheBuffer 内の現在処理位置
+	 */
+	private int cachePosition;
 
+	/**
+	 * ビットバッファ
+	 */
+	private int bitBuffer;
 
-    //------------------------------------------------------------------
-    //  instance field
-    //------------------------------------------------------------------
-    //  cache
-    //------------------------------------------------------------------
-    //  private byte[] cache
-    //  private int    cachePosition
-    //------------------------------------------------------------------
-    /**
-     * 速度低下抑止用バイト配列
-     */
-    private byte[] cache;
+	/**
+	 * bitBuffer の 有効ビット数
+	 */
+	private int bitCount;
 
-    /**
-     * cacheBuffer 内の現在処理位置
-     */
-    private int    cachePosition;
+	// ------------------------------------------------------------------
+	// Constructer
 
+	/**
+	 * 出力ストリーム out へ データをビット単位で 書きこめるようなストリームを構築する。<br>
+	 * キャッシュサイズにはデフォルト値が使用される。
+	 * 
+	 * @param out 出力ストリーム
+	 */
+	public BitOutputStream(final OutputStream out) {
+		this(out, BitOutputStream.DefaultCacheSize);
 
-    //------------------------------------------------------------------
-    //  instance field
-    //------------------------------------------------------------------
-    //  bit buffer
-    //------------------------------------------------------------------
-    //  private int bitBuffer
-    //  private int bitCount
-    //------------------------------------------------------------------
-    /**
-     * ビットバッファ
-     */
-    private int bitBuffer;
+	}
 
-    /**
-     * bitBuffer の 有効ビット数
-     */
-    private int bitCount;
+	/**
+	 * 出力ストリーム out へ データをビット単位で 書きこめるようなストリームを構築する。<br>
+	 * 
+	 * @param out 出力ストリーム
+	 * @param CacheSize キャッシュサイズ
+	 * @exception IllegalArgumentException CacheSize が 4未満の場合、または CacheSize が 4の倍数で無い場合。
+	 */
+	public BitOutputStream(final OutputStream out, final int CacheSize) {
+		if (out != null && 4 <= CacheSize && 0 == (CacheSize & 0x03)) {
+			this.out = out;
+			cache = new byte[CacheSize];
+			cachePosition = 0;
+			bitBuffer = 0;
+			bitCount = 0;
+		} else if (out == null) {
+			throw new NullPointerException("out");
+		} else if (CacheSize < 4) {
+			throw new IllegalArgumentException("CacheSize must be 4 or more.");
+		} else {
+			throw new IllegalArgumentException("CacheSize must be multiple of 4.");
+		}
+	}
 
+	// ------------------------------------------------------------------
+	// method of java.io.OutputStream
 
-    //------------------------------------------------------------------
-    //  constructer
-    //------------------------------------------------------------------
-    //  private BitOutputStream()
-    //  public BitOutputStream( OutputStream out )
-    //  public BitOutputStream( OutputStream out, int CacheSize )
-    //------------------------------------------------------------------
-    /**
-     * デフォルトコンストラクタ。
-     * 使用不可。
-     */
-    private BitOutputStream(){  }
+	/**
+	 * 接続された出力ストリームに 8ビットのデータを出力する。<br>
+	 * 
+	 * @param data 8ビットのデータ。<br>上位24ビットは無視される。<br>
+	 * @exception IOException 入出力エラーが発生した場合
+	 */
+	@Override
+	public void write(final int data) throws IOException {
+		writeBits(8, data);
+	}
 
-    /**
-     * 出力ストリーム out へ データをビット単位で
-     * 書きこめるようなストリームを構築する。<br>
-     * キャッシュサイズにはデフォルト値が使用される。
-     * 
-     * @param out 出力ストリーム
-     */
-    public BitOutputStream( OutputStream out ){
-        this( out, BitOutputStream.DefaultCacheSize );
+	/**
+	 * 接続された出力ストリームにbufferの内容を連続した 8ビットのデータとして出力する。<br>
+	 * 
+	 * @param buffer 出力すべきデータを格納したバイト配列<br>
+	 * @exception IOException 入出力エラーが発生した場合
+	 */
+	@Override
+	public void write(final byte[] buffer) throws IOException {
+		this.write(buffer, 0, buffer.length);                                 // throws IOException
+	}
 
-    }
+	/**
+	 * 接続された出力ストリームにbufferのindexから lengthバイトの内容を連続した 8ビットのデータ として出力する。<br>
+	 * 
+	 * @param buffer 出力すべきデータを格納したバイト配列
+	 * @param index buffer内のデータ開始位置
+	 * @param length 出力するデータ量(バイト数)
+	 * @exception IOException 入出力エラーが発生した場合
+	 */
+	@Override
+	public void write(final byte[] buffer, int index, int length) throws IOException {
+		if (bitCount % 8 == 0) {
+			flush();                                                       // throws IOException
+			out.write(buffer, index, length);                            // throws IOException
+		} else {
+			while (0 < length--) {
+				writeBits(8, buffer[index++]);                           // throws IOException
+			}
+		}
+	}
 
-    /**
-     * 出力ストリーム out へ データをビット単位で
-     * 書きこめるようなストリームを構築する。<br>
-     * 
-     * @param out       出力ストリーム
-     * @param CacheSize キャッシュサイズ
-     * 
-     * @exception IllegalArgumentException
-     *                   CacheSize が 4未満の場合、または
-     *                   CacheSize が 4の倍数で無い場合。
-     */
-    public BitOutputStream( OutputStream out, int CacheSize ){
-        if( out != null && 4 <= CacheSize && 0 == ( CacheSize & 0x03 ) ){
-            this.out            = out;
-            this.cache          = new byte[ CacheSize ];
-            this.cachePosition  = 0;
-            this.bitBuffer      = 0;
-            this.bitCount       = 0;
-        }else if( out == null ){
-            throw new NullPointerException( "out" );
-        }else if( CacheSize < 4 ){
-            throw new IllegalArgumentException( "CacheSize must be 4 or more." );
-        }else{
-            throw new IllegalArgumentException( "CacheSize must be multiple of 4." );
-        }
-    }
+	// ------------------------------------------------------------------
+	// method of java.io.OutputStream
 
+	/**
+	 * このビット出力ストリームにバッファリングされている 8ビット単位のデータを全て出力先に出力する。 8ビットに満たないデータは出力されないことに注意。<br>
+	 * 
+	 * @exception IOException 入出力エラーが発生した場合
+	 */
+	@Override
+	public void flush() throws IOException {
+		while (8 <= bitCount) {
+			cache[cachePosition++] = (byte) (bitBuffer >> 24);
+			bitBuffer <<= 8;
+			bitCount -= 8;
+		}
 
-    //------------------------------------------------------------------
-    //  method of java.io.OutputStream
-    //------------------------------------------------------------------
-    //  write
-    //------------------------------------------------------------------
-    //  public void write( int data )
-    //  public void write( byte[] buffer )
-    //  public void write( byte[] buffer, int index, int length )
-    //------------------------------------------------------------------
-    /**
-     * 接続された出力ストリームに 8ビットのデータを出力する。<br>
-     * 
-     * @param data 8ビットのデータ。<br>
-     *             上位24ビットは無視される。<br>
-     * 
-     * @exception IOException 入出力エラーが発生した場合
-     */
-    public void write( int data ) throws IOException {
-        this.writeBits( 8, data );
-    }
+		out.write(cache, 0, cachePosition);                    // throws IOException
+		cachePosition = 0;
+		out.flush();                                                       // throws IOException
+	}
 
-    /**
-     * 接続された出力ストリームにbufferの内容を連続した
-     * 8ビットのデータとして出力する。<br>
-     * 
-     * @param buffer 出力すべきデータを格納したバイト配列<br>
-     * 
-     * @exception IOException 入出力エラーが発生した場合
-     */
-    public void write( byte[] buffer ) throws IOException {
-        this.write( buffer, 0, buffer.length );                                 //throws IOException
-    }
+	/**
+	 * この出力ストリームと、接続された出力ストリームを閉じ、 使用していたリソースを開放する。<br>
+	 * 
+	 * @exception IOException 入出力エラーが発生した場合
+	 */
+	@Override
+	public void close() throws IOException {
+		while (0 < bitCount) {
+			cache[cachePosition++] = (byte) (bitBuffer >> 24);
+			bitBuffer <<= 8;
+			bitCount -= 8;
+		}
 
-    /**
-     * 接続された出力ストリームにbufferのindexから
-     * lengthバイトの内容を連続した 8ビットのデータ
-     * として出力する。<br>
-     * 
-     * @param buffer 出力すべきデータを格納したバイト配列
-     * @param index  buffer内のデータ開始位置
-     * @param length 出力するデータ量(バイト数)
-     * 
-     * @exception IOException 入出力エラーが発生した場合
-     */
-    public void write( byte[] buffer, int index, int length )
-                                                           throws IOException {
-        if( this.bitCount % 8 == 0 ){
-            this.flush();                                                       //throws IOException
-            this.out.write( buffer, index, length );                            //throws IOException
-        }else{
-            while( 0 < length-- )
-                this.writeBits( 8, buffer[index++] );                           //throws IOException
-        }
-    }
+		out.write(cache, 0, cachePosition);                    // throws IOException
+		cachePosition = 0;
+		out.flush();                                                       // throws IOException
+		out.close();                                                       // throws IOException
 
+		out = null;
+		cache = null;
+		cachePosition = 0;
+		bitCount = 128;
+		bitBuffer = 0;
+	}
 
-    //------------------------------------------------------------------
-    //  method of java.io.OutputStream
-    //------------------------------------------------------------------
-    //  other
-    //------------------------------------------------------------------
-    //  public void flush()
-    //  public void close()
-    //------------------------------------------------------------------
-    /**
-     * このビット出力ストリームにバッファリングされている
-     * 8ビット単位のデータを全て出力先に出力する。
-     * 8ビットに満たないデータは出力されないことに注意。<br>
-     * 
-     * @exception IOException 入出力エラーが発生した場合
-     */
-    public void flush() throws IOException {
-        while( 8 <= this.bitCount ){
-            this.cache[ this.cachePosition++ ] = (byte)( this.bitBuffer >> 24 );
-            this.bitBuffer <<= 8;
-            this.bitCount  -= 8;
-        }
+	// ------------------------------------------------------------------
+	// original method
 
-        this.out.write( this.cache, 0, this.cachePosition );                    //throws IOException
-        this.cachePosition = 0;
-        this.out.flush();                                                       //throws IOException
-    }
+	/**
+	 * 接続された出力ストリームに1ビットのデータを出力する。<br>
+	 * 
+	 * @param data 1ビットのデータ。<br>上位31ビットは無視される。<br>
+	 * @exception IOException 入出力エラーが発生した場合
+	 */
+	public void writeBit(final int data) throws IOException {
+		bitBuffer |= (data & 0x00000001) << 31 - bitCount;
+		bitCount++;
+		if (32 <= bitCount) {
+			writeOutBitBuffer();                        // throws IOException
+		}
+	}
 
-    /**
-     * この出力ストリームと、接続された出力ストリームを閉じ、
-     * 使用していたリソースを開放する。<br>
-     * 
-     * @exception IOException 入出力エラーが発生した場合
-     */
-    public void close() throws IOException {
-        while( 0 < this.bitCount ){
-            this.cache[ this.cachePosition++ ] = (byte)( this.bitBuffer >> 24 );
-            this.bitBuffer <<= 8;
-            this.bitCount  -= 8;
-        }
+	/**
+	 * 真偽値を接続された出力ストリームに1ビットの データとして出力する。<br>
+	 * true は 1、false は 0として出力する。<br>
+	 * java.io.DataOutput の writeBoolean() とは 互換性が無いので注意すること。<br>
+	 * 
+	 * @param bool 真偽値
+	 * @exception IOException 入出力エラーが発生した場合
+	 */
+	public void writeBoolean(final boolean bool) throws IOException {
+		if (bool) {
+			bitBuffer |= 1 << 31 - bitCount;
+		}
 
-        this.out.write( this.cache, 0, this.cachePosition );                    //throws IOException
-        this.cachePosition = 0;
-        this.out.flush();                                                       //throws IOException
-        this.out.close();                                                       //throws IOException
+		bitCount++;
 
-        this.out            = null;
-        this.cache          = null;
-        this.cachePosition  = 0;
-        this.bitCount       = 128;
-        this.bitBuffer      = 0;
-    }
+		if (32 <= bitCount) {
+			writeOutBitBuffer();                     // throws IOException
+		}
+	}
 
+	/**
+	 * 接続された出力ストリームにビットデータを出力する。<br>
+	 * 
+	 * @param count data の有効ビット数
+	 * @param data ビットデータ
+	 * @exception IOException 入出力エラーが発生した場合
+	 */
+	public void writeBits(int count, final int data) throws IOException {
+		while (0 < count) {
+			final int available = 32 - bitCount;
+			if (count < available) {
+				bitBuffer |= (data & 0xFFFFFFFF >>> 32 - count) << available
+						- count;
+				bitCount += count;
+				count = 0;
+			} else {
+				count -= available;
+				bitBuffer |= data >> count & 0xFFFFFFFF >>> 32 - available;
+				writeOutBitBuffer();
+			}
+		}
+	}
 
-    //------------------------------------------------------------------
-    //  original method
-    //------------------------------------------------------------------
-    //  bit write
-    //------------------------------------------------------------------
-    //  public void writeBit( int data )
-    //  public void writeBoolean( boolean bool )
-    //  public void writeBits( int count, int data )
-    //------------------------------------------------------------------
-    /**
-     * 接続された出力ストリームに1ビットのデータを出力する。<br>
-     * 
-     * @param data 1ビットのデータ。<br>
-     *             上位31ビットは無視される。<br>
-     * 
-     * @exception IOException 入出力エラーが発生した場合
-     */
-    public void writeBit( int data ) throws IOException {
-        this.bitBuffer |= ( data & 0x00000001 ) << 31 - this.bitCount;
-        this.bitCount++;
+	// ------------------------------------------------------------------
+	// local method
 
-        if( 32 <= this.bitCount ) this.writeOutBitBuffer();                        //throws IOException
-    }
+	/**
+	 * ビットバッファに蓄えられたデータを全てキャッシュに 出力し、キャッシュが満ちた場合はキャッシュのデータを 接続された出力ストリームに出力する。<br>
+	 * 
+	 * @exception IOException 入出力エラーが発生した場合
+	 */
+	private void writeOutBitBuffer() throws IOException {
+		cache[cachePosition++] = (byte) (bitBuffer >> 24);
+		cache[cachePosition++] = (byte) (bitBuffer >> 16);
+		cache[cachePosition++] = (byte) (bitBuffer >> 8);
+		cache[cachePosition++] = (byte) bitBuffer;
 
-    /**
-     * 真偽値を接続された出力ストリームに1ビットの
-     * データとして出力する。<br>
-     * true は 1、false は 0として出力する。<br>
-     * java.io.DataOutput の writeBoolean() とは
-     * 互換性が無いので注意すること。<br>
-     * 
-     * @param bool 真偽値
-     * 
-     * @exception IOException 入出力エラーが発生した場合
-     */
-    public void writeBoolean( boolean bool ) throws IOException {
-        if( bool )  this.bitBuffer |= 1 << 31 - this.bitCount;
+		bitBuffer = 0;
+		bitCount = 0;
 
-        this.bitCount++;
-
-        if( 32 <= this.bitCount ) this.writeOutBitBuffer();                     //throws IOException
-    }
-
-    /**
-     * 接続された出力ストリームにビットデータを出力する。<br>
-     * 
-     * @param count data の有効ビット数
-     * @param data  ビットデータ
-     * 
-     * @exception IOException 入出力エラーが発生した場合
-     */
-    public void writeBits( int count, int data ) throws IOException {
-        while( 0 < count ){
-            int available = 32 - this.bitCount;
-            if( count < available ){
-                this.bitBuffer   |= ( data & ( 0xFFFFFFFF >>> 32 - count ) )
-                                                          << available - count;
-                this.bitCount    += count;
-                count            = 0;
-            }else{
-                count          -= available;
-                this.bitBuffer |= data >> count
-                                & ( 0xFFFFFFFF >>> 32 - available );
-                this.writeOutBitBuffer();
-            }
-        }
-    }
-
-    //------------------------------------------------------------------
-    //  local method
-    //------------------------------------------------------------------
-    //  private void writeOutBitBuffer()
-    //------------------------------------------------------------------
-    /**
-     * ビットバッファに蓄えられたデータを全てキャッシュに
-     * 出力し、キャッシュが満ちた場合はキャッシュのデータを
-     * 接続された出力ストリームに出力する。<br>
-     * 
-     * @exception IOException 入出力エラーが発生した場合
-     */
-    private void writeOutBitBuffer() throws IOException {
-        this.cache[ this.cachePosition++ ] = (byte)( this.bitBuffer >> 24 );
-        this.cache[ this.cachePosition++ ] = (byte)( this.bitBuffer >> 16 );
-        this.cache[ this.cachePosition++ ] = (byte)( this.bitBuffer >>  8 );
-        this.cache[ this.cachePosition++ ] = (byte)this.bitBuffer;
-
-        this.bitBuffer = 0;
-        this.bitCount  = 0;
-
-        if( this.cache.length <= this.cachePosition ){
-            this.out.write( this.cache );
-            this.cachePosition = 0;
-        }
-    }
+		if (cache.length <= cachePosition) {
+			out.write(cache);
+			cachePosition = 0;
+		}
+	}
 
 }
-//end of BitOutputStream.java
