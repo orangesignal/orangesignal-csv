@@ -43,7 +43,7 @@ package jp.gr.java_conf.dangan.util.lha;
  * @author $Author: dangan $
  * @version $Revision: 1.0 $
  */
-final class BinaryTreeSearch implements LzssSearchMethod {
+public class BinaryTreeSearch implements LzssSearchMethod {
 
 	/**
 	 * 使用されていない事を示す値。 parent[node] に UNUSED がある場合は node は未使用のnodeである。 small[node], large[node] に UNUSED がある場合は 二分木のそちら側には節が無い事を示す。

@@ -64,7 +64,7 @@ import jp.gr.java_conf.dangan.lang.reflect.Factory;
  * @author $Author: dangan $
  * @version $Revision: 1.0 $
  */
-final class HashAndBinaryTreeSearch implements LzssSearchMethod {
+public class HashAndBinaryTreeSearch implements LzssSearchMethod {
 
 	/**
 	 * 使用されていない事を示す値。 parent[node] に UNUSED がある場合は node は未使用のnodeである。 small[node], large[node] に UNUSED がある場合は node がそちら側の子ノードを持たない無い事を示す。
