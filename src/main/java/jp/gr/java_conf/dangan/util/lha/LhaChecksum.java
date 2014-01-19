@@ -1,9 +1,4 @@
-//start of LhaChecksum.java
-//TEXT_STYLE:CODE=Shift_JIS(Japanese):RET_CODE=CRLF
-
 /**
- * LhaChecksum.java
- * 
  * Copyright (C) 2001-2002  Michel Ishizuka  All rights reserved.
  * 
  * 以下の条件に同意するならばソースとバイナリ形式の再配布と使用を
@@ -31,126 +26,87 @@
 
 package jp.gr.java_conf.dangan.util.lha;
 
-//import classes and interfaces
 import java.util.zip.Checksum;
 
-//import exceptions
-
 /**
- * LHAで使用される 単純な 1バイトのチェックサム値を
- * 算出するためのクラス。
+ * LHAで使用される 単純な 1バイトのチェックサム値を 算出するためのクラス。
  * 
- * <pre>
- * -- revision history --
- * $Log: LhaChecksum.java,v $
- * Revision 1.0  2002/08/05 00:00:00  dangan
- * add to version control
- * [maintanance]
- *     ソース整備
- *     タブ廃止
- *     ライセンス文の修正
- *
- * </pre>
- * 
- * @author  $Author: dangan $
+ * @author $Author: dangan $
  * @version $Revision: 1.0 $
  */
-public class LhaChecksum implements Checksum{
+public class LhaChecksum implements Checksum {
 
+	/**
+	 * チェックサム値
+	 */
+	private int checksum;
 
-    //------------------------------------------------------------------
-    //  instance field
-    //------------------------------------------------------------------
-    //  private int checksum
-    //------------------------------------------------------------------
-    /** 
-     * チェックサム値
-     */
-    private int checksum;
+	// ------------------------------------------------------------------
+	// Constructor
 
+	/**
+	 * 新しい チェックサムクラスを作成する。
+	 */
+	public LhaChecksum() {
+		super();
+		reset();
+	}
 
-    //------------------------------------------------------------------
-    //  constructor
-    //------------------------------------------------------------------
-    //  public LhaChecksum()
-    //------------------------------------------------------------------
-    /**
-     * 新しい チェックサムクラスを作成する。
-     */
-    public LhaChecksum(){
-        super();
-        this.reset();
-    }
+	// ------------------------------------------------------------------
+	// public method
 
+	/**
+	 * buffer で指定したバイト配列で チェックサム値を更新する。 このメソッドは update( buffer, 0, buffer.length ) と同等。
+	 * 
+	 * @param buffer チェックサムを更新するデータを持つバイト配列
+	 */
+	public void update(final byte[] buffer) {
+		this.update(buffer, 0, buffer.length);
+	}
 
-    //------------------------------------------------------------------
-    //  method of java.util.zip.Checksum method
-    //------------------------------------------------------------------
-    //  update
-    //------------------------------------------------------------------
-    //  public void update( int byte8 )
-    //  public void update( byte[] buffer )
-    //  public void update( byte[] buffer, int index, int length )
-    //------------------------------------------------------------------
-    /**
-     * byte8 で指定した 1バイトのデータで チェックサム値を更新する。
-     *
-     * @param byte8 チェックサムを更新する1バイトのデータ
-     */
-    public void update( int byte8 ){
-        this.checksum += byte8;
-    }
+	// ------------------------------------------------------------------
+	// method of java.util.zip.Checksum method
 
-    /**
-     * buffer で指定したバイト配列で チェックサム値を更新する。
-     * このメソッドは
-     *   update( buffer, 0, buffer.length ) 
-     * と同等。
-     * 
-     * @param buffer チェックサムを更新するデータを持つバイト配列
-     */
-    public void update( byte[] buffer ){
-        this.update( buffer, 0, buffer.length );
-    }
+	/**
+	 * byte8 で指定した 1バイトのデータで チェックサム値を更新する。
+	 * 
+	 * @param byte8 チェックサムを更新する1バイトのデータ
+	 */
+	@Override
+	public void update(final int byte8) {
+		checksum += byte8;
+	}
 
-    /**
-     * buffer で指定したバイト配列で チェックサム値を更新する。
-     * 
-     * @param buffer チェックサムを更新するデータを持つバイト配列
-     * @param index  データの開始位置
-     * @param length チェックサムの更新に使うバイト数
-     */
-    public void update( byte[] buffer, int index, int length ){
-        while( 0 < length-- )
-            this.checksum += buffer[index++];
-    }
+	/**
+	 * buffer で指定したバイト配列で チェックサム値を更新する。
+	 * 
+	 * @param buffer チェックサムを更新するデータを持つバイト配列
+	 * @param index データの開始位置
+	 * @param length チェックサムの更新に使うバイト数
+	 */
+	@Override
+	public void update(final byte[] buffer, int index, int length) {
+		while (0 < length--) {
+			checksum += buffer[index++];
+		}
+	}
 
+	/**
+	 * チェックサム値を初期値に設定しなおす。
+	 */
+	@Override
+	public void reset() {
+		checksum = 0;
+	}
 
-    //------------------------------------------------------------------
-    //  method of java.util.zip.Checksum
-    //------------------------------------------------------------------
-    //  other
-    //------------------------------------------------------------------
-    //  public void reset()
-    //  public long getValue()
-    //------------------------------------------------------------------
-    /**
-     * チェックサム値を初期値に設定しなおす。
-     */
-    public void reset(){
-        this.checksum = 0;
-    }
-
-    /**
-     * チェックサム値を得る。
-     * チェックサム値は 1バイトの値であり、 
-     * 0x00～0xFFにマップされる。
-     * 
-     * @return チェックサム値
-     */
-    public long getValue(){
-        return this.checksum & 0xFF;
-    }
+	/**
+	 * チェックサム値を得る。 チェックサム値は 1バイトの値であり、 0x00～0xFFにマップされる。
+	 * 
+	 * @return チェックサム値
+	 */
+	@Override
+	public long getValue() {
+		return checksum & 0xFF;
+	}
 
 }
-//end of LhaChecksum.java
