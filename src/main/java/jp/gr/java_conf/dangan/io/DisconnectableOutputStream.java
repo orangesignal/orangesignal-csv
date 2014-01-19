@@ -1,9 +1,4 @@
-//start of DisconnectableOutputStream.java
-//TEXT_STYLE:CODE=Shift_JIS(Japanese):RET_CODE=CRLF
-
 /**
- * DisconnectableOutputStream.java
- * 
  * Copyright (C) 2001-2002  Michel Ishizuka  All rights reserved.
  * 
  * 以下の条件に同意するならばソースとバイナリ形式の再配布と使用を
@@ -31,18 +26,11 @@
 
 package jp.gr.java_conf.dangan.io;
 
-//import classes and interfaces
-import java.io.OutputStream;
-import jp.gr.java_conf.dangan.io.Disconnectable;
-
-//import exceptions
 import java.io.IOException;
-import java.lang.NullPointerException;
+import java.io.OutputStream;
 
 /**
- * データを処理して出力する出力ストリームと
- * データをデバイスに出力するストリームとの
- * 接続を解除するためのユーティリティクラス。<br>
+ * データを処理して出力する出力ストリームと データをデバイスに出力するストリームとの 接続を解除するためのユーティリティクラス。<br>
  * 
  * <pre>
  * -- revision history --
@@ -56,140 +44,105 @@ import java.lang.NullPointerException;
  * 
  * </pre>
  * 
- * @author  $Author: dangan $
+ * @author $Author: dangan $
  * @version $Revision: 1.0 $
  */
-public class DisconnectableOutputStream extends OutputStream
-                                        implements Disconnectable {
+public class DisconnectableOutputStream extends OutputStream implements Disconnectable {
 
-    //------------------------------------------------------------------
-    //  instance field
-    //------------------------------------------------------------------
-    //  sink
-    //------------------------------------------------------------------
-    //  private OutputStream out
-    //------------------------------------------------------------------
-    /**
-     * 接続された出力ストリーム
-     */
-    private OutputStream out;
+	/**
+	 * 接続された出力ストリーム
+	 */
+	private OutputStream out;
 
+	// ------------------------------------------------------------------
+	// Constructer
 
-    //------------------------------------------------------------------
-    //  constructer
-    //------------------------------------------------------------------
-    //  private DisconnectableOutputStream()
-    //  public DisconnectableOutputStream( OutputStream out )
-    //------------------------------------------------------------------
-    /**
-     * デフォルトコンストラクタ。
-     * 使用不可。
-     */
-    private DisconnectableOutputStream(){   }
+	/**
+	 * out との接続を解除可能な出力ストリームを構築する。
+	 * 
+	 * @param out 出力ストリーム
+	 */
+	public DisconnectableOutputStream(final OutputStream out) {
+		if (out != null) {
+			this.out = out;
+		} else {
+			throw new NullPointerException("out");
+		}
+	}
 
-    /**
-     * out との接続を解除可能な出力ストリームを構築する。
-     * 
-     * @param out 出力ストリーム
-     */
-    public DisconnectableOutputStream( OutputStream out ){
-        if( out != null ){
-            this.out = out;
-        }else{
-            throw new NullPointerException( "out" );
-        }
-    }
+	// ------------------------------------------------------------------
+	// method of java.io.OutputStream method
 
+	/**
+	 * 接続された出力ストリームに 1バイトのデータを出力する。<br>
+	 * 
+	 * @param data 書きこまれるべき 1バイトのデータ。<br>
+	 * 一般的に上位3バイトは無視される。<br>
+	 * 
+	 * @exception IOException 入出力エラーが発生した場合
+	 */
+	@Override
+	public void write(final int data) throws IOException {
+		out.write(data);                                                 // throws IOException
+	}
 
-    //------------------------------------------------------------------
-    //  method of java.io.OutputStream method
-    //------------------------------------------------------------------
-    //  write
-    //------------------------------------------------------------------
-    //  public void write( int data )
-    //  public void write( byte[] buffer )
-    //  public void write( byte[] buffer, int index, int length )
-    //------------------------------------------------------------------
-    /**
-     * 接続された出力ストリームに 1バイトのデータを出力する。<br>
-     * 
-     * @param data 書きこまれるべき 1バイトのデータ。<br>
-     *             一般的に上位3バイトは無視される。<br>
-     * 
-     * @exception IOException 入出力エラーが発生した場合
-     */
-    public void write( int data ) throws IOException {
-        this.out.write( data );                                                 //throws IOException
-    }
+	/**
+	 * 接続された出力ストリームに buffer内のデータを 全て出力する。<br>
+	 * 
+	 * @param buffer 書きこまれるべきデータを格納した バイト配列。<br>
+	 * 
+	 * @exception IOException 入出力エラーが発生した場合
+	 */
+	@Override
+	public void write(final byte[] buffer) throws IOException {
+		out.write(buffer, 0, buffer.length);                             // throws IOException
+	}
 
-    /**
-     * 接続された出力ストリームに buffer内のデータを
-     * 全て出力する。<br>
-     * 
-     * @param buffer 書きこまれるべきデータを格納した
-     *               バイト配列。<br>
-     * 
-     * @exception IOException 入出力エラーが発生した場合
-     */
-    public void write( byte[] buffer ) throws IOException {
-        this.out.write( buffer, 0, buffer.length );                             //throws IOException
-    }
+	/**
+	 * 接続された出力ストリームに buffer内のデータを indexで指定された位置から lengthバイト出力する。<br>
+	 * 
+	 * @param buffer 書きこまれるべきデータを格納した バイト配列。<br>
+	 * @param index buffer内の書きこむべきデータの開始位置。<br>
+	 * @param length 書きこむべきデータ量。<br>
+	 * 
+	 * @exception IOException 入出力エラーが発生した場合
+	 */
+	@Override
+	public void write(final byte[] buffer, final int index, final int length) throws IOException {
+		out.write(buffer, index, length);                                // throws IOException
+	}
 
-    /**
-     * 接続された出力ストリームに buffer内のデータを
-     * indexで指定された位置から lengthバイト出力する。<br>
-     * 
-     * @param buffer 書きこまれるべきデータを格納した
-     *               バイト配列。<br>
-     * @param index  buffer内の書きこむべきデータの開始位置。<br>
-     * @param length 書きこむべきデータ量。<br>
-     * 
-     * @exception IOException 入出力エラーが発生した場合
-     */
-    public void write( byte[] buffer, int index, int length )
-                                                           throws IOException {
-        this.out.write( buffer, index, length );                                //throws IOException
-    }
+	// ------------------------------------------------------------------
+	// method of java.io.OutputStream
 
+	/**
+	 * 接続された出力ストリームに蓄えられたデータを全て出力する ように指示する。<br>
+	 * 
+	 * @exception IOException 入出力エラーが発生した場合
+	 */
+	@Override
+	public void flush() throws IOException {
+		out.flush();
+	}
 
-    //------------------------------------------------------------------
-    //  method of java.io.OutputStream
-    //------------------------------------------------------------------
-    //  other
-    //------------------------------------------------------------------
-    //  public void flush()
-    //  public void close()
-    //------------------------------------------------------------------
-    /**
-     * 接続された出力ストリームに蓄えられたデータを全て出力する
-     * ように指示する。<br>
-     * 
-     * @exception IOException 入出力エラーが発生した場合
-     */
-    public void flush() throws IOException {
-        this.out.flush();
-    }
+	/**
+	 * 接続された出力ストリームとの接続を解除する。<br>
+	 * このメソッドは disconnect() を呼び出すだけである。<br>
+	 */
+	@Override
+	public void close() {
+		disconnect();
+	}
 
-    /**
-     * 接続された出力ストリームとの接続を解除する。<br>
-     * このメソッドは disconnect() を呼び出すだけである。<br>
-     */
-    public void close(){
-        this.disconnect();
-    }
+	// ------------------------------------------------------------------
+	// method of jp.gr.java_conf.dangan.io.Disconnectable
 
-
-    //------------------------------------------------------------------
-    //  method of jp.gr.java_conf.dangan.io.Disconnectable
-    //------------------------------------------------------------------
-    //  public void disconnect()
-    //------------------------------------------------------------------
-    /**
-     * 接続された出力ストリームとの接続を解除する。<br>
-     */
-    public void disconnect(){
-        this.out = null;
-    }
+	/**
+	 * 接続された出力ストリームとの接続を解除する。<br>
+	 */
+	@Override
+	public void disconnect() {
+		out = null;
+	}
 
 }
-//end of DisconnectableOutputStream.java
