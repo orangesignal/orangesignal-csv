@@ -1,9 +1,4 @@
-//start of WindowsDate.java
-//TEXT_STYLE:CODE=Shift_JIS(Japanese):RET_CODE=CRLF
-
 /**
- * WindowsDate.java
- * 
  * Copyright (C) 2002  Michel Ishizuka  All rights reserved.
  * 
  * 以下の条件に同意するならばソースとバイナリ形式の再配布と使用を
@@ -31,21 +26,13 @@
 
 package jp.gr.java_conf.dangan.util;
 
-//import classes and interfaces
 import java.util.Date;
-import java.lang.Cloneable;
-
-//import exceptions
-import java.lang.IllegalArgumentException;
 
 /**
  * WindowsのFILETIME形式の情報を扱うDateの派生クラス。<br>
- * FILETIME は 1601年 1月 1日 0時0分0秒からの経過時間を
- * 100ナノ秒単位で持つ64ビット値。<br>
- * このクラスでは FILETIME を long(64ビット値)として扱うときは
- * 基本的に符号無しとみなす。<br>
- * 1601年 1月 1日 0時0分0秒以前の時間を扱いたい場合は
- * WindowsDate( Date date ) か、WindowsDate.setTime( long time )を使用する。<br>
+ * FILETIME は 1601年 1月 1日 0時0分0秒からの経過時間を 100ナノ秒単位で持つ64ビット値。<br>
+ * このクラスでは FILETIME を long(64ビット値)として扱うときは 基本的に符号無しとみなす。<br>
+ * 1601年 1月 1日 0時0分0秒以前の時間を扱いたい場合は WindowsDate( Date date ) か、WindowsDate.setTime( long time )を使用する。<br>
  * 
  * <pre>
  * -- revision history --
@@ -54,7 +41,7 @@ import java.lang.IllegalArgumentException;
  * [maintenance]
  *     javadoc コメントのスペルミスを修正。
  *     ソース整備
- *
+ * 
  * Revision 1.0  2002/08/05 00:00:00  dangan
  * add to version control
  * [bug fix] 
@@ -64,348 +51,262 @@ import java.lang.IllegalArgumentException;
  * [maintenance]
  *     タブの廃止
  *     ライセンス文の修正
- *
+ * 
  * </pre>
  * 
- * @author  $Author: dangan $
+ * @author $Author: dangan $
  * @version $Revision: 1.1 $
  */
-public class WindowsDate extends Date
-                         implements Cloneable{
+@SuppressWarnings("serial")
+public class WindowsDate extends Date implements Cloneable {
 
+	/**
+	 * FILETIME形式のデータと、java.util.Date.getTime() で 得られる時間形式との時間差を 100ナノセカンド単位で示した数値。 なお、閏秒等は考慮に入れていない。
+	 */
+	public static final long TIME_DIFFERENCE = 0x19DB1DED53E8000L;
 
-    //------------------------------------------------------------------
-    //  class field
-    //------------------------------------------------------------------
-    //  public static final long TIME_DIFFERENCE
-    //------------------------------------------------------------------
-    /**
-     * FILETIME形式のデータと、java.util.Date.getTime() で
-     * 得られる時間形式との時間差を 100ナノセカンド単位で示した数値。
-     * なお、閏秒等は考慮に入れていない。
-     */
-    public static final long TIME_DIFFERENCE = 0x19DB1DED53E8000L;
+	/**
+	 * java.util.Date では保持できない ナノ秒単位の時間を保持するために用いる。
+	 */
+	private int nanoSecounds;
 
+	// ------------------------------------------------------------------
+	// Constructor
 
-    //------------------------------------------------------------------
-    //  instance field
-    //------------------------------------------------------------------
-    //  private int NanoSecounds
-    //------------------------------------------------------------------
-    /**
-     * java.util.Date では保持できない 
-     * ナノ秒単位の時間を保持するために用いる。
-     */
-    private int NanoSecounds;
+	/**
+	 * デフォルトコンストラクタ。 現在の時間情報を持つ WindowsDateを構築する。 ナノ秒単位の時間は取得できないため、0に設定される。
+	 * 
+	 * @exception IllegalArgumentException 現在の時間が FILETIME 形式で表現できる 範囲外だった場合。
+	 */
+	public WindowsDate() {
+		super();
+		nanoSecounds = 0;
+		checkRange();
+	}
 
+	/**
+	 * dateで示される時間を表す WindowsDateを構築する。<br>
+	 * dateが WindowsDate のインスタンスならば ナノ秒単位の情報もコピーされるが、それ以外の場合は ナノ秒単位の情報には 0 が設定される。
+	 * 
+	 * @param date 新しく構築される WindowsDate の元となる時間情報を持つ Date のオブジェクト
+	 * @exception IllegalArgumentException 現在の時間が FILETIME 形式で表現できる 範囲外だった場合。
+	 */
+	public WindowsDate(final Date date) {
+		super(date.getTime());
+		if (date instanceof WindowsDate) {
+			nanoSecounds = ((WindowsDate) date).nanoSecounds;
+		} else {
+			nanoSecounds = 0;
+			checkRange();
+		}
+	}
 
-    //------------------------------------------------------------------
-    //  constructor
-    //------------------------------------------------------------------
-    //  public WindowsDate()
-    //  public WindowsDate( Date date )
-    //  public WindowsDate( long time )
-    //------------------------------------------------------------------
-    /**
-     * デフォルトコンストラクタ。
-     * 現在の時間情報を持つ WindowsDateを構築する。
-     * ナノ秒単位の時間は取得できないため、0に設定される。
-     * 
-     * @exception IllegalArgumentException
-     *                  現在の時間が FILETIME 形式で表現できる
-     *                  範囲外だった場合。
-     */
-    public WindowsDate(){
-        super();
-        this.NanoSecounds = 0;
+	/**
+	 * 符号無し64ビットのFILETIME形式の時間情報から 新しいWindowsDateを構築する。<br>
+	 * 
+	 * @param time FILETIME形式の時間情報
+	 */
+	public WindowsDate(final long time) {
+		super(0 <= time ? (time - WindowsDate.TIME_DIFFERENCE) / 10000L : ((time >>> 1) - (WindowsDate.TIME_DIFFERENCE >>> 1)) / 5000L);
+		nanoSecounds = (int) ((time >>> 1) % 5000L * 2 + (time & 1)) * 100;
+	}
 
-        this.checkRange();
-    }
+	/**
+	 * このオブジェクトのコピーを返す。
+	 * 
+	 * @return このWindowsDateオブジェクトの複製
+	 */
+	@Override
+	public Object clone() {
+		return new WindowsDate(this);
+	}
 
-    /**
-     * dateで示される時間を表す WindowsDateを構築する。<br>
-     * dateが WindowsDate のインスタンスならば
-     * ナノ秒単位の情報もコピーされるが、それ以外の場合は
-     * ナノ秒単位の情報には 0 が設定される。
-     * 
-     * @param date 新しく構築される WindowsDate の元となる時間情報を持つ 
-     *             Date のオブジェクト
-     * 
-     * @exception IllegalArgumentException
-     *                  現在の時間が FILETIME 形式で表現できる
-     *                  範囲外だった場合。
-     */
-    public WindowsDate( Date date ){
-        super( date.getTime() );
-        if( date instanceof WindowsDate ){
-            this.NanoSecounds = ((WindowsDate)date).NanoSecounds;
-        }else{
-            this.NanoSecounds = 0;
-            this.checkRange();
-        }
-    }
+	/**
+	 * この WindowsDate の示す年を year で 指定された値に1900を足したものに設定する。<br>
+	 * このメソッドは範囲チェックを行うだけのために存在する。<br>
+	 * 
+	 * @param year 1900を足すことで西暦を表すような 年の値
+	 * @exception IllegalArgumentException year に変更したところ FILETIME形式で扱えない 範囲の時間になった場合
+	 * @deprecated
+	 */
+	@SuppressWarnings("deprecation")
+	@Deprecated
+	@Override
+	public void setYear(final int year) {
+		final long temp = getTime();
 
-    /**
-     * 符号無し64ビットのFILETIME形式の時間情報から
-     * 新しいWindowsDateを構築する。<br>
-     * 
-     * @param time FILETIME形式の時間情報
-     */
-    public WindowsDate( long time ){
-        super( 0 <= time 
-         ? ( time - WindowsDate.TIME_DIFFERENCE ) / 10000L
-         : ( ( time >>> 1 ) - ( WindowsDate.TIME_DIFFERENCE >>> 1 ) ) / 5000L );
+		try {
+			super.setYear(year);
+			checkRange();
+		} catch (final IllegalArgumentException exception) {
+			setTime(temp);
+			throw exception;
+		}
+	}
 
-        this.NanoSecounds = 
-                 (int)( ( time >>> 1 ) % 5000L * 2 + ( time & 1 ) ) * 100;
-    }
+	/**
+	 * この WindowsDate の示す月を month で指定された値に設定する。<br>
+	 * このメソッドは範囲チェックを行うだけのために存在する。<br>
+	 * 
+	 * @param month 0が1月、1が2月を示すような月の値
+	 * @exception IllegalArgumentException month に変更したところ FILETIME形式で扱えない 範囲の時間になった場合
+	 * @deprecated
+	 */
+	@SuppressWarnings("deprecation")
+	@Deprecated
+	@Override
+	public void setMonth(final int month) {
+		final long temp = getTime();
 
+		try {
+			super.setMonth(month);
+			checkRange();
+		} catch (final IllegalArgumentException exception) {
+			setTime(temp);
+			throw exception;
+		}
+	}
 
-    //------------------------------------------------------------------
-    //  method of java.lang.Cloneable
-    //------------------------------------------------------------------
-    //  public Object clone()
-    //------------------------------------------------------------------
-    /**
-     * このオブジェクトのコピーを返す。
-     * 
-     * @return このWindowsDateオブジェクトの複製
-     */
-    public Object clone(){
-        return new WindowsDate( this );
-    }
+	/**
+	 * この WindowsDate の示す 一ヶ月の 中での何日目かを date で指定された値に設定する。<br>
+	 * このメソッドは範囲チェックを行うだけのために存在する。<br>
+	 * 
+	 * @param date 1が1日、2が2日を示すような日の値
+	 * @exception IllegalArgumentException date に変更したところ FILETIME形式で扱えない 範囲の時間になった場合
+	 * @deprecated
+	 */
+	@SuppressWarnings("deprecation")
+	@Deprecated
+	@Override
+	public void setDate(final int date) {
+		final long temp = getTime();
 
+		try {
+			super.setDate(date);
+			checkRange();
+		} catch (final IllegalArgumentException exception) {
+			setTime(temp);
+			throw exception;
+		}
+	}
 
-    //------------------------------------------------------------------
-    //  method of java.util.Date
-    //------------------------------------------------------------------
-    //  set method with range check
-    //------------------------------------------------------------------
-    //  public void setYear( int year )
-    //  public void setMonth( int month )
-    //  public void setDate( int day )
-    //  public void setHours( int hour )
-    //  public void setMinutes( int minute )
-    //  public void setSecounds( int secound )
-    //  public void setTime( long time )
-    //------------------------------------------------------------------
-    /**
-     * この WindowsDate の示す年を year で
-     * 指定された値に1900を足したものに設定する。<br>
-     * このメソッドは範囲チェックを行うだけのために存在する。<br>
-     *
-     * @param year 1900を足すことで西暦を表すような 年の値
-     * 
-     * @exception IllegalArgumentException
-     *             year に変更したところ FILETIME形式で扱えない
-     *             範囲の時間になった場合
-     * @deprecated
-     */
-    public void setYear( int year ){
-        long temp = this.getTime();
+	/**
+	 * この WindowsDate の示す一日の中での時間を hours で指定された値に設定する。<br>
+	 * このメソッドは範囲チェックを行うだけのために存在する。<br>
+	 * 
+	 * @param hours 時間の値
+	 * @exception IllegalArgumentException hours に変更したところ FILETIME形式で扱えない 範囲の時間になった場合
+	 * @deprecated
+	 */
+	@SuppressWarnings("deprecation")
+	@Deprecated
+	@Override
+	public void setHours(final int hours) {
+		final long temp = getTime();
 
-        try{
-            super.setYear( year );
-            this.checkRange();
-        }catch( IllegalArgumentException exception ){
-            this.setTime( temp );
-            throw exception;
-        }
-    }
+		try {
+			super.setHours(hours);
+			checkRange();
+		} catch (final IllegalArgumentException exception) {
+			setTime(temp);
+			throw exception;
+		}
+	}
 
-    /**
-     * この WindowsDate の示す月を month で指定された値に設定する。<br>
-     * このメソッドは範囲チェックを行うだけのために存在する。<br>
-     *
-     * @param month 0が1月、1が2月を示すような月の値
-     * 
-     * @exception IllegalArgumentException
-     *             month に変更したところ FILETIME形式で扱えない
-     *             範囲の時間になった場合
-     * @deprecated
-     */
-    public void setMonth( int month ){
-        long temp = this.getTime();
+	/**
+	 * この WindowsDate の示す一時間の中での分を minutes で指定された値に設定する。<br>
+	 * このメソッドは範囲チェックを行うだけのために存在する。<br>
+	 * 
+	 * @param minutes 分の値
+	 * @exception IllegalArgumentException minutes に変更したところ FILETIME形式で扱えない 範囲の時間になった場合
+	 * @deprecated
+	 */
+	@SuppressWarnings("deprecation")
+	@Deprecated
+	@Override
+	public void setMinutes(final int minutes) {
+		final long temp = getTime();
 
-        try{
-            super.setMonth( month );
-            this.checkRange();
-        }catch( IllegalArgumentException exception ){
-            this.setTime( temp );
-            throw exception;
-        }
-    }
+		try {
+			super.setMinutes(minutes);
+			checkRange();
+		} catch (final IllegalArgumentException exception) {
+			setTime(temp);
+			throw exception;
+		}
+	}
 
-    /**
-     * この WindowsDate の示す 一ヶ月の
-     * 中での何日目かを date で指定された値に設定する。<br>
-     * このメソッドは範囲チェックを行うだけのために存在する。<br>
-     *
-     * @param date 1が1日、2が2日を示すような日の値
-     * 
-     * @exception IllegalArgumentException
-     *             date に変更したところ FILETIME形式で扱えない
-     *             範囲の時間になった場合
-     * @deprecated
-     */
-    public void setDate( int date ){
-        long temp = this.getTime();
+	/**
+	 * この WindowsDate の示す一分の中での秒数を secounds で指定された値に設定する。<br>
+	 * このメソッドは範囲チェックを行うだけのために存在する。<br>
+	 * 
+	 * @param secounds 秒数
+	 * 
+	 * @exception IllegalArgumentException secounds に変更したところ FILETIME形式で扱えない 範囲の時間になった場合
+	 * @deprecated
+	 */
+	@SuppressWarnings("deprecation")
+	@Deprecated
+	@Override
+	public void setSeconds(final int seconds) {
+		final long temp = getTime();
+		try {
+			super.setSeconds(seconds);
+			checkRange();
+		} catch (final IllegalArgumentException exception) {
+			setTime(temp);
+			throw exception;
+		}
+	}
 
-        try{
-            super.setDate( date );
-            this.checkRange();
-        }catch( IllegalArgumentException exception ){
-            this.setTime( temp );
-            throw exception;
-        }
-    }
+	/**
+	 * この WindowsDate の示す時間を 1970年1月1日 00:00:00 GMTから time ミリ秒経過した時刻に設定する。<br>
+	 * このメソッドは範囲チェックを行うだけのために存在する。<br>
+	 * 
+	 * @param time 1970年1月1日 00:00:00GMT からの経過ミリ秒
+	 * @exception IllegalArgumentException time がFILETIME形式で扱えない 範囲の時間を示していた場合
+	 */
+	@Override
+	public void setTime(final long time) {
+		final long temp = getTime();
+		try {
+			super.setTime(time);
+			checkRange();
+		} catch (final IllegalArgumentException exception) {
+			setTime(temp);
+			throw exception;
+		}
+	}
 
-    /**
-     * この WindowsDate の示す一日の中での時間を
-     * hours で指定された値に設定する。<br>
-     * このメソッドは範囲チェックを行うだけのために存在する。<br>
-     *
-     * @param hours 時間の値
-     * 
-     * @exception IllegalArgumentException
-     *             hours に変更したところ FILETIME形式で扱えない
-     *             範囲の時間になった場合
-     * @deprecated
-     */
-    public void setHours( int hours ){
-        long temp = this.getTime();
+	/**
+	 * この WindowsDate に FILETIME形式の時間情報を設定する。
+	 * 
+	 * @param time FILETIME形式の時間情報
+	 */
+	public void setWindowsTime(final long time) {
+		super.setTime(0 <= time ? (time - WindowsDate.TIME_DIFFERENCE) / 10000L : ((time >>> 1) - (WindowsDate.TIME_DIFFERENCE >>> 1)) / 5000L);
+		nanoSecounds = (int) ((time >>> 1) % 5000L * 2 + (time & 1)) * 100;
+	}
 
-        try{
-            super.setHours( hours );
-            this.checkRange();
-        }catch( IllegalArgumentException exception ){
-            this.setTime( temp );
-            throw exception;
-        }
-    }
+	/**
+	 * この WindowsDateが示す時間情報を FILETIME 形式で得る。
+	 * 
+	 * @return FILETIME形式の値
+	 */
+	public long getWindowsTime() {
+		return super.getTime() * 10000L + WindowsDate.TIME_DIFFERENCE + nanoSecounds / 100;
+	}
 
-    /**
-     * この WindowsDate の示す一時間の中での分を
-     * minutes で指定された値に設定する。<br>
-     * このメソッドは範囲チェックを行うだけのために存在する。<br>
-     *
-     * @param minutes 分の値
-     * 
-     * @exception IllegalArgumentException
-     *             minutes に変更したところ FILETIME形式で扱えない
-     *             範囲の時間になった場合
-     * @deprecated
-     */
-    public void setMinutes( int minutes ){
-        long temp = this.getTime();
-
-        try{
-            super.setMinutes( minutes );
-            this.checkRange();
-        }catch( IllegalArgumentException exception ){
-            this.setTime( temp );
-            throw exception;
-        }
-    }
-
-    /**
-     * この WindowsDate の示す一分の中での秒数を
-     * secounds で指定された値に設定する。<br>
-     * このメソッドは範囲チェックを行うだけのために存在する。<br>
-     *
-     * @param secounds 秒数
-     * 
-     * @exception IllegalArgumentException
-     *             secounds に変更したところ FILETIME形式で扱えない
-     *             範囲の時間になった場合
-     * @deprecated
-     */
-    public void setSeconds( int seconds ){
-        long temp = this.getTime();
-
-        try{
-            super.setSeconds( seconds );
-            this.checkRange();
-        }catch( IllegalArgumentException exception ){
-            this.setTime( temp );
-            throw exception;
-        }
-    }
-
-    /**
-     * この WindowsDate の示す時間を 
-     * 1970年1月1日 00:00:00 GMTから
-     * time ミリ秒経過した時刻に設定する。<br>
-     * このメソッドは範囲チェックを行うだけのために存在する。<br>
-     * 
-     * @param time 1970年1月1日 00:00:00GMT からの経過ミリ秒
-     * 
-     * @exception IllegalArgumentException
-     *             time がFILETIME形式で扱えない
-     *             範囲の時間を示していた場合
-     */
-    public void setTime( long time ){
-        long temp = this.getTime();
-
-        try{
-            super.setTime( time );
-            this.checkRange();
-        }catch( IllegalArgumentException exception ){
-            this.setTime( temp );
-            throw exception;
-        }
-    }
-
-    //------------------------------------------------------------------
-    //  original method
-    //------------------------------------------------------------------
-    //  access method with FILETIME format
-    //------------------------------------------------------------------
-    //  public void setWindowsTime( long time )
-    //  public long getWindowsTime()
-    //------------------------------------------------------------------
-    /**
-     * この WindowsDate に FILETIME形式の時間情報を設定する。
-     * 
-     * @param time FILETIME形式の時間情報
-     */
-    public void setWindowsTime( long time ){
-        super.setTime( 0 <= time 
-         ? ( time - WindowsDate.TIME_DIFFERENCE ) / 10000L
-         : ( ( time >>> 1 ) - ( WindowsDate.TIME_DIFFERENCE >>> 1 ) ) / 5000L );
-
-        this.NanoSecounds = 
-                 (int)( ( time >>> 1 ) % 5000L * 2 + ( time & 1 ) ) * 100;
-    }
-
-    /**
-     * この WindowsDateが示す時間情報を FILETIME 形式で得る。
-     * 
-     * @return FILETIME形式の値
-     */
-    public long getWindowsTime() {
-        return ( super.getTime() * 10000L + WindowsDate.TIME_DIFFERENCE
-                 + (long)( this.NanoSecounds / 100 ) );
-    }
-
-
-    //------------------------------------------------------------------
-    //  local method
-    //------------------------------------------------------------------
-    //  private void checkRange()
-    //------------------------------------------------------------------
-    /**
-     * この WindowsDate が FILETIME形式で表せる時間の
-     * 範囲内であるかを判定する。まだ不完全
-     * 
-     * @exception IllegalArgumentException
-     *             この WindowsDate が FILETIME形式で扱えない
-     *             範囲の時間を示していた場合
-     */
-    private void checkRange(){
-        long time = super.getTime();
-        if( !( 0xFFFCAE8C71E60F9BL <= time && time <= 0x000683218A10A8CBL ) )
-            throw new IllegalArgumentException( "outside of range of Windows FILETIME format. " );
-    }
+	/**
+	 * この WindowsDate が FILETIME形式で表せる時間の 範囲内であるかを判定する。まだ不完全
+	 * 
+	 * @exception IllegalArgumentException この WindowsDate が FILETIME形式で扱えない 範囲の時間を示していた場合
+	 */
+	private void checkRange() {
+		final long time = super.getTime();
+		if (!(0xFFFCAE8C71E60F9BL <= time && time <= 0x000683218A10A8CBL)) {
+			throw new IllegalArgumentException("outside of range of Windows FILETIME format. ");
+		}
+	}
 
 }
