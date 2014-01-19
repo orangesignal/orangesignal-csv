@@ -1,9 +1,4 @@
-//start of DynamicHuffman.java
-//TEXT_STYLE:CODE=Shift_JIS(Japanese):RET_CODE=CRLF
-
 /**
- * DynamicHuffman.java
- * 
  * Copyright (C) 2001-2002  Michel Ishizuka  All rights reserved.
  * 
  * 以下の条件に同意するならばソースとバイナリ形式の再配布と使用を
@@ -31,12 +26,6 @@
 
 package jp.gr.java_conf.dangan.util.lha;
 
-//import classes and interfaces
-import java.lang.Cloneable;
-
-//import exceptions
-import java.io.IOException;
-
 /**
  * 動的ハフマンを扱うクラス。
  * 
@@ -55,357 +44,294 @@ import java.io.IOException;
  *     ソース整備
  *     タブ廃止
  *     ライセンス文の変更
- *
+ * 
  * </pre>
  * 
- * @author  $Author: dangan $
+ * @author $Author: dangan $
  * @version $Revision: 1.0 $
  */
-public class DynamicHuffman implements Cloneable{
+class DynamicHuffman implements Cloneable {
 
+	/**
+	 * ハフマン木のルートを示す。
+	 */
+	public static final int ROOT = 0;
 
-    //------------------------------------------------------------------
-    //  class field
-    //------------------------------------------------------------------
-    //  public static final int ROOT
-    //  private static final int MAX_WEIGHT
-    //------------------------------------------------------------------
-    /**
-     * ハフマン木のルートを示す。
-     */
-    public static final int ROOT = 0;
+	/**
+	 * ハフマン木を再構築する重さ
+	 */
+	private static final int MAX_WEIGHT = 0x8000;
 
-    /**
-     * ハフマン木を再構築する重さ
-     */
-    private static final int MAX_WEIGHT = 0x8000;
+	/**
+	 * 添え字のノードの重さを示す。
+	 */
+	private int[] weight;
 
+	/**
+	 * 添え字のノードの子ノードのノード番号を保持する 兄弟特性を利用するため、 child が 小さいノードのノード番号 child - 1 が 大きいノードのノード番号となる。 葉の場合はデータをbit反転したものが入っている。
+	 */
+	private int[] child;
 
-    //------------------------------------------------------------------
-    //  instance field
-    //------------------------------------------------------------------
-    //  huffman tree
-    //------------------------------------------------------------------
-    //  private int[] weight
-    //  private int[] child
-    //  private int[] parent
-    //  private int[] leafs
-    //  private int size
-    //------------------------------------------------------------------
-    /**
-     * 添え字のノードの重さを示す。
-     */
-    private int[] weight;
+	/**
+	 * 添え字のノードの親ノードのノード番号を保持する
+	 */
+	private int[] parent;
 
-    /**
-     * 添え字のノードの子ノードのノード番号を保持する
-     * 兄弟特性を利用するため、
-     * child     が 小さいノードのノード番号
-     * child - 1 が 大きいノードのノード番号となる。
-     * 葉の場合はデータをbit反転したものが入っている。
-     */
-    private int[] child;
+	/**
+	 * 葉のノード番号を保持する。
+	 */
+	private int[] leafs;
 
-    /**
-     * 添え字のノードの親ノードのノード番号を保持する
-     */
-    private int[] parent;
+	/**
+	 * 現在のハフマン木の大きさ
+	 */
+	private int size;
 
-    /**
-     * 葉のノード番号を保持する。
-     */
-    private int[] leafs;
+	// ------------------------------------------------------------------
+	// Constructor
 
-    /**
-     * 現在のハフマン木の大きさ
-     */
-    private int size;
+	/**
+	 * デフォルトコンストラクタ。 
+	 */
+	protected DynamicHuffman() {}
 
+	/**
+	 * コンストラクタ
+	 * 
+	 * @param count 葉の数
+	 */
+	public DynamicHuffman(final int count) {
+		this(count, count);
+	}
 
-    //------------------------------------------------------------------
-    //  constructor
-    //------------------------------------------------------------------
-    //  private DynamicHuffman()
-    //  public DynamicHuffman( int count )
-    //  public DynamicHuffman( int max, int first )
-    //------------------------------------------------------------------
-    /**
-     * デフォルトコンストラクタ。
-     * 使用不可。
-     */
-    private DynamicHuffman(){   }
+	/**
+	 * コンストラクタ
+	 * 
+	 * @param max 葉の最大数
+	 * @param start 開始時の葉の数
+	 */
+	public DynamicHuffman(final int max, final int first) {
+		if (1 <= first && first <= max) {
+			weight = new int[max * 2 - 1];
+			child = new int[max * 2 - 1];
+			parent = new int[max * 2 - 1];
+			leafs = new int[max];
+			size = Math.max(0, first * 2 - 1);
 
-    /**
-     * コンストラクタ
-     * 
-     * @param count 葉の数
-     */
-    public DynamicHuffman( int count ){
-        this( count, count );
-    }
+			// 葉を生成していく。
+			int node = size - 1;
+			for (int code = 0; code < first; code++, node--) {
+				weight[node] = 1;
+				child[node] = ~code;
+				leafs[code] = node;
+			}
 
-    /**
-     * コンストラクタ
-     * 
-     * @param max   葉の最大数
-     * @param start 開始時の葉の数 
-     */
-    public DynamicHuffman( int max, int first ){
-        if( 1 <= first && first <= max ){
+			// 枝を生成していく。
+			int child = size - 1;
+			while (0 <= node && node != child) {
+				weight[node] = weight[child] + weight[child - 1];
 
-            this.weight = new int[ max * 2 - 1 ];
-            this.child  = new int[ max * 2 - 1 ];
-            this.parent = new int[ max * 2 - 1 ];
-            this.leafs  = new int[ max ];
-            this.size   = Math.max( 0, first * 2 - 1 );
+				this.child[node] = child;
+				parent[child] = parent[child - 1] = node;
 
-            //葉を生成していく。
-            int node = this.size - 1;
-            for( int code = 0 ; code < first ; code++, node-- ){
-                this.weight[ node ] = 1;
-                this.child[ node ]  = ~code;
-                this.leafs[ code ]  = node;
-            }
+				child -= 2;
+				node--;
+			}
+		} else if (max < first) {
+			throw new IllegalArgumentException(
+					"\"max\" must be larger than \"first\".");
+		} else {
+			throw new IllegalArgumentException("\"first\" must be one or more.");
+		}
+	}
 
-            //枝を生成していく。
-            int child = this.size - 1;
-            while( 0 <= node && node != child ){
-                this.weight[node]  = this.weight[child] + this.weight[child-1];
+	// ------------------------------------------------------------------
+	// method of java.lang.Object
 
-                this.child[node]   = child;
-                this.parent[child] = this.parent[child-1] = node;
+	/**
+	 * このオブジェクトの現在の状態を持つコピーを作成して返す。
+	 * 
+	 * @return このオブジェクトの現在の状態を持つコピー
+	 */
+	@Override
+	public Object clone() {
+		final DynamicHuffman clone = new DynamicHuffman();
+		clone.weight = weight.clone();
+		clone.child = child.clone();
+		clone.parent = parent.clone();
+		clone.leafs = leafs.clone();
+		clone.size = size;
+		return clone;
+	}
 
-                child -= 2;
-                node--;
-            }
-        }else if( max < first ){
-            throw new IllegalArgumentException( "\"max\" must be larger than \"first\"." );
-        }else{
-            throw new IllegalArgumentException( "\"first\" must be one or more." );
-        }
-    }
+	// ------------------------------------------------------------------
+	// original method
 
+	/**
+	 * データからノード番号を得る。
+	 * 
+	 * @param code データ
+	 * @return codeのノード番号
+	 */
+	public int codeToNode(final int code) {
+		return leafs[code];
+	}
 
-    //------------------------------------------------------------------
-    //  method of java.lang.Object
-    //------------------------------------------------------------------
-    //  public Object clone()
-    //------------------------------------------------------------------
-    /**
-     * このオブジェクトの現在の状態を持つコピーを作成して返す。
-     * 
-     * @return このオブジェクトの現在の状態を持つコピー
-     */
-    public Object clone(){
-        DynamicHuffman clone = new DynamicHuffman();
-        clone.weight = (int[])this.weight.clone();
-        clone.child  = (int[])this.child.clone();
-        clone.parent = (int[])this.parent.clone();
-        clone.leafs  = (int[])this.leafs.clone();
-        clone.size   = this.size;
-        return clone;
-    }
+	/**
+	 * ノードが葉でないノードなら子ノードのノード番号、 ノードが葉ならノードの持つデータを全ビット反転したものを得る。 子ノードのノード番号は兄弟特性と利用するため、<br>
+	 * node の 0 の子ノードの場合 childNode( node )<br>
+	 * node の 1 の子ノードの場合 childNode( node ) - 1<br>
+	 * となる。
+	 * 
+	 * @param node ノード
+	 * @return node の子ノードのノード番号
+	 */
+	public int childNode(final int node) {
+		return child[node];
+	}
 
+	/**
+	 * node の親ノードのノード番号を得る。
+	 * 
+	 * @param node ノード
+	 * @return node の親ノードのノード番号。
+	 */
+	public int parentNode(final int node) {
+		return parent[node];
+	}
 
-    //------------------------------------------------------------------
-    //  original method
-    //------------------------------------------------------------------
-    //  access to huffman tree
-    //------------------------------------------------------------------
-    //  public int codeToNode( int code )
-    //  public int childNode( int node )
-    //  public int parentNode( int node )
-    //------------------------------------------------------------------
-    /**
-     * データからノード番号を得る。
-     * 
-     * @param code データ
-     * 
-     * @return codeのノード番号
-     */
-    public int codeToNode( int code ){
-        return this.leafs[code];
-    }
+	// ------------------------------------------------------------------
+	// original method
 
-    /**
-     * ノードが葉でないノードなら子ノードのノード番号、
-     * ノードが葉ならノードの持つデータを全ビット反転したものを得る。
-     * 子ノードのノード番号は兄弟特性と利用するため、<br>
-     * node の 0 の子ノードの場合 childNode( node )<br>
-     * node の 1 の子ノードの場合 childNode( node ) - 1<br>
-     * となる。
-     * 
-     * @param node ノード
-     * 
-     * @return node の子ノードのノード番号
-     */
-    public int childNode( int node ){
-        return this.child[node];
-    }
+	/**
+	 * code の重みが増すようにハフマン木を更新する。
+	 * 
+	 * @param code 重みを増やす葉
+	 */
+	public void update(final int code) {
+		if (weight[DynamicHuffman.ROOT] == DynamicHuffman.MAX_WEIGHT) {
+			rebuildTree();
+		}
 
-    /**
-     * node の親ノードのノード番号を得る。
-     * 
-     * @param node ノード
-     * 
-     * @return node の親ノードのノード番号。
-     */
-    public int parentNode( int node ){
-        return this.parent[node];
-    }
+		int node = leafs[code];
+		while (DynamicHuffman.ROOT != node) {
+			int swapNode = node;
+			while (weight[swapNode - 1] == weight[node]
+					&& DynamicHuffman.ROOT < swapNode - 1) {
+				swapNode--;
+			}
 
+			if (node != swapNode) {
+				swap(node, swapNode);
+			}
 
-    //------------------------------------------------------------------
-    //  original method
-    //------------------------------------------------------------------
-    //  update huffman tree
-    //------------------------------------------------------------------
-    //  public void update( int code )
-    //  public void addLeaf( int code )
-    //------------------------------------------------------------------
-    /**
-     * code の重みが増すようにハフマン木を更新する。
-     * 
-     * @param code 重みを増やす葉
-     */
-    public void update( int code ){
-        if( this.weight[ DynamicHuffman.ROOT ] == DynamicHuffman.MAX_WEIGHT ){
-            this.rebuildTree();
-        }
+			weight[swapNode]++;
+			node = parent[swapNode];
+		}
+		weight[DynamicHuffman.ROOT]++;
+	}
 
-        int node = this.leafs[code];
-        while( DynamicHuffman.ROOT != node ){
-            int swapNode = node;
-            while( this.weight[swapNode - 1] == this.weight[node]
-                && DynamicHuffman.ROOT < swapNode - 1 ){
-                swapNode--;
-            }
+	/**
+	 * ハフマン木に code を示す葉を追加する。
+	 * 
+	 * @param code 葉の示す符号
+	 * @exception IllegalStateException ハフマン木が十分に大きいため 葉が追加できない場合
+	 */
+	public void addLeaf(final int code) {
+		if (size < weight.length - 1) {
+			final int last = size - 1;
+			final int large = size;
+			final int small = size + 1;
+			child[large] = child[last];
+			child[small] = ~code;
+			child[last] = small;
+			weight[large] = weight[last];
+			weight[small] = 0;
+			leafs[~child[large]] = large;
+			leafs[~child[small]] = small;
+			parent[large] = parent[small] = last;
+			size = small + 1;
 
-            if( node != swapNode ) this.swap( node, swapNode );
+			if (last == DynamicHuffman.ROOT) {
+				weight[last] -= 1;
+			}
 
-            this.weight[swapNode]++;
-            node = this.parent[swapNode];
-        }
-        this.weight[ DynamicHuffman.ROOT ]++;
-    }
+			update(code);
+		} else {
+			throw new IllegalStateException();
+		}
+	}
 
-    /**
-     * ハフマン木に code を示す葉を追加する。
-     * 
-     * @param code 葉の示す符号
-     * 
-     * @exception IllegalStateException
-     *              ハフマン木が十分に大きいため
-     *              葉が追加できない場合
-     */
-    public void addLeaf( int code ){
-        if( this.size < this.weight.length - 1 ){
-            int last  = this.size - 1;
-            int large = this.size;
-            int small = this.size + 1;
-            this.child[ large ] = this.child[ last ];
-            this.child[ small ] = ~code;
-            this.child[ last ]  = small;
-            this.weight[ large ] = this.weight[ last ];
-            this.weight[ small ] = 0;
-            this.leafs[ ~this.child[ large ] ] = large;
-            this.leafs[ ~this.child[ small ] ] = small;
-            this.parent[ large ] = this.parent[ small ] = last;
-            this.size = small + 1;
+	// ------------------------------------------------------------------
+	// local method
 
-            if( last == DynamicHuffman.ROOT ){
-                this.weight[ last  ] -= 1;
-            }
+	/**
+	 * ハフマン木を再構築する。 重みが privateな定数 MAX_WEIGHT を超えた時に update(int)から呼び出される。 全てのノードの重みを およそ半分にする。
+	 */
+	private void rebuildTree() {
+		int leafCount = 0;
+		for (int i = 0; i < size; i++) {
+			if (child[i] < 0) {
+				weight[leafCount] = (weight[i] + 1) / 2;
+				child[leafCount] = child[i];
+				leafCount++;
+			}
+		}
 
-            this.update( code );
-        }else{
-            throw new IllegalStateException();
-        }
-    }
+		leafCount--;
+		int position = size - 1;
+		int leafPosition = size - 2;
+		while (0 <= position) {
+			while (leafPosition <= position) {
+				leafs[~child[leafCount]] = position;
+				weight[position] = weight[leafCount];
+				child[position--] = child[leafCount--];
+			}
 
-    //------------------------------------------------------------------
-    //  local method
-    //------------------------------------------------------------------
-    //  private void rebuildTree()
-    //  private void swap( int i, int j )
-    //------------------------------------------------------------------
-    /**
-     * ハフマン木を再構築する。
-     * 重みが privateな定数 MAX_WEIGHT を超えた時に
-     * update(int)から呼び出される。
-     * 全てのノードの重みを およそ半分にする。
-     */
-    private void rebuildTree(){
-        int leafCount = 0;
-        for( int i = 0 ; i < this.size ; i++ )
-            if( this.child[i] < 0 ){
-                this.weight[leafCount] = ( this.weight[i] + 1 ) / 2;
-                this.child[leafCount]  = this.child[i];
-                leafCount++;
-            }
+			final int weight = this.weight[leafPosition]
+					+ this.weight[leafPosition + 1];
 
-        leafCount--;
-        int position     = this.size - 1;
-        int leafPosition = this.size - 2;
-        while( 0 <= position ){
-            while( leafPosition <= position ){
-                this.leafs[~this.child[leafCount]] = position;
-                this.weight[ position ]  = this.weight[ leafCount ];
-                this.child[ position-- ] = this.child[ leafCount-- ];
-            }
+			while (0 <= leafCount && this.weight[leafCount] <= weight) {
+				leafs[~child[leafCount]] = position;
+				this.weight[position] = this.weight[leafCount];
+				child[position--] = child[leafCount--];
+			}
 
-            int weight = this.weight[leafPosition]
-                       + this.weight[leafPosition + 1];
+			this.weight[position] = weight;
+			child[position] = leafPosition + 1;
+			parent[leafPosition] = parent[leafPosition + 1] = position;
 
-            while( 0 <= leafCount && this.weight[leafCount] <= weight ){
-                this.leafs[~this.child[leafCount]] = position;
-                this.weight[ position ]  = this.weight[ leafCount ];
-                this.child[ position-- ] = this.child[ leafCount-- ];
-            }
+			position--;
+			leafPosition -= 2;
+		}
+	}
 
-            this.weight[position] = weight;
-            this.child[position]  = leafPosition + 1;
-            this.parent[leafPosition]
-                = this.parent[leafPosition + 1]
-                = position;
+	/**
+	 * ノード番号iのノードと ノード番号jのノードを入れ換える処理を行う。
+	 * 
+	 * @param i 入れ換え対象のノード
+	 * @param j 入れ換え対象のノード
+	 */
+	private void swap(final int i, final int j) {
+		if (child[i] < 0) {
+			leafs[~child[i]] = j;
+		} else {
+			parent[child[i]] = parent[child[i] - 1] = j;
+		}
 
-            position--;
-            leafPosition -= 2;
-        }
-    }
+		if (child[j] < 0) {
+			leafs[~child[j]] = i;
+		} else {
+			parent[child[j]] = parent[child[j] - 1] = i;
+		}
 
-    /**
-     * ノード番号iのノードと
-     * ノード番号jのノードを入れ換える処理を行う。
-     * 
-     * @param i 入れ換え対象のノード
-     * @param j 入れ換え対象のノード
-     */
-    private void swap( int i, int j ){
-        if( this.child[i] < 0 ){
-            this.leafs[ ~this.child[i] ] = j;
-        }else{
-            this.parent[ this.child[i] ]
-                = this.parent[ this.child[i] - 1 ]
-                = j;
-        }
+		int temp = child[i];
+		child[i] = child[j];
+		child[j] = temp;
 
-        if( this.child[j] < 0 ){
-            this.leafs[ ~this.child[j] ] = i;
-        }else{
-            this.parent[ this.child[j] ]
-                = this.parent[ this.child[j] - 1 ]
-                = i;
-        }
-
-        int temp      = this.child[i];
-        this.child[i] = this.child[j];
-        this.child[j] = temp;
-
-        temp           = this.weight[i];
-        this.weight[i] = this.weight[j];
-        this.weight[j] = temp;
-    }
+		temp = weight[i];
+		weight[i] = weight[j];
+		weight[j] = temp;
+	}
 
 }
-//end of DynamicHuffman.java
