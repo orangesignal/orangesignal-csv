@@ -944,7 +944,7 @@ public class PostLh5Encoder implements PostLzssEncoder{
      * @return codeLen の頻度表
      */
     private static int[] createCodeLenFreq( int[] codeLen ){
-        int[] codeLenFreq = new int[ StaticHuffman.LimitLen + 3 ];
+        int[] codeLenFreq = new int[ StaticHuffman.LIMIT_LEN + 3 ];
 
         int end = codeLen.length;
         while( 0 < end && codeLen[end - 1] == 0 ){

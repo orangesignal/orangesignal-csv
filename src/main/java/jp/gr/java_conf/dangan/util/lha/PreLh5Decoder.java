@@ -551,10 +551,10 @@ public class PreLh5Decoder implements PreLzssDecoder{
         //------------------------------------------------------------------
         //  ハフマン符号化で最悪の場合を考慮して readLimit を計算する
         if( this.blockSize < readLimit ){
-            readLimit = readLimit * StaticHuffman.LimitLen / 8;
+            readLimit = readLimit * StaticHuffman.LIMIT_LEN / 8;
             readLimit += 272; //block head
         }else{
-            readLimit = readLimit * StaticHuffman.LimitLen / 8;
+            readLimit = readLimit * StaticHuffman.LIMIT_LEN / 8;
         }
 
         //------------------------------------------------------------------
@@ -679,7 +679,7 @@ public class PreLh5Decoder implements PreLzssDecoder{
         int avail = ( ( this.cacheLimit - this.cachePosition )
                     + this.in.available() / this.cache.length * this.cache.length );//throws IOException
         avail += this.bitCount - 32;
-        avail = avail / StaticHuffman.LimitLen;
+        avail = avail / StaticHuffman.LIMIT_LEN;
         if( this.blockSize < avail ){
             avail -= 272;
         }

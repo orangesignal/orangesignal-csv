@@ -419,7 +419,7 @@ public class PreLh3Decoder implements PreLzssDecoder {
      * @see PreLzssDecoder#mark(int)
      */
     public void mark( int readLimit ){
-        readLimit = readLimit * StaticHuffman.LimitLen / 8;
+        readLimit = readLimit * StaticHuffman.LIMIT_LEN / 8;
         if( this.blockSize < readLimit ){
             readLimit += 245;
         }
@@ -488,7 +488,7 @@ public class PreLh3Decoder implements PreLzssDecoder {
      * @see PreLzssDecoder#available()
      */
     public int available() throws IOException {
-        int avail = this.in.available() * 8 / StaticHuffman.LimitLen;
+        int avail = this.in.available() * 8 / StaticHuffman.LIMIT_LEN;
         if( this.blockSize < avail ){
             avail -= 245;
         }
