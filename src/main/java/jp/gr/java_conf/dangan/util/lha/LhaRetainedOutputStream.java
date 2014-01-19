@@ -512,7 +512,7 @@ public class LhaRetainedOutputStream extends OutputStream{
      */
     public void putNextEntry( LhaHeader header ) throws IOException {
         if( header.getCompressedSize() == LhaHeader.UNKNOWN
-         || header.getCRC()            == LhaHeader.UNKNOWN ){
+         || header.getCrc()            == LhaHeader.UNKNOWN ){
             this.putNextEntryNotYetCompressed( header );                        //throws IOException
         }else{
             this.putNextEntryAlreadyCompressed( header );                       //throws IOException
@@ -539,7 +539,7 @@ public class LhaRetainedOutputStream extends OutputStream{
                                                 throws IOException {
         if( header.getOriginalSize()   != LhaHeader.UNKNOWN
          && header.getCompressedSize() != LhaHeader.UNKNOWN
-         && header.getCRC()            != LhaHeader.UNKNOWN ){
+         && header.getCrc()            != LhaHeader.UNKNOWN ){
 
             if( this.out != null ){
                 this.closeEntry();
@@ -587,7 +587,7 @@ public class LhaRetainedOutputStream extends OutputStream{
             this.headerpos = this.archive.getFilePointer();
             this.header    = (LhaHeader)header.clone();
             this.header.setCompressedSize( 0 );
-            this.header.setCRC( 0 );
+            this.header.setCrc( 0 );
 
             this.encoding = this.property.getProperty( "lha.encoding" );
             if( this.encoding == null ){
@@ -644,8 +644,8 @@ public class LhaRetainedOutputStream extends OutputStream{
             long size = ( pos - this.headerpos
                               - this.header.getBytes( this.encoding ).length );
             this.header.setCompressedSize( size );
-            if( this.header.getCRC() != LhaHeader.NO_CRC ){
-                this.header.setCRC( (int)this.crc.getValue() );
+            if( this.header.getCrc() != LhaHeader.NO_CRC ){
+                this.header.setCrc( (int)this.crc.getValue() );
             }
 
             this.archive.seek( this.headerpos );

@@ -654,8 +654,8 @@ public class LhaFile{
                && header1.getLastModified().equals( header2.getLastModified() )
                && header1.getCompressedSize() == header2.getCompressedSize()
                && header1.getOriginalSize()   == header2.getOriginalSize()
-               && header1.getCRC()            == header2.getCRC()
-               && header1.getOSID()           == header2.getOSID()
+               && header1.getCrc()            == header2.getCrc()
+               && header1.getOsid()           == header2.getOsid()
                && header1.getHeaderLevel()    == header2.getHeaderLevel();
     }
 

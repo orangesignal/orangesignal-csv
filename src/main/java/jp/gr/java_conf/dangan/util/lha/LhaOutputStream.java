@@ -465,7 +465,7 @@ public class LhaOutputStream extends OutputStream{
     public void putNextEntry( LhaHeader header ) throws IOException {
         if( header.getCompressedSize() == LhaHeader.UNKNOWN
          || header.getOriginalSize()   == LhaHeader.UNKNOWN
-         || header.getCRC()            == LhaHeader.UNKNOWN ){
+         || header.getCrc()            == LhaHeader.UNKNOWN ){
             this.putNextEntryNotYetCompressed( header );                        //throws IOException
         }else{
             this.putNextEntryAlreadyCompressed( header );                       //throws IOException
@@ -492,7 +492,7 @@ public class LhaOutputStream extends OutputStream{
     public void putNextEntryAlreadyCompressed( LhaHeader header ) throws IOException {
         if( header.getOriginalSize()   != LhaHeader.UNKNOWN
          && header.getCompressedSize() != LhaHeader.UNKNOWN
-         && header.getCRC()            != LhaHeader.UNKNOWN ){
+         && header.getCrc()            != LhaHeader.UNKNOWN ){
 
             if( this.tempOut != null ){
                 this.closeEntry();                                              //throws IOException
@@ -553,7 +553,7 @@ public class LhaOutputStream extends OutputStream{
             if( this.temp.length() < this.length ){
                 this.header.setOriginalSize( this.length );
                 this.header.setCompressedSize( this.temp.length() );
-                this.header.setCRC( (int)crc.getValue() );
+                this.header.setCrc( (int)crc.getValue() );
 
                 in = this.temp.getInputStream();                                //throws IOException
             }else{
@@ -561,7 +561,7 @@ public class LhaOutputStream extends OutputStream{
 
                 this.header.setOriginalSize( this.length );
                 this.header.setCompressedSize( this.length );
-                this.header.setCRC( (int)crc.getValue() );
+                this.header.setCrc( (int)crc.getValue() );
                 if( !this.header.getCompressMethod().equalsIgnoreCase( CompressMethod.LHD ) ){
                     this.header.setCompressMethod( CompressMethod.LH0 );
                 }
