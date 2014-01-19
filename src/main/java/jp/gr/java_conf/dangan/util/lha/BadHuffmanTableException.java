@@ -1,9 +1,4 @@
-//start of BadHuffmanTableException.java
-//TEXT_STYLE:CODE=Shift_JIS(Japanese):RET_CODE=CRLF
-
 /**
- * BadHuffmanTableException.java
- * 
  * Copyright (C) 2001-2002  Michel Ishizuka  All rights reserved.
  * 
  * 以下の条件に同意するならばソースとバイナリ形式の再配布と使用を
@@ -31,53 +26,34 @@
 
 package jp.gr.java_conf.dangan.util.lha;
 
-//import classes and interfaces
-
-//import exceptions
 import java.io.IOException;
 
 /**
- * BlockHuffman.LenListToCodeList() 内で、
- * 渡された LenList ( ハフマン符号長の表 )が不正なため、
- * ハフマン符号を生成できない事を示す。<br>
+ * BlockHuffman.LenListToCodeList() 内で、 渡された LenList ( ハフマン符号長の表 )が不正なため、 ハフマン符号を生成できない事を示す。<br>
  * 
- * <pre>
- * -- revision history --
- * $Log: BadHuffmanTableException.java,v $
- * Revision 1.0  2002/07/24 00:00:00  dangan
- * add to version control
- * [maintenance]
- *     タブ廃止
- *     ライセンス文の修正
- *
- * </pre>
- * 
- * @author  $Author: dangan $
+ * @author $Author: dangan $
  * @version $Revision: 1.0 $
  */
-public class BadHuffmanTableException extends IOException{
+@SuppressWarnings("serial")
+public class BadHuffmanTableException extends IOException {
 
+	// ------------------------------------------------------------------
+	// Constructor
 
-    //------------------------------------------------------------------
-    //  constructor
-    //------------------------------------------------------------------
-    //  public BadHuffmanTableException()
-    //  public BadHuffmanTableException( String message )
-    //------------------------------------------------------------------
-    /**
-     * 新しい BadHuffmanTableException を構築する。
-     */
-    public BadHuffmanTableException(){
-        super();
-    }
+	/**
+	 * 新しい BadHuffmanTableException を構築する。
+	 */
+	public BadHuffmanTableException() {
+		super();
+	}
 
-    /**
-     * 新しい BadHuffmanTableException を構築する。
-     *
-     * @param message 詳細なメッセージ
-     */
-    public BadHuffmanTableException( String message ){
-        super( message );
-    }
+	/**
+	 * 新しい BadHuffmanTableException を構築する。
+	 * 
+	 * @param message 詳細なメッセージ
+	 */
+	public BadHuffmanTableException(final String message) {
+		super(message);
+	}
+
 }
-//end of BadHuffmanTableException.java
