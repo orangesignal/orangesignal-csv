@@ -254,6 +254,7 @@
 				<version>0.9</version>
 				<configuration>
 					<message>Creating site for ${project.version}</message>
+					<dryRun>true</dryRun>
 				</configuration>
 				<executions>
 					<execution>
@@ -321,6 +322,9 @@
 				<version>2.4</version>
 				<configuration>
 					<linkJavadoc>true</linkJavadoc>
+					<excludes>
+						<exclude>com/orangesignal/jlha/*</exclude>
+					</excludes>
 				</configuration>
 				<reportSets>
 					<reportSet>
