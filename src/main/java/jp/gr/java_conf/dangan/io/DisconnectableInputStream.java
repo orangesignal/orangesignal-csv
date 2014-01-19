@@ -1,9 +1,4 @@
-//start of DisconnectableInputStream.java
-//TEXT_STYLE:CODE=Shift_JIS(Japanese):RET_CODE=CRLF
-
 /**
- * DisconnectableInputStream.java
- * 
  * Copyright (C) 2001-2002  Michel Ishizuka  All rights reserved.
  * 
  * 以下の条件に同意するならばソースとバイナリ形式の再配布と使用を
@@ -31,21 +26,12 @@
 
 package jp.gr.java_conf.dangan.io;
 
-//import classes and interfaces
-import java.io.InputStream;
-import jp.gr.java_conf.dangan.io.Disconnectable;
-
-//import exceptions
 import java.io.IOException;
-import java.lang.NullPointerException;
+import java.io.InputStream;
 
 /**
- * データを供給する入力ストリームと データを処理する
- * 入力ストリームとの接続を解除するためのユーティリティクラス。<br>
- * java.io.BufferedInputStream 等のバッファリングするストリーム
- * との接続を解除する場合は
- * jp.gr.java_conf.dangan.io.LimitedInputStream 等を使用して
- * 接続解除位置を過ぎたバッファリングを抑止する必要がある。<br>
+ * データを供給する入力ストリームと データを処理する 入力ストリームとの接続を解除するためのユーティリティクラス。<br>
+ * java.io.BufferedInputStream 等のバッファリングするストリーム との接続を解除する場合は jp.gr.java_conf.dangan.io.LimitedInputStream 等を使用して 接続解除位置を過ぎたバッファリングを抑止する必要がある。<br>
  * 
  * <pre>
  * -- revision history --
@@ -56,220 +42,165 @@ import java.lang.NullPointerException;
  *     タブ廃止
  *     ライセンス文の修正
  *     ソース整備
- *
+ * 
  * </pre>
  * 
- * @author  $Author: dangan $
+ * @author $Author: dangan $
  * @version $Revision: 1.0 $
  */
-public class DisconnectableInputStream extends InputStream
-                                       implements Disconnectable {
+public class DisconnectableInputStream extends InputStream implements Disconnectable {
 
-    //------------------------------------------------------------------
-    //  instance field
-    //------------------------------------------------------------------
-    //  source
-    //------------------------------------------------------------------
-    //  private InputStream in
-    //------------------------------------------------------------------
-    /**
-     * 接続された入力ストリーム
-     */
-    private InputStream in;
+	/**
+	 * 接続された入力ストリーム
+	 */
+	private InputStream in;
 
-    //------------------------------------------------------------------
-    //  constructer
-    //------------------------------------------------------------------
-    //  private DisconnectableInputStream()
-    //  public DisconnectableInputStream( InputStream in )
-    //------------------------------------------------------------------
-    /**
-     * デフォルトコンストラクタ。
-     * 使用不可。
-     */
-    private DisconnectableInputStream(){    }
+	// ------------------------------------------------------------------
+	// Constructer
 
-    /**
-     * in との接続を解除可能な入力ストリームを構築する。
-     * 
-     * @param in 入力ストリーム
-     */
-    public DisconnectableInputStream( InputStream in ){
-        if( in != null ){
-            this.in = in;
-        }else{
-            throw new NullPointerException( "in" );
-        }
-    }
+	/**
+	 * in との接続を解除可能な入力ストリームを構築する。
+	 * 
+	 * @param in 入力ストリーム
+	 */
+	public DisconnectableInputStream(final InputStream in) {
+		if (in != null) {
+			this.in = in;
+		} else {
+			throw new NullPointerException("in");
+		}
+	}
 
+	// ------------------------------------------------------------------
+	// java.io.InputStream methods
 
-    //------------------------------------------------------------------
-    //  java.io.InputStream methods
-    //------------------------------------------------------------------
-    //  read method
-    //------------------------------------------------------------------
-    //  public int read()
-    //  public int read( byte[] buffer )
-    //  public int read( byte[] buffer, int index, int length )
-    //  public long skip( long length )
-    //------------------------------------------------------------------
-    /**
-     * 接続された入力ストリームから 次の1バイトのデータを得る。<br>
-     * 
-     * @return 読み込まれた1バイトのデータ。<br>
-     *         EndOfStreamに達した場合は -1 を返す。<br>
-     * 
-     * @exception IOException 入出力エラーが発生した場合
-     */
-    public int read() throws IOException {
-        return this.in.read();                                                  //throws IOException
-    }
+	/**
+	 * 接続された入力ストリームから 次の1バイトのデータを得る。<br>
+	 * 
+	 * @return 読み込まれた1バイトのデータ。<br>
+	 * EndOfStreamに達した場合は -1 を返す。<br>
+	 * 
+	 * @exception IOException 入出力エラーが発生した場合
+	 */
+	@Override
+	public int read() throws IOException {
+		return in.read();                                                  // throws IOException
+	}
 
-    /**
-     * 接続された入力ストリームから バイト配列 buffer を
-     * 満たすようにデータを読み込む。<br>
-     * データは必ずしも buffer を満たすとは限らないことに注意。<br>
-     * 
-     * @param buffer 読み込まれたデータを格納するためのバイト配列
-     * 
-     * @return buffer に読み込んだデータ量をバイト数で返す。<br>
-     *         既に EndOfStream に達していた場合は -1 を返す。<br>
-     * 
-     * @exception IOException 入出力エラーが発生した場合
-     */
-    public int read( byte[] buffer ) throws IOException {
-        return this.in.read( buffer, 0, buffer.length );                        //throws IOException
-    }
+	/**
+	 * 接続された入力ストリームから バイト配列 buffer を 満たすようにデータを読み込む。<br>
+	 * データは必ずしも buffer を満たすとは限らないことに注意。<br>
+	 * 
+	 * @param buffer 読み込まれたデータを格納するためのバイト配列
+	 * @return buffer に読み込んだデータ量をバイト数で返す。<br>
+	 * 既に EndOfStream に達していた場合は -1 を返す。<br>
+	 * @exception IOException 入出力エラーが発生した場合
+	 */
+	@Override
+	public int read(final byte[] buffer) throws IOException {
+		return in.read(buffer, 0, buffer.length);                        // throws IOException
+	}
 
-    /**
-     * 接続された入力ストリームから バイト配列 buffer の
-     * index で指定された位置から length バイトのデータを
-     * 読み込む。<br>
-     * データは必ずしも length バイト読み込まれるとは限ら
-     * ないことに注意。<br>
-     * 
-     * @param buffer 読み込まれたデータを格納するためのバイト配列
-     * @param index  buffer内のデータ読み込み開始位置
-     * @param length bufferに読み込むデータ量
-     * 
-     * @return buffer に読み込んだデータ量をバイト数で返す。<br>
-     *         既に EndOfStream に達していた場合は -1 を返す。<br>
-     * 
-     * @exception IOException 入出力エラーが発生した場合
-     */
-    public int read( byte[] buffer, int index, int length ) throws IOException {
-        if( 0 < length ){
-            return this.in.read( buffer, index, length );                       //throws IOException
-        }else{
-            return 0;
-        }
-    }
+	/**
+	 * 接続された入力ストリームから バイト配列 buffer の index で指定された位置から length バイトのデータを 読み込む。<br>
+	 * データは必ずしも length バイト読み込まれるとは限ら ないことに注意。<br>
+	 * 
+	 * @param buffer 読み込まれたデータを格納するためのバイト配列
+	 * @param index buffer内のデータ読み込み開始位置
+	 * @param length bufferに読み込むデータ量
+	 * @return buffer に読み込んだデータ量をバイト数で返す。<br>
+	 * 既に EndOfStream に達していた場合は -1 を返す。<br>
+	 * @exception IOException 入出力エラーが発生した場合
+	 */
+	@Override
+	public int read(final byte[] buffer, final int index, final int length) throws IOException {
+		if (0 < length) {
+			return in.read(buffer, index, length);                       // throws IOException
+		}
+		return 0;
+	}
 
-    /**
-     * 接続された入力ストリームのデータを length バイト
-     * 読み飛ばす。<br>
-     * 
-     * @param length 読み飛ばすバイト数。<br>
-     * 
-     * @return 実際に読み飛ばされたバイト数。<br>
-     * 
-     * @exception IOException 入出力エラーが発生した場合
-     */
-    public long skip( long length ) throws IOException {
-        if( 0 < length ){
-            return this.in.skip( length );                                      //throws IOException
-        }else{
-            return 0;
-        }
-    }
+	/**
+	 * 接続された入力ストリームのデータを length バイト 読み飛ばす。
+	 * 
+	 * @param length 読み飛ばすバイト数。
+	 * @return 実際に読み飛ばされたバイト数。
+	 * @exception IOException 入出力エラーが発生した場合
+	 */
+	@Override
+	public long skip(final long length) throws IOException {
+		if (0 < length) {
+			return in.skip(length);                                      // throws IOException
+		}
+		return 0;
+	}
 
+	// ------------------------------------------------------------------
+	// method of java.io.InputStream
 
-    //------------------------------------------------------------------
-    //  method of java.io.InputStream
-    //------------------------------------------------------------------
-    //  mark/reset
-    //------------------------------------------------------------------
-    //  public void mark( int readLimit )
-    //  public void reset()
-    //  public boolean markSupprted()
-    //------------------------------------------------------------------
-    /**
-     * 接続された入力ストリームの現在位置にマークを設定し、
-     * reset() メソッドでマークした時点の 読み込み位置に
-     * 戻れるようにする。<br>
-     * 
-     * @param readLimit マーク位置に戻れる限界のバイト数。
-     *                  このバイト数を超えてデータを読み
-     *                  込んだ場合 reset()できなくなる可
-     *                  能性がある。<br>
-     */
-    public void mark( int readLimit ){
-        this.in.mark( readLimit );
-    }
+	/**
+	 * 接続された入力ストリームの現在位置にマークを設定し、 reset() メソッドでマークした時点の 読み込み位置に 戻れるようにする。<br>
+	 * 
+	 * @param readLimit マーク位置に戻れる限界のバイト数。 このバイト数を超えてデータを読み 込んだ場合 reset()できなくなる可 能性がある。<br>
+	 */
+	@Override
+	public void mark(final int readLimit) {
+		in.mark(readLimit);
+	}
 
-    /**
-     * 接続された入力ストリームの読み込み位置を最後に
-     * mark() メソッドが呼び出されたときの位置に設定する。<br>
-     * 
-     * @exception IOException 入出力エラーが発生した場合
-     */
-    public void reset() throws IOException {
-        this.in.reset();                                                        //throws IOException
-    }
+	/**
+	 * 接続された入力ストリームの読み込み位置を最後に mark() メソッドが呼び出されたときの位置に設定する。<br>
+	 * 
+	 * @exception IOException 入出力エラーが発生した場合
+	 */
+	@Override
+	public void reset() throws IOException {
+		in.reset();                                                        // throws IOException
+	}
 
-    /**
-     * 接続された入力ストリームが mark() と reset() を
-     * サポートするかを得る。<br>
-     * 
-     * @return ストリームが mark() と reset() を
-     *         サポートする場合は true。<br>
-     *         サポートしない場合は false。<br>
-     */
-    public boolean  markSupprted(){
-        return this.in.markSupported();
-    }
+	/**
+	 * 接続された入力ストリームが mark() と reset() を サポートするかを得る。<br>
+	 * 
+	 * @return ストリームが mark() と reset() を サポートする場合は true。<br>
+	 * サポートしない場合は false。<br>
+	 */
+	public boolean markSupprted() {
+		return in.markSupported();
+	}
 
+	// ------------------------------------------------------------------
+	// method of java.io.InputStream
 
-    //------------------------------------------------------------------
-    //  method of java.io.InputStream
-    //------------------------------------------------------------------
-    //  other
-    //------------------------------------------------------------------
-    //  public int available()
-    //  public void close()
-    //------------------------------------------------------------------
-    /**
-     * 接続された入力ストリームからブロックしないで
-     * 読み込むことのできるバイト数を得る。<br>
-     * 
-     * @return ブロックしないで読み出せるバイト数。<br>
-     * 
-     * @exception IOException 入出力エラーが発生した場合
-     */
-    public int available() throws IOException {
-        return this.in.available();                                             //throws IOException
-    }
+	/**
+	 * 接続された入力ストリームからブロックしないで 読み込むことのできるバイト数を得る。<br>
+	 * 
+	 * @return ブロックしないで読み出せるバイト数。<br>
+	 * 
+	 * @exception IOException 入出力エラーが発生した場合
+	 */
+	@Override
+	public int available() throws IOException {
+		return in.available();                                             // throws IOException
+	}
 
-    /**
-     * 接続された入力ストリームとの接続を解除する。<br>
-     * このメソッドは disconnect() を呼ぶだけである。<br>
-     */
-    public void close(){
-        this.disconnect();
-    }
+	/**
+	 * 接続された入力ストリームとの接続を解除する。<br>
+	 * このメソッドは disconnect() を呼ぶだけである。<br>
+	 */
+	@Override
+	public void close() {
+		disconnect();
+	}
 
+	// ------------------------------------------------------------------
+	// method of jp.gr.java_conf.dangan.io.Disconnectable
 
-    //------------------------------------------------------------------
-    //  method of jp.gr.java_conf.dangan.io.Disconnectable 
-    //------------------------------------------------------------------
-    //  public void disconnect
-    //------------------------------------------------------------------
-    /**
-     * 接続された入力ストリームとの接続を解除する。<br>
-     */
-    public void disconnect(){
-        this.in = null;
-    }
+	/**
+	 * 接続された入力ストリームとの接続を解除する。<br>
+	 */
+	@Override
+	public void disconnect() {
+		in = null;
+	}
 
 }
-//end of DisconnectableInputStream.java
