@@ -134,29 +134,29 @@ final class CompressMethod {
 	 * @return 辞書サイズ
 	 */
 	public static int toDictionarySize(final String method) {
-		if (CompressMethod.LZS.equalsIgnoreCase(method)) {
+		if (LZS.equalsIgnoreCase(method)) {
 			return 2048;
-		} else if (CompressMethod.LZ5.equalsIgnoreCase(method)) {
+		} else if (LZ5.equalsIgnoreCase(method)) {
 			return 4096;
-		} else if (CompressMethod.LH1.equalsIgnoreCase(method)) {
+		} else if (LH1.equalsIgnoreCase(method)) {
 			return 4096;
-		} else if (CompressMethod.LH2.equalsIgnoreCase(method)) {
+		} else if (LH2.equalsIgnoreCase(method)) {
 			return 8192;
-		} else if (CompressMethod.LH3.equalsIgnoreCase(method)) {
+		} else if (LH3.equalsIgnoreCase(method)) {
 			return 8192;
-		} else if (CompressMethod.LH4.equalsIgnoreCase(method)) {
+		} else if (LH4.equalsIgnoreCase(method)) {
 			return 4096;
-		} else if (CompressMethod.LH5.equalsIgnoreCase(method)) {
+		} else if (LH5.equalsIgnoreCase(method)) {
 			return 8192;
-		} else if (CompressMethod.LH6.equalsIgnoreCase(method)) {
+		} else if (LH6.equalsIgnoreCase(method)) {
 			return 32768;
-		} else if (CompressMethod.LH7.equalsIgnoreCase(method)) {
+		} else if (LH7.equalsIgnoreCase(method)) {
 			return 65536;
-		} else if (CompressMethod.LZ4.equalsIgnoreCase(method)) {
+		} else if (LZ4.equalsIgnoreCase(method)) {
 			throw new IllegalArgumentException(method + " means no compress.");
-		} else if (CompressMethod.LH0.equalsIgnoreCase(method)) {
+		} else if (LH0.equalsIgnoreCase(method)) {
 			throw new IllegalArgumentException(method + " means no compress.");
-		} else if (CompressMethod.LHD.equalsIgnoreCase(method)) {
+		} else if (LHD.equalsIgnoreCase(method)) {
 			throw new IllegalArgumentException(method + " means no compress.");
 		} else if (method == null) {
 			throw new NullPointerException("method");
@@ -172,29 +172,29 @@ final class CompressMethod {
 	 * @return 圧縮/非圧縮
 	 */
 	public static int toThreshold(final String method) {
-		if (CompressMethod.LZS.equalsIgnoreCase(method)) {
+		if (LZS.equalsIgnoreCase(method)) {
 			return 2;
-		} else if (CompressMethod.LZ5.equalsIgnoreCase(method)) {
+		} else if (LZ5.equalsIgnoreCase(method)) {
 			return 3;
-		} else if (CompressMethod.LH1.equalsIgnoreCase(method)) {
+		} else if (LH1.equalsIgnoreCase(method)) {
 			return 3;
-		} else if (CompressMethod.LH2.equalsIgnoreCase(method)) {
+		} else if (LH2.equalsIgnoreCase(method)) {
 			return 3;
-		} else if (CompressMethod.LH3.equalsIgnoreCase(method)) {
+		} else if (LH3.equalsIgnoreCase(method)) {
 			return 3;
-		} else if (CompressMethod.LH4.equalsIgnoreCase(method)) {
+		} else if (LH4.equalsIgnoreCase(method)) {
 			return 3;
-		} else if (CompressMethod.LH5.equalsIgnoreCase(method)) {
+		} else if (LH5.equalsIgnoreCase(method)) {
 			return 3;
-		} else if (CompressMethod.LH6.equalsIgnoreCase(method)) {
+		} else if (LH6.equalsIgnoreCase(method)) {
 			return 3;
-		} else if (CompressMethod.LH7.equalsIgnoreCase(method)) {
+		} else if (LH7.equalsIgnoreCase(method)) {
 			return 3;
-		} else if (CompressMethod.LZ4.equalsIgnoreCase(method)) {
+		} else if (LZ4.equalsIgnoreCase(method)) {
 			throw new IllegalArgumentException(method + " means no compress.");
-		} else if (CompressMethod.LH0.equalsIgnoreCase(method)) {
+		} else if (LH0.equalsIgnoreCase(method)) {
 			throw new IllegalArgumentException(method + " means no compress.");
-		} else if (CompressMethod.LHD.equalsIgnoreCase(method)) {
+		} else if (LHD.equalsIgnoreCase(method)) {
 			throw new IllegalArgumentException(method + " means no compress.");
 		} else if (method == null) {
 			throw new NullPointerException("method");
@@ -210,29 +210,29 @@ final class CompressMethod {
 	 * @return 最大一致長
 	 */
 	public static int toMaxMatch(final String method) {
-		if (CompressMethod.LZS.equalsIgnoreCase(method)) {
+		if (LZS.equalsIgnoreCase(method)) {
 			return 17;
-		} else if (CompressMethod.LZ5.equalsIgnoreCase(method)) {
+		} else if (LZ5.equalsIgnoreCase(method)) {
 			return 18;
-		} else if (CompressMethod.LH1.equalsIgnoreCase(method)) {
+		} else if (LH1.equalsIgnoreCase(method)) {
 			return 60;
-		} else if (CompressMethod.LH2.equalsIgnoreCase(method)) {
+		} else if (LH2.equalsIgnoreCase(method)) {
 			return 256;
-		} else if (CompressMethod.LH3.equalsIgnoreCase(method)) {
+		} else if (LH3.equalsIgnoreCase(method)) {
 			return 256;
-		} else if (CompressMethod.LH4.equalsIgnoreCase(method)) {
+		} else if (LH4.equalsIgnoreCase(method)) {
 			return 256;
-		} else if (CompressMethod.LH5.equalsIgnoreCase(method)) {
+		} else if (LH5.equalsIgnoreCase(method)) {
 			return 256;
-		} else if (CompressMethod.LH6.equalsIgnoreCase(method)) {
+		} else if (LH6.equalsIgnoreCase(method)) {
 			return 256;
-		} else if (CompressMethod.LH7.equalsIgnoreCase(method)) {
+		} else if (LH7.equalsIgnoreCase(method)) {
 			return 256;
-		} else if (CompressMethod.LZ4.equalsIgnoreCase(method)) {
+		} else if (LZ4.equalsIgnoreCase(method)) {
 			throw new IllegalArgumentException(method + " means no compress.");
-		} else if (CompressMethod.LH0.equalsIgnoreCase(method)) {
+		} else if (LH0.equalsIgnoreCase(method)) {
 			throw new IllegalArgumentException(method + " means no compress.");
-		} else if (CompressMethod.LHD.equalsIgnoreCase(method)) {
+		} else if (LHD.equalsIgnoreCase(method)) {
 			throw new IllegalArgumentException(method + " means no compress.");
 		} else if (method == null) {
 			throw new NullPointerException("method");
@@ -253,7 +253,7 @@ final class CompressMethod {
 	 * @return method の圧縮法でデータを圧縮し、outに出力するストリーム
 	 */
 	public static OutputStream connectEncoder(final OutputStream out, final String method, final Properties property) {
-		final String key = "lha." + CompressMethod.getCore(method) + ".encoder";
+		final String key = "lha." + getCore(method) + ".encoder";
 
 		String generator = property.getProperty(key);
 		if (generator == null) {
@@ -265,7 +265,7 @@ final class CompressMethod {
 			packages = LhaProperty.getProperty("lha.packages");
 		}
 
-		final Hashtable substitute = new Hashtable();
+		final Hashtable<String, Object> substitute = new Hashtable<String, Object>();
 		substitute.put("out", out);
 
 		return (OutputStream) LhaProperty.parse(generator, substitute, packages);
@@ -280,7 +280,7 @@ final class CompressMethod {
 	 * @return in から method の圧縮法で圧縮されたデータを解凍し 供給する入力ストリームを構築する。
 	 */
 	public static InputStream connectDecoder(final InputStream in, final String method, final Properties property, final long length) {
-		final String key = "lha." + CompressMethod.getCore(method) + ".decoder";
+		final String key = "lha." + getCore(method) + ".decoder";
 
 		String generator = property.getProperty(key);
 		if (generator == null) {
@@ -292,7 +292,7 @@ final class CompressMethod {
 			packages = LhaProperty.getProperty("lha.packages");
 		}
 
-		final Hashtable substitute = new Hashtable();
+		final Hashtable<String, Object> substitute = new Hashtable<String, Object>();
 		substitute.put("in", in);
 		substitute.put("length", new Long(length));
 
