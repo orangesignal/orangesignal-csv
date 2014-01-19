@@ -1,9 +1,4 @@
-//start of BitDataBrokenException.java
-//TEXT_STYLE:CODE=Shift_JIS(Japanese):RET_CODE=CRLF
-
 /**
- * BitDataBrokenException.java
- * 
  * Copyright (C) 2001-2002  Michel Ishizuka  All rights reserved.
  * 
  * 以下の条件に同意するならばソースとバイナリ形式の再配布と使用を
@@ -31,23 +26,12 @@
 
 package jp.gr.java_conf.dangan.io;
 
-//import classes and interfaces
-
-//import exceptions
 import java.io.IOException;
-import java.lang.Throwable;
-
 
 /**
- * EndOfStream に達してしまったため要求されたビット数の
- * データを得られなかった場合に投げられる例外。<br>
- * jp.gr.java_conf.dangan.io.BitInputStream 用であるため、
- * 保持しておける データは 32ビットまでとなっている点に
- * 注意すること。<br>
- * NotEnoughBitsException と違い、こちらの例外を投げる
- * 場合には 実際に読み込み動作を行ってしまっているため
- * 読み込み位置は例外を投げる前の時点から変化してしまっ
- * ている点に注意すること。<br>
+ * EndOfStream に達してしまったため要求されたビット数の データを得られなかった場合に投げられる例外。<br>
+ * jp.gr.java_conf.dangan.io.BitInputStream 用であるため、 保持しておける データは 32ビットまでとなっている点に 注意すること。<br>
+ * NotEnoughBitsException と違い、こちらの例外を投げる 場合には 実際に読み込み動作を行ってしまっているため 読み込み位置は例外を投げる前の時点から変化してしまっ ている点に注意すること。<br>
  * 
  * <pre>
  * -- revision history --
@@ -55,112 +39,81 @@ import java.lang.Throwable;
  * Revision 1.1  2002/12/07 00:00:00  dangan
  * [maintenance]
  *     ソース整備
- *
+ * 
  * Revision 1.0  2002/07/24 00:00:00  dangan
  * add to version control
  * [maintenance]
  *     タブ廃止
  *     ライセンス文の修正
- *
+ * 
  * </pre>
  * 
- * @author  $Author: dangan $
+ * @author $Author: dangan $
  * @version $Revision: 1.1 $
  */
-public class BitDataBrokenException extends IOException{
+@SuppressWarnings("serial")
+public class BitDataBrokenException extends IOException {
 
+	/**
+	 * ビットデータが途中までしか 取得できない原因となった例外
+	 */
+	private Throwable cause;
 
-    //------------------------------------------------------------------
-    //  instance field
-    //------------------------------------------------------------------
-    //  private Throwable cause
-    //  private int bitData
-    //  private int bitCount
-    //------------------------------------------------------------------
-    /**
-     * ビットデータが途中までしか
-     * 取得できない原因となった例外
-     */
-    private Throwable cause;
+	/**
+	 * 途中までのビットデータ
+	 */
+	private int bitData;
 
-    /**
-     * 途中までのビットデータ
-     */
-    private int bitData;
+	/**
+	 * bitData の有効ビット数
+	 */
+	private int bitCount;
 
-    /**
-     * bitData の有効ビット数
-     */
-    private int bitCount;
+	// ------------------------------------------------------------------
+	// Constructor
 
+	/**
+	 * 新しい BitDataBrokenException を構築する。<br>
+	 * 
+	 * @param cause ビットデータが途中までしか取得できない 原因となった例外
+	 * @param bitData 要求されたビット数に満たないビットデータ
+	 * @param bitCount bitData のビット数
+	 */
+	public BitDataBrokenException(final Throwable cause, final int bitData, final int bitCount) {
+		this.cause = cause;
+		this.bitData = bitData;
+		this.bitCount = bitCount;
+	}
 
-    //------------------------------------------------------------------
-    //  constructor
-    //------------------------------------------------------------------
-    //  private BitDataBrokenException()
-    //  public BitDataBrokenException( Throwable cause,
-    //                                 int bitData, int bitCount )
-    //------------------------------------------------------------------
-    /**
-     * デフォルトコンストラクタ。
-     * 使用不可
-     */
-    private BitDataBrokenException(){    }
+	// ------------------------------------------------------------------
+	// access method
 
-    /**
-     * 新しい BitDataBrokenException を構築する。<br>
-     * 
-     * @param cause    ビットデータが途中までしか取得できない
-     *                 原因となった例外
-     * @param bitData  要求されたビット数に満たないビットデータ
-     * @param bitCount bitData のビット数
-     * 
-     */
-    public BitDataBrokenException( Throwable cause,
-                                   int       bitData,
-                                   int       bitCount ){
-        this.cause    = cause;
-        this.bitData  = bitData;
-        this.bitCount = bitCount;
-    }
+	/**
+	 * ビットデータが途中までしか 取得できない原因となった例外を得る。<br>
+	 * 
+	 * @return 原因となった例外
+	 */
+	@Override
+	public Throwable getCause() {
+		return cause;
+	}
 
+	/**
+	 * 要求されたビット数に満たない "壊れた" ビットデータを得る。<br>
+	 * 
+	 * @return ビットデータ
+	 */
+	public int getBitData() {
+		return bitData;
+	}
 
-    //------------------------------------------------------------------
-    //  access method
-    //------------------------------------------------------------------
-    //  public Throwable getCause()
-    //  public int getBitData()
-    //  public int getBitCount()
-    //------------------------------------------------------------------
-    /**
-     * ビットデータが途中までしか
-     * 取得できない原因となった例外を得る。<br>
-     * 
-     * @return 原因となった例外
-     */
-    public Throwable getCause(){
-        return this.cause;
-    }
-
-    /**
-     * 要求されたビット数に満たない
-     * "壊れた" ビットデータを得る。<br>
-     *
-     * @return ビットデータ
-     */
-    public int getBitData(){
-        return this.bitData;
-    }
-
-    /**
-     * getBitData() で得られる
-     * ビットデータの有効ビット数を得る。
-     * 
-     * @return ビットデータの有効ビット数
-     */
-    public int getBitCount(){
-        return this.bitCount;
-    }
+	/**
+	 * getBitData() で得られる ビットデータの有効ビット数を得る。
+	 * 
+	 * @return ビットデータの有効ビット数
+	 */
+	public int getBitCount() {
+		return bitCount;
+	}
 
 }
-// end of BitDataBrokenException.java
