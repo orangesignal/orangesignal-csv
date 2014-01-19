@@ -1,0 +1,917 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+           "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title>Coverage Report</title>
+<link title="Style" type="text/css" rel="stylesheet" href="css/main.css"/>
+<script type="text/javascript" src="js/popup.js"></script>
+</head>
+<body>
+<h5>Coverage Report - com.orangesignal.jlha.StaticHuffman</h5>
+<div class="separator">&nbsp;</div>
+<table class="report">
+<thead><tr>  <td class="heading">Classes in this File</td>  <td class="heading"><a class="dfn" href="help.html" onclick="popupwindow('help.html'); return false;">Line Coverage</a></td>  <td class="heading"><a class="dfn" href="help.html" onclick="popupwindow('help.html'); return false;">Branch Coverage</a></td>  <td class="heading"><a class="dfn" href="help.html" onclick="popupwindow('help.html'); return false;">Complexity</a></td></tr></thead>
+  <tr><td><a href="com.orangesignal.jlha.StaticHuffman.html">StaticHuffman</a></td><td><table cellpadding="0px" cellspacing="0px" class="percentgraph"><tr class="percentgraph"><td align="right" class="percentgraph" width="40">71%</td><td class="percentgraph"><div class="percentgraph"><div class="greenbar" style="width:71px"><span class="text">140/197</span></div></div></td></tr></table></td><td><table cellpadding="0px" cellspacing="0px" class="percentgraph"><tr class="percentgraph"><td align="right" class="percentgraph" width="40">74%</td><td class="percentgraph"><div class="percentgraph"><div class="greenbar" style="width:74px"><span class="text">95/128</span></div></div></td></tr></table></td><td class="value"><span class="hidden">7.8;</span>7.8</td></tr>
+
+</table>
+<div class="separator">&nbsp;</div>
+<table cellspacing="0" cellpadding="0" class="src">
+<tr>  <td class="numLine">&nbsp;1</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment">/**</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;2</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment"> * Copyright (C) 2001-2002  Michel Ishizuka  All rights reserved.</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;3</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment"> * </span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;4</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment"> * 以下の条件に同意するならばソースとバイナリ形式の再配布と使用を</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;5</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment"> * 変更の有無にかかわらず許可する。</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;6</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment"> * </span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;7</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment"> * １．ソースコードの再配布において著作権表示と この条件のリスト</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;8</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment"> *     および下記の声明文を保持しなくてはならない。</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;9</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment"> * </span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;10</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment"> * ２．バイナリ形式の再配布において著作権表示と この条件のリスト</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;11</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment"> *     および下記の声明文を使用説明書もしくは その他の配布物内に</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;12</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment"> *     含む資料に記述しなければならない。</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;13</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment"> * </span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;14</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment"> * このソフトウェアは石塚美珠瑠によって無保証で提供され、特定の目</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;15</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment"> * 的を達成できるという保証、商品価値が有るという保証にとどまらず、</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;16</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment"> * いかなる明示的および暗示的な保証もしない。</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;17</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment"> * 石塚美珠瑠は このソフトウェアの使用による直接的、間接的、偶発</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;18</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment"> * 的、特殊な、典型的な、あるいは必然的な損害(使用によるデータの</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;19</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment"> * 損失、業務の中断や見込まれていた利益の遺失、代替製品もしくは</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;20</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment"> * サービスの導入費等が考えられるが、決してそれだけに限定されない</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;21</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment"> * 損害)に対して、いかなる事態の原因となったとしても、契約上の責</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;22</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment"> * 任や無過失責任を含む いかなる責任があろうとも、たとえそれが不</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;23</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment"> * 正行為のためであったとしても、またはそのような損害の可能性が報</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;24</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment"> * 告されていたとしても一切の責任を負わないものとする。</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;25</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment"> */</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;26</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;27</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="keyword">package</span> com.orangesignal.jlha;</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;28</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;29</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment">/**</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;30</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment"> * 静的ハフマン用ユーティリティ関数群を保持する。&lt;br&gt;</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;31</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment"> * ハフマン符号は最大16ビットに制限される。&lt;br&gt;</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;32</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment"> * </span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;33</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment"> * @author $Author: dangan $</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;34</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment"> * @version $Revision: 1.0 $</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;35</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment"> */</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;36</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="keyword">final</span> <span class="keyword">class</span> StaticHuffman {</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;37</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;38</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;        <span class="comment">/**</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;39</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment">         * LHAがDOSの16bitモードを使用して作られたことによる ハフマン符号長の制限。</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;40</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment">         */</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;41</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;        <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> LIMIT_LEN = 16;</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;42</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;43</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;        <span class="comment">// ------------------------------------------------------------------</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;44</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;        <span class="comment">// Constructor</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;45</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;46</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;        <span class="comment">/**</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;47</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment">         * デフォルトコンストラクタ。 使用不可。</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;48</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment">         */</span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;49</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;        <span class="keyword">private</span> StaticHuffman() {}</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;50</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;51</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;        <span class="comment">// ------------------------------------------------------------------</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;52</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;        <span class="comment">// shared method</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;53</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;54</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;        <span class="comment">/**</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;55</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment">         * 頻度表から ハフマン符号のビット長の表を作成する。</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;56</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment">         * </span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;57</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment">         * @param FreqList 頻度表</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;58</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment">         * @return ハフマン符号のビット長の表</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;59</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment">         */</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;60</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;        <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span>[] FreqListToLenList(<span class="keyword">final</span> <span class="keyword">int</span>[] FreqList) {</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;61</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                <span class="comment">/**</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;62</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment">                 * ハフマン木を構成する配列群 ハフマン木は 0～FreqList.length までは全てが葉であり、 そのノード番号は符号である。木がいったん完成した後は TreeCount-1がルートノードとなる。 NodeWeight:: そのノードの重みを持つ SmallNode:: 小さな子ノードのノード番号を持つ LargeNode:: 大きな子ノードのノード番号を持つ TreeCount:: 有効なノードの個数を持つ</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;63</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment">                 */</span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;64</td>  <td class="nbHitsCovered">&nbsp;6</td>  <td class="src"><pre class="src">&nbsp;                <span class="keyword">final</span> <span class="keyword">int</span>[] NodeWeight = <span class="keyword">new</span> <span class="keyword">int</span>[FreqList.length * 2 - 1];</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;65</td>  <td class="nbHitsCovered">&nbsp;6</td>  <td class="src"><pre class="src">&nbsp;                <span class="keyword">final</span> <span class="keyword">int</span>[] SmallNode = <span class="keyword">new</span> <span class="keyword">int</span>[FreqList.length * 2 - 1];</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;66</td>  <td class="nbHitsCovered">&nbsp;6</td>  <td class="src"><pre class="src">&nbsp;                <span class="keyword">final</span> <span class="keyword">int</span>[] LargeNode = <span class="keyword">new</span> <span class="keyword">int</span>[FreqList.length * 2 - 1];</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;67</td>  <td class="nbHitsCovered">&nbsp;6</td>  <td class="src"><pre class="src">&nbsp;                <span class="keyword">int</span> TreeCount = FreqList.length;</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;68</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;69</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                <span class="comment">/**</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;70</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment">                 * ハフマン木の葉のノード番号を小さな順に格納したリスト。 Leafs:: リスト本体 LeafCount:: 葉の個数</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;71</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment">                 */</span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;72</td>  <td class="nbHitsCovered">&nbsp;6</td>  <td class="src"><pre class="src">&nbsp;                <span class="keyword">final</span> <span class="keyword">int</span>[] Leafs = <span class="keyword">new</span> <span class="keyword">int</span>[FreqList.length];</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;73</td>  <td class="nbHitsCovered">&nbsp;6</td>  <td class="src"><pre class="src">&nbsp;                <span class="keyword">int</span> LeafCount = 0;</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;74</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;75</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                <span class="comment">/**</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;76</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment">                 * ハフマン木の葉でないノードのノード番号を 小さな順に格納したリストを格納する。 Nodes:: リスト本体 NodeCount:: 葉でないノードの個数</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;77</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment">                 */</span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;78</td>  <td class="nbHitsCovered">&nbsp;6</td>  <td class="src"><pre class="src">&nbsp;                <span class="keyword">final</span> <span class="keyword">int</span>[] Nodes = <span class="keyword">new</span> <span class="keyword">int</span>[FreqList.length - 1];</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;79</td>  <td class="nbHitsCovered">&nbsp;6</td>  <td class="src"><pre class="src">&nbsp;                <span class="keyword">int</span> NodeCount = 0;</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;80</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;81</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                <span class="comment">// 木に葉をセットし、</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;82</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                <span class="comment">// Leafsに頻度1以上の葉のみセットする。</span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;83</td>  <td class="nbHitsCovered"><a title="Line 83: Conditional coverage 100% (2/2).">&nbsp;1092</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 83: Conditional coverage 100% (2/2).">                <span class="keyword">for</span> (<span class="keyword">int</span> i = 0; i &lt; FreqList.length; i++) {</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;84</td>  <td class="nbHitsCovered">&nbsp;1086</td>  <td class="src"><pre class="src">&nbsp;                        NodeWeight[i] = FreqList[i];</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;85</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;86</td>  <td class="nbHitsCovered"><a title="Line 86: Conditional coverage 100% (2/2).">&nbsp;1086</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 86: Conditional coverage 100% (2/2).">                        <span class="keyword">if</span> (0 &lt; FreqList[i]) {</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;87</td>  <td class="nbHitsCovered">&nbsp;34</td>  <td class="src"><pre class="src">&nbsp;                                Leafs[LeafCount++] = i;</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;88</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                        }</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;89</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                }</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;90</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;91</td>  <td class="nbHitsCovered"><a title="Line 91: Conditional coverage 100% (2/2).">&nbsp;6</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 91: Conditional coverage 100% (2/2).">                <span class="keyword">if</span> (2 &lt;= LeafCount) {</a></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;92</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                        <span class="comment">// =================================</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;93</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                        <span class="comment">// ハフマン木を作成する</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;94</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                        <span class="comment">// =================================</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;95</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;96</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                        <span class="comment">// ハフマン木の葉となるべき要素を整列させる。</span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;97</td>  <td class="nbHitsCovered">&nbsp;4</td>  <td class="src"><pre class="src">&nbsp;                        mergeSort(Leafs, 0, LeafCount - 1, FreqList, <span class="keyword">new</span> <span class="keyword">int</span>[LeafCount / 2 + 1]);</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;98</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;99</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                        <span class="comment">// 葉か、ノードの最小のもの2つを新しいノードに</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;100</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                        <span class="comment">// 結びつける事を繰り返し、ルートノードまで作成する。</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;101</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                        <span class="comment">// この処理によってハフマン木が完成する。</span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;102</td>  <td class="nbHitsCovered">&nbsp;4</td>  <td class="src"><pre class="src">&nbsp;                        <span class="keyword">int</span> LeafIndex = 0;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;103</td>  <td class="nbHitsCovered">&nbsp;4</td>  <td class="src"><pre class="src">&nbsp;                        <span class="keyword">int</span> NodeIndex = 0;</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;104</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                        <span class="keyword">do</span> {</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;105</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                                <span class="keyword">int</span> small;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;106</td>  <td class="nbHitsCovered"><a title="Line 106: Conditional coverage 100% (2/2).">&nbsp;30</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 106: Conditional coverage 100% (2/2).">                                <span class="keyword">if</span> (NodeCount &lt;= NodeIndex) {</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;107</td>  <td class="nbHitsCovered">&nbsp;4</td>  <td class="src"><pre class="src">&nbsp;                                        small = Leafs[LeafIndex++];</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;108</td>  <td class="nbHitsCovered"><a title="Line 108: Conditional coverage 100% (2/2).">&nbsp;26</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 108: Conditional coverage 100% (2/2).">                                } <span class="keyword">else</span> <span class="keyword">if</span> (LeafCount &lt;= LeafIndex) {</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;109</td>  <td class="nbHitsCovered">&nbsp;10</td>  <td class="src"><pre class="src">&nbsp;                                        small = Nodes[NodeIndex++];</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;110</td>  <td class="nbHitsCovered"><a title="Line 110: Conditional coverage 100% (2/2).">&nbsp;16</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 110: Conditional coverage 100% (2/2).">                                } <span class="keyword">else</span> <span class="keyword">if</span> (NodeWeight[Leafs[LeafIndex]] &lt;= NodeWeight[Nodes[NodeIndex]]) {</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;111</td>  <td class="nbHitsCovered">&nbsp;14</td>  <td class="src"><pre class="src">&nbsp;                                        small = Leafs[LeafIndex++];</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;112</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                                } <span class="keyword">else</span> {</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;113</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;                                        small = Nodes[NodeIndex++];</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;114</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                                }</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;115</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;116</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                                <span class="keyword">int</span> large;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;117</td>  <td class="nbHitsCovered"><a title="Line 117: Conditional coverage 100% (2/2).">&nbsp;30</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 117: Conditional coverage 100% (2/2).">                                <span class="keyword">if</span> (NodeCount &lt;= NodeIndex) {</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;118</td>  <td class="nbHitsCovered">&nbsp;4</td>  <td class="src"><pre class="src">&nbsp;                                        large = Leafs[LeafIndex++];</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;119</td>  <td class="nbHitsCovered"><a title="Line 119: Conditional coverage 100% (2/2).">&nbsp;26</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 119: Conditional coverage 100% (2/2).">                                } <span class="keyword">else</span> <span class="keyword">if</span> (LeafCount &lt;= LeafIndex) {</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;120</td>  <td class="nbHitsCovered">&nbsp;12</td>  <td class="src"><pre class="src">&nbsp;                                        large = Nodes[NodeIndex++];</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;121</td>  <td class="nbHitsCovered"><a title="Line 121: Conditional coverage 100% (2/2).">&nbsp;14</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 121: Conditional coverage 100% (2/2).">                                } <span class="keyword">else</span> <span class="keyword">if</span> (NodeWeight[Leafs[LeafIndex]] &lt;= NodeWeight[Nodes[NodeIndex]]) {</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;122</td>  <td class="nbHitsCovered">&nbsp;12</td>  <td class="src"><pre class="src">&nbsp;                                        large = Leafs[LeafIndex++];</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;123</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                                } <span class="keyword">else</span> {</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;124</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;                                        large = Nodes[NodeIndex++];</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;125</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                                }</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;126</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;127</td>  <td class="nbHitsCovered">&nbsp;30</td>  <td class="src"><pre class="src">&nbsp;                                <span class="keyword">final</span> <span class="keyword">int</span> newNode = TreeCount++;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;128</td>  <td class="nbHitsCovered">&nbsp;30</td>  <td class="src"><pre class="src">&nbsp;                                NodeWeight[newNode] = NodeWeight[small] + NodeWeight[large];</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;129</td>  <td class="nbHitsCovered">&nbsp;30</td>  <td class="src"><pre class="src">&nbsp;                                SmallNode[newNode] = small;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;130</td>  <td class="nbHitsCovered">&nbsp;30</td>  <td class="src"><pre class="src">&nbsp;                                LargeNode[newNode] = large;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;131</td>  <td class="nbHitsCovered">&nbsp;30</td>  <td class="src"><pre class="src">&nbsp;                                Nodes[NodeCount++] = newNode;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;132</td>  <td class="nbHitsCovered"><a title="Line 132: Conditional coverage 100% (2/2).">&nbsp;30</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 132: Conditional coverage 100% (2/2).">                        } <span class="keyword">while</span> (NodeIndex + LeafIndex &lt; NodeCount + LeafCount - 1);</a></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;133</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;134</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                        <span class="comment">// ============================================</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;135</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                        <span class="comment">// ハフマン木からハフマン符号長の表を作成する。</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;136</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                        <span class="comment">// ============================================</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;137</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                        <span class="comment">// ハフマン木からハフマン符号長の頻度表を作成する。</span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;138</td>  <td class="nbHitsCovered">&nbsp;4</td>  <td class="src"><pre class="src">&nbsp;                        <span class="keyword">final</span> <span class="keyword">int</span>[] LenFreq = huffmanTreeToLenFreq(SmallNode, LargeNode, TreeCount - 1);</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;139</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;140</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                        <span class="comment">// ハフマン符号長の頻度長から符号長の表を作成する。</span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;141</td>  <td class="nbHitsCovered">&nbsp;4</td>  <td class="src"><pre class="src">&nbsp;                        <span class="keyword">final</span> <span class="keyword">int</span>[] LenList = <span class="keyword">new</span> <span class="keyword">int</span>[FreqList.length];</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;142</td>  <td class="nbHitsCovered">&nbsp;4</td>  <td class="src"><pre class="src">&nbsp;                        LeafIndex = 0;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;143</td>  <td class="nbHitsCovered"><a title="Line 143: Conditional coverage 100% (2/2).">&nbsp;68</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 143: Conditional coverage 100% (2/2).">                        <span class="keyword">for</span> (<span class="keyword">int</span> len = LIMIT_LEN; 0 &lt; len; len--) {</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;144</td>  <td class="nbHitsCovered"><a title="Line 144: Conditional coverage 100% (2/2).">&nbsp;98</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 144: Conditional coverage 100% (2/2).">                                <span class="keyword">while</span> (0 &lt; LenFreq[len]--) {</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;145</td>  <td class="nbHitsCovered">&nbsp;34</td>  <td class="src"><pre class="src">&nbsp;                                        LenList[Leafs[LeafIndex++]] = len;</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;146</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                                }</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;147</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                        }</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;148</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;149</td>  <td class="nbHitsCovered">&nbsp;4</td>  <td class="src"><pre class="src">&nbsp;                        <span class="keyword">return</span> LenList;</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;150</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                }</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;151</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;                <span class="keyword">return</span> <span class="keyword">new</span> <span class="keyword">int</span>[FreqList.length];</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;152</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;        }</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;153</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;154</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;        <span class="comment">/**</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;155</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment">         * 頻度表から ハフマン符号のビット長の表を作成する。 オリジナルのLHAと同じコードを出力する。</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;156</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment">         * </span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;157</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment">         * @param FreqList 頻度表</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;158</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment">         * @return ハフマン符号のビット長の表</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;159</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment">         */</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;160</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;        <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span>[] FreqListToLenListOriginal(<span class="keyword">final</span> <span class="keyword">int</span>[] FreqList) {</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;161</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                <span class="comment">/**</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;162</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment">                 * ハフマン木を構成する配列群 ハフマン木は 0～FreqList.length までは全てが葉であり、 そのノード番号は符号である。木がいったん完成した後は TreeCount-1がルートノードとなる。 NodeWeight:: そのノードの重みを持つ SmallNode:: 小さな子ノードのノード番号を持つ LargeNode:: 大きな子ノードのノード番号を持つ TreeCount:: 有効なノードの個数を持つ</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;163</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment">                 */</span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;164</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;                <span class="keyword">final</span> <span class="keyword">int</span>[] NodeWeight = <span class="keyword">new</span> <span class="keyword">int</span>[FreqList.length * 2 - 1];</span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;165</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;                <span class="keyword">final</span> <span class="keyword">int</span>[] SmallNode = <span class="keyword">new</span> <span class="keyword">int</span>[FreqList.length * 2 - 1];</span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;166</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;                <span class="keyword">final</span> <span class="keyword">int</span>[] LargeNode = <span class="keyword">new</span> <span class="keyword">int</span>[FreqList.length * 2 - 1];</span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;167</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;                <span class="keyword">int</span> TreeCount = FreqList.length;</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;168</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;169</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                <span class="comment">/**</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;170</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment">                 * ハフマン木の葉のノード番号を小さな順に格納したリスト。 Leafs:: リスト本体 LeafCount:: 葉の個数</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;171</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment">                 */</span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;172</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;                <span class="keyword">final</span> <span class="keyword">int</span>[] Leafs = <span class="keyword">new</span> <span class="keyword">int</span>[FreqList.length];</span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;173</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;                <span class="keyword">int</span> LeafCount = 0;</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;174</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;175</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                <span class="comment">/**</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;176</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment">                 * ハフマン木の全てのノードのノード番号を 小さな順に格納したリストを格納する。 ヒープソートを使用するため、Heap[0]は使用しない Heap:: リスト本体 HeapLast:: Heapの最後の要素</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;177</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment">                 */</span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;178</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;                <span class="keyword">final</span> <span class="keyword">int</span>[] Heap = <span class="keyword">new</span> <span class="keyword">int</span>[FreqList.length * 2];</span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;179</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;                <span class="keyword">int</span> HeapLast = 0;</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;180</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;181</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                <span class="comment">// 木に葉をセットし、</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;182</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                <span class="comment">// Heapに頻度1以上の葉のみセットする。</span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;183</td>  <td class="nbHitsUncovered"><a title="Line 183: Conditional coverage 0% (0/2).">&nbsp;0</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 183: Conditional coverage 0% (0/2).">                <span class="keyword">for</span> (<span class="keyword">int</span> i = 0; i &lt; FreqList.length; i++) {</a></span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;184</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;                        NodeWeight[i] = FreqList[i];</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;185</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;186</td>  <td class="nbHitsUncovered"><a title="Line 186: Conditional coverage 0% (0/2).">&nbsp;0</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 186: Conditional coverage 0% (0/2).">                        <span class="keyword">if</span> (0 &lt; FreqList[i]) {</a></span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;187</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;                                Heap[++HeapLast] = i;</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;188</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                        }</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;189</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                }</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;190</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;191</td>  <td class="nbHitsUncovered"><a title="Line 191: Conditional coverage 0% (0/2).">&nbsp;0</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 191: Conditional coverage 0% (0/2).">                <span class="keyword">if</span> (2 &lt;= HeapLast) {</a></span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;192</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                        <span class="comment">// =================================</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;193</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                        <span class="comment">// ハフマン木を作成する</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;194</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                        <span class="comment">// =================================</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;195</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;196</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                        <span class="comment">// ハフマン木の葉となるべき要素を整列させる。</span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;197</td>  <td class="nbHitsUncovered"><a title="Line 197: Conditional coverage 0% (0/2).">&nbsp;0</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 197: Conditional coverage 0% (0/2).">                        <span class="keyword">for</span> (<span class="keyword">int</span> i = HeapLast / 2; 1 &lt;= i; i--) {</a></span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;198</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;                                downHeap(Heap, HeapLast, NodeWeight, i);</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;199</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                        }</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;200</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;201</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                        <span class="comment">// 葉か、ノードの最小のもの2つを新しいノードに</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;202</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                        <span class="comment">// 結びつける事を繰り返し、ルートノードまで作成する。</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;203</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                        <span class="comment">// この処理によってハフマン木が完成する。</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;204</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                        <span class="keyword">do</span> {</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;205</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;                                <span class="keyword">final</span> <span class="keyword">int</span> small = Heap[1];</span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;206</td>  <td class="nbHitsUncovered"><a title="Line 206: Conditional coverage 0% (0/2).">&nbsp;0</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 206: Conditional coverage 0% (0/2).">                                <span class="keyword">if</span> (small &lt; FreqList.length) {</a></span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;207</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;                                        Leafs[LeafCount++] = small;</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;208</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                                }</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;209</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;210</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;                                Heap[1] = Heap[HeapLast--];</span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;211</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;                                downHeap(Heap, HeapLast, NodeWeight, 1);</span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;212</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;                                <span class="keyword">final</span> <span class="keyword">int</span> large = Heap[1];</span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;213</td>  <td class="nbHitsUncovered"><a title="Line 213: Conditional coverage 0% (0/2).">&nbsp;0</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 213: Conditional coverage 0% (0/2).">                                <span class="keyword">if</span> (large &lt; FreqList.length) {</a></span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;214</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;                                        Leafs[LeafCount++] = large;</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;215</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                                }</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;216</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;217</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;                                <span class="keyword">final</span> <span class="keyword">int</span> newNode = TreeCount++;</span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;218</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;                                NodeWeight[newNode] = NodeWeight[small] + NodeWeight[large];</span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;219</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;                                SmallNode[newNode] = small;</span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;220</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;                                LargeNode[newNode] = large;</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;221</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;222</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;                                Heap[1] = newNode;</span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;223</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;                                downHeap(Heap, HeapLast, NodeWeight, 1);</span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;224</td>  <td class="nbHitsUncovered"><a title="Line 224: Conditional coverage 0% (0/2).">&nbsp;0</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 224: Conditional coverage 0% (0/2).">                        } <span class="keyword">while</span> (1 &lt; HeapLast);</a></span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;225</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;226</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                        <span class="comment">// ============================================</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;227</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                        <span class="comment">// ハフマン木からハフマン符号長の表を作成する。</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;228</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                        <span class="comment">// ============================================</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;229</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;230</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                        <span class="comment">// ハフマン木からハフマン符号長の頻度表を作成する。</span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;231</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;                        <span class="keyword">final</span> <span class="keyword">int</span>[] LenFreq = huffmanTreeToLenFreq(SmallNode, LargeNode, TreeCount - 1);</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;232</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                        <span class="comment">// ハフマン符号長の頻度長から符号長の表を作成する。</span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;233</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;                        <span class="keyword">final</span> <span class="keyword">int</span>[] LenList = <span class="keyword">new</span> <span class="keyword">int</span>[FreqList.length];</span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;234</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;                        <span class="keyword">int</span> LeafIndex = 0;</span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;235</td>  <td class="nbHitsUncovered"><a title="Line 235: Conditional coverage 0% (0/2).">&nbsp;0</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 235: Conditional coverage 0% (0/2).">                        <span class="keyword">for</span> (<span class="keyword">int</span> len = LIMIT_LEN; 0 &lt; len; len--) {</a></span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;236</td>  <td class="nbHitsUncovered"><a title="Line 236: Conditional coverage 0% (0/2).">&nbsp;0</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 236: Conditional coverage 0% (0/2).">                                <span class="keyword">while</span> (0 &lt; LenFreq[len]--) {</a></span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;237</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;                                        LenList[Leafs[LeafIndex++]] = len;</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;238</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                                }</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;239</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                        }</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;240</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;241</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;                        <span class="keyword">return</span> LenList;</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;242</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                }</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;243</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;                <span class="keyword">return</span> <span class="keyword">new</span> <span class="keyword">int</span>[FreqList.length];</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;244</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;        }</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;245</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;246</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;        <span class="comment">/**</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;247</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment">         * ハフマン符号長のリストから ハフマン符号表を作成する。</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;248</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment">         * </span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;249</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment">         * @param LenList ハフマン符号長のリスト</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;250</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment">         * @return ハフマン符号表</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;251</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment">         * @exception BadHuffmanTableException LenListが不正なため、 ハフマン符号表が生成出来ない場合</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;252</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment">         */</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;253</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;        <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span>[] LenListToCodeList(<span class="keyword">final</span> <span class="keyword">int</span>[] LenList) <span class="keyword">throws</span> BadHuffmanTableException {</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;254</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                <span class="comment">// ハフマン符号長の頻度表</span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;255</td>  <td class="nbHitsCovered">&nbsp;82</td>  <td class="src"><pre class="src">&nbsp;                <span class="keyword">final</span> <span class="keyword">int</span>[] LenFreq = <span class="keyword">new</span> <span class="keyword">int</span>[LIMIT_LEN + 1];</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;256</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                <span class="comment">// ハフマン符号長に対応した符号</span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;257</td>  <td class="nbHitsCovered">&nbsp;82</td>  <td class="src"><pre class="src">&nbsp;                <span class="keyword">final</span> <span class="keyword">int</span>[] CodeStart = <span class="keyword">new</span> <span class="keyword">int</span>[LIMIT_LEN + 2];</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;258</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;259</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                <span class="comment">// ハフマン符号長の頻度表作成</span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;260</td>  <td class="nbHitsCovered"><a title="Line 260: Conditional coverage 100% (2/2).">&nbsp;8770</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 260: Conditional coverage 100% (2/2).">                <span class="keyword">for</span> (<span class="keyword">int</span> i = 0; i &lt; LenList.length; i++) {</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;261</td>  <td class="nbHitsCovered">&nbsp;8688</td>  <td class="src"><pre class="src">&nbsp;                        LenFreq[LenList[i]]++;</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;262</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                }</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;263</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;264</td>  <td class="nbHitsCovered"><a title="Line 264: Conditional coverage 100% (2/2).">&nbsp;82</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 264: Conditional coverage 100% (2/2).">                <span class="keyword">if</span> (LenFreq[0] &lt; LenList.length) {</a></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;265</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;266</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                        <span class="comment">// CodeStart[1] = 0; //Javaでは必要無いのでコメントアウトしている。</span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;267</td>  <td class="nbHitsCovered"><a title="Line 267: Conditional coverage 100% (2/2).">&nbsp;1360</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 267: Conditional coverage 100% (2/2).">                        <span class="keyword">for</span> (<span class="keyword">int</span> i = 1; i &lt;= LIMIT_LEN; i++) {</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;268</td>  <td class="nbHitsCovered">&nbsp;1280</td>  <td class="src"><pre class="src">&nbsp;                                CodeStart[i + 1] = CodeStart[i] + LenFreq[i] &lt;&lt; 1;</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;269</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                        }</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;270</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;271</td>  <td class="nbHitsUncovered"><a title="Line 271: Conditional coverage 50% (1/2).">&nbsp;80</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 271: Conditional coverage 50% (1/2).">                        <span class="keyword">if</span> (CodeStart[LIMIT_LEN + 1] != 0x20000) {</a></span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;272</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;                                <span class="keyword">throw</span> <span class="keyword">new</span> BadHuffmanTableException();</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;273</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                        }</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;274</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;275</td>  <td class="nbHitsCovered">&nbsp;80</td>  <td class="src"><pre class="src">&nbsp;                        <span class="keyword">final</span> <span class="keyword">int</span>[] CodeList = <span class="keyword">new</span> <span class="keyword">int</span>[LenList.length];</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;276</td>  <td class="nbHitsCovered"><a title="Line 276: Conditional coverage 100% (2/2).">&nbsp;8740</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 276: Conditional coverage 100% (2/2).">                        <span class="keyword">for</span> (<span class="keyword">int</span> i = 0; i &lt; CodeList.length; i++) {</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;277</td>  <td class="nbHitsCovered"><a title="Line 277: Conditional coverage 100% (2/2).">&nbsp;8660</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 277: Conditional coverage 100% (2/2).">                                <span class="keyword">if</span> (0 &lt; LenList[i]) {</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;278</td>  <td class="nbHitsCovered">&nbsp;1452</td>  <td class="src"><pre class="src">&nbsp;                                        CodeList[i] = CodeStart[LenList[i]]++;</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;279</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                                }</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;280</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                        }</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;281</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;282</td>  <td class="nbHitsCovered">&nbsp;80</td>  <td class="src"><pre class="src">&nbsp;                        <span class="keyword">return</span> CodeList;</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;283</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                }</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;284</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;                <span class="keyword">return</span> <span class="keyword">new</span> <span class="keyword">int</span>[LenList.length];</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;285</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;        }</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;286</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;287</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;        <span class="comment">// ------------------------------------------------------------------</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;288</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;        <span class="comment">// shared method</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;289</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;290</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;        <span class="comment">/**</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;291</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment">         * LenList から、ハフマン復号用のテーブルを生成する。&lt;br&gt;</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;292</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment">         * </span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;293</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment">         * @param LenList ハフマン符号長の表</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;294</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment">         * @return ハフマン復号用テーブル。</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;295</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment">         * @exception BadHuffmanTableException LenListが不正なため、 ハフマン符号表が生成出来ない場合</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;296</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment">         */</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;297</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;        <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">short</span>[] createTable(<span class="keyword">final</span> <span class="keyword">int</span>[] LenList) <span class="keyword">throws</span> BadHuffmanTableException {</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;298</td>  <td class="nbHitsCovered">&nbsp;26</td>  <td class="src"><pre class="src">&nbsp;                <span class="keyword">final</span> <span class="keyword">int</span>[] CodeList = LenListToCodeList(LenList);            <span class="comment">// throws BadHuffmanTableException</span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;299</td>  <td class="nbHitsCovered">&nbsp;26</td>  <td class="src"><pre class="src">&nbsp;                <span class="keyword">int</span> TableBits = 0;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;300</td>  <td class="nbHitsCovered">&nbsp;26</td>  <td class="src"><pre class="src">&nbsp;                <span class="keyword">int</span> LastCode = 0;</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;301</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;302</td>  <td class="nbHitsCovered"><a title="Line 302: Conditional coverage 100% (2/2).">&nbsp;385</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 302: Conditional coverage 100% (2/2).">                <span class="keyword">for</span> (<span class="keyword">int</span> i = 0; i &lt; LenList.length; i++) {</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;303</td>  <td class="nbHitsCovered"><a title="Line 303: Conditional coverage 100% (2/2).">&nbsp;359</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 303: Conditional coverage 100% (2/2).">                        <span class="keyword">if</span> (TableBits &lt;= LenList[i]) {</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;304</td>  <td class="nbHitsCovered">&nbsp;158</td>  <td class="src"><pre class="src">&nbsp;                                TableBits = LenList[i];</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;305</td>  <td class="nbHitsCovered">&nbsp;158</td>  <td class="src"><pre class="src">&nbsp;                                LastCode = i;</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;306</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                        }</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;307</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                }</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;308</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;309</td>  <td class="nbHitsCovered">&nbsp;26</td>  <td class="src"><pre class="src">&nbsp;                <span class="keyword">final</span> <span class="keyword">short</span>[] Table = <span class="keyword">new</span> <span class="keyword">short</span>[1 &lt;&lt; TableBits];</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;310</td>  <td class="nbHitsCovered"><a title="Line 310: Conditional coverage 100% (2/2).">&nbsp;385</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 310: Conditional coverage 100% (2/2).">                <span class="keyword">for</span> (<span class="keyword">int</span> i = 0; i &lt; LenList.length; i++) {</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;311</td>  <td class="nbHitsCovered"><a title="Line 311: Conditional coverage 100% (2/2).">&nbsp;359</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 311: Conditional coverage 100% (2/2).">                        <span class="keyword">if</span> (0 &lt; LenList[i]) {</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;312</td>  <td class="nbHitsCovered">&nbsp;283</td>  <td class="src"><pre class="src">&nbsp;                                <span class="keyword">final</span> <span class="keyword">int</span> start = CodeList[i] &lt;&lt; TableBits - LenList[i];</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;313</td>  <td class="nbHitsCovered"><a title="Line 313: Conditional coverage 100% (2/2).">&nbsp;283</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 313: Conditional coverage 100% (2/2).">                                <span class="keyword">final</span> <span class="keyword">int</span> end = i != LastCode ? start</a></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;314</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                                                + (1 &lt;&lt; TableBits - LenList[i]) : Table.length;</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;315</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;316</td>  <td class="nbHitsCovered"><a title="Line 316: Conditional coverage 100% (2/2).">&nbsp;1067</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 316: Conditional coverage 100% (2/2).">                                <span class="keyword">for</span> (<span class="keyword">int</span> j = start; j &lt; end; j++) {</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;317</td>  <td class="nbHitsCovered">&nbsp;784</td>  <td class="src"><pre class="src">&nbsp;                                        Table[j] = (<span class="keyword">short</span>) i;</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;318</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                                }</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;319</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                        }</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;320</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                }</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;321</td>  <td class="nbHitsCovered">&nbsp;26</td>  <td class="src"><pre class="src">&nbsp;                <span class="keyword">return</span> Table;</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;322</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;        }</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;323</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;324</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;        <span class="comment">/**</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;325</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment">         * LenList から、ハフマン復号用のテーブルと木を生成する。 テーブルは TableBits の大きさを持ち、それ以上の部分は木に格納される。&lt;br&gt;</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;326</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment">         * 戻り値は new short[][]{ Table, Tree[0], Tree[1] } となる。&lt;br&gt;</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;327</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment">         * テーブルを引いた結果もしくは木を走査した際、負の値を得た場合、 それは復号化されたコードを全ビット反転したものである。 正の値であればそれは 木を走査するための index であり、 Tree[bit][index] のように使用する。</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;328</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment">         * </span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;329</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment">         * @param LenList ハフマン符号長の表</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;330</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment">         * @param TableBits ハフマン復号用テーブルの大きさ。</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;331</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment">         * @return ハフマン復号用テーブルと木。</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;332</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment">         * @exception BadHuffmanTableException LenListが不正なため、 ハフマン符号表が生成出来ない場合</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;333</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment">         */</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;334</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;        <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">short</span>[][] createTableAndTree(<span class="keyword">final</span> <span class="keyword">int</span>[] LenList, <span class="keyword">final</span> <span class="keyword">int</span> TableBits) <span class="keyword">throws</span> BadHuffmanTableException {</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;335</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                <span class="comment">// ------------------------------------------------------------------</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;336</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                <span class="comment">// ハフマン符号長リストから ハフマン符号のリストを得る。</span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;337</td>  <td class="nbHitsCovered">&nbsp;50</td>  <td class="src"><pre class="src">&nbsp;                <span class="keyword">final</span> <span class="keyword">int</span>[] CodeList = LenListToCodeList(LenList);            <span class="comment">// throws BadHuffmanTableException</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;338</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;339</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                <span class="comment">// ------------------------------------------------------------------</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;340</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                <span class="comment">// ハフマン符号長のリストを走査し、</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;341</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                <span class="comment">// LastCode を得る。</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;342</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                <span class="comment">// また 木を構成するのに必要な配列サイズを得るための準備を行う。</span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;343</td>  <td class="nbHitsCovered">&nbsp;50</td>  <td class="src"><pre class="src">&nbsp;                <span class="keyword">final</span> <span class="keyword">short</span>[] Table = <span class="keyword">new</span> <span class="keyword">short</span>[1 &lt;&lt; TableBits];</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;344</td>  <td class="nbHitsCovered">&nbsp;50</td>  <td class="src"><pre class="src">&nbsp;                <span class="keyword">int</span> LastCode = 0;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;345</td>  <td class="nbHitsCovered"><a title="Line 345: Conditional coverage 100% (2/2).">&nbsp;7293</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 345: Conditional coverage 100% (2/2).">                <span class="keyword">for</span> (<span class="keyword">int</span> i = 0; i &lt; LenList.length; i++) {</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;346</td>  <td class="nbHitsCovered"><a title="Line 346: Conditional coverage 100% (2/2).">&nbsp;7243</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 346: Conditional coverage 100% (2/2).">                        <span class="keyword">if</span> (LenList[LastCode] &lt;= LenList[i]) {</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;347</td>  <td class="nbHitsCovered">&nbsp;1079</td>  <td class="src"><pre class="src">&nbsp;                                LastCode = i;</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;348</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                        }</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;349</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;350</td>  <td class="nbHitsCovered"><a title="Line 350: Conditional coverage 100% (2/2).">&nbsp;7243</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 350: Conditional coverage 100% (2/2).">                        <span class="keyword">if</span> (TableBits &lt; LenList[i]) {</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;351</td>  <td class="nbHitsCovered">&nbsp;144</td>  <td class="src"><pre class="src">&nbsp;                                Table[CodeList[i] &gt;&gt; LenList[i] - TableBits]++;</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;352</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                        }</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;353</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                }</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;354</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;355</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                <span class="comment">// ------------------------------------------------------------------</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;356</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                <span class="comment">// 木を構成するのに必要な配列サイズを得、テーブルを初期化する。</span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;357</td>  <td class="nbHitsCovered">&nbsp;50</td>  <td class="src"><pre class="src">&nbsp;                <span class="keyword">final</span> <span class="keyword">short</span> INIT = -1;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;358</td>  <td class="nbHitsCovered">&nbsp;50</td>  <td class="src"><pre class="src">&nbsp;                <span class="keyword">int</span> count = 0;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;359</td>  <td class="nbHitsCovered"><a title="Line 359: Conditional coverage 100% (2/2).">&nbsp;112690</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 359: Conditional coverage 100% (2/2).">                <span class="keyword">for</span> (<span class="keyword">int</span> i = 0; i &lt; Table.length; i++) {</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;360</td>  <td class="nbHitsCovered"><a title="Line 360: Conditional coverage 100% (2/2).">&nbsp;112640</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 360: Conditional coverage 100% (2/2).">                        <span class="keyword">if</span> (0 &lt; Table[i]) {</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;361</td>  <td class="nbHitsCovered">&nbsp;48</td>  <td class="src"><pre class="src">&nbsp;                                count += Table[i] - 1;</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;362</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                        }</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;363</td>  <td class="nbHitsCovered">&nbsp;112640</td>  <td class="src"><pre class="src">&nbsp;                        Table[i] = INIT;</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;364</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                }</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;365</td>  <td class="nbHitsCovered">&nbsp;50</td>  <td class="src"><pre class="src">&nbsp;                <span class="keyword">final</span> <span class="keyword">short</span>[] Small = <span class="keyword">new</span> <span class="keyword">short</span>[count];</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;366</td>  <td class="nbHitsCovered">&nbsp;50</td>  <td class="src"><pre class="src">&nbsp;                <span class="keyword">final</span> <span class="keyword">short</span>[] Large = <span class="keyword">new</span> <span class="keyword">short</span>[count];</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;367</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;368</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                <span class="comment">// ------------------------------------------------------------------</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;369</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                <span class="comment">// テーブルと木を構成する。</span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;370</td>  <td class="nbHitsCovered">&nbsp;50</td>  <td class="src"><pre class="src">&nbsp;                <span class="keyword">int</span> avail = 0;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;371</td>  <td class="nbHitsCovered"><a title="Line 371: Conditional coverage 100% (2/2).">&nbsp;7293</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 371: Conditional coverage 100% (2/2).">                <span class="keyword">for</span> (<span class="keyword">int</span> i = 0; i &lt; LenList.length; i++) {</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;372</td>  <td class="nbHitsCovered"><a title="Line 372: Conditional coverage 100% (2/2).">&nbsp;7243</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 372: Conditional coverage 100% (2/2).">                        <span class="keyword">if</span> (0 &lt; LenList[i]) {</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;373</td>  <td class="nbHitsCovered">&nbsp;1135</td>  <td class="src"><pre class="src">&nbsp;                                <span class="keyword">final</span> <span class="keyword">int</span> TreeBits = LenList[i] - TableBits;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;374</td>  <td class="nbHitsCovered"><a title="Line 374: Conditional coverage 100% (2/2).">&nbsp;1135</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 374: Conditional coverage 100% (2/2).">                                <span class="keyword">if</span> (TreeBits &lt;= 0) {</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;375</td>  <td class="nbHitsCovered">&nbsp;991</td>  <td class="src"><pre class="src">&nbsp;                                        <span class="keyword">final</span> <span class="keyword">int</span> start = CodeList[i] &lt;&lt; TableBits - LenList[i];</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;376</td>  <td class="nbHitsCovered"><a title="Line 376: Conditional coverage 100% (2/2).">&nbsp;991</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 376: Conditional coverage 100% (2/2).">                                        <span class="keyword">final</span> <span class="keyword">int</span> end = i != LastCode ? start</a></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;377</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                                                        + (1 &lt;&lt; TableBits - LenList[i]) : Table.length;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;378</td>  <td class="nbHitsCovered"><a title="Line 378: Conditional coverage 100% (2/2).">&nbsp;113583</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 378: Conditional coverage 100% (2/2).">                                        <span class="keyword">for</span> (<span class="keyword">int</span> j = start; j &lt; end; j++) {</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;379</td>  <td class="nbHitsCovered">&nbsp;112592</td>  <td class="src"><pre class="src">&nbsp;                                                Table[j] = (<span class="keyword">short</span>) ~i;</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;380</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                                        }</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;381</td>  <td class="nbHitsCovered">&nbsp;991</td>  <td class="src"><pre class="src">&nbsp;                                } <span class="keyword">else</span> {</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;382</td>  <td class="nbHitsCovered">&nbsp;144</td>  <td class="src"><pre class="src">&nbsp;                                        <span class="keyword">final</span> <span class="keyword">int</span> TableCode = CodeList[i] &gt;&gt; TreeBits;</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;383</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                                        <span class="keyword">int</span> node;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;384</td>  <td class="nbHitsCovered"><a title="Line 384: Conditional coverage 100% (2/2).">&nbsp;144</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 384: Conditional coverage 100% (2/2).">                                        <span class="keyword">if</span> (Table[TableCode] == INIT) {</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;385</td>  <td class="nbHitsCovered">&nbsp;48</td>  <td class="src"><pre class="src">&nbsp;                                                node = Table[TableCode] = (<span class="keyword">short</span>) avail++;</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;386</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                                        } <span class="keyword">else</span> {</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;387</td>  <td class="nbHitsCovered">&nbsp;96</td>  <td class="src"><pre class="src">&nbsp;                                                node = Table[TableCode];</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;388</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                                        }</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;389</td>  <td class="nbHitsCovered"><a title="Line 389: Conditional coverage 100% (2/2).">&nbsp;240</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 389: Conditional coverage 100% (2/2).">                                        <span class="keyword">for</span> (<span class="keyword">int</span> j = TableBits + 1; j &lt; LenList[i]; j++) {</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;390</td>  <td class="nbHitsCovered"><a title="Line 390: Conditional coverage 100% (2/2).">&nbsp;96</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 390: Conditional coverage 100% (2/2).">                                                <span class="keyword">if</span> (0 == (CodeList[i] &amp; 1 &lt;&lt; LenList[i] - j)) {</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;391</td>  <td class="nbHitsCovered"><a title="Line 391: Conditional coverage 100% (2/2).">&nbsp;48</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 391: Conditional coverage 100% (2/2).">                                                        <span class="keyword">if</span> (Small[node] == 0) {</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;392</td>  <td class="nbHitsCovered">&nbsp;24</td>  <td class="src"><pre class="src">&nbsp;                                                                node = Small[node] = (<span class="keyword">short</span>) avail++;</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;393</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                                                        } <span class="keyword">else</span> {</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;394</td>  <td class="nbHitsCovered">&nbsp;24</td>  <td class="src"><pre class="src">&nbsp;                                                                node = Small[node];</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;395</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                                                        }</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;396</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                                                } <span class="keyword">else</span> {</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;397</td>  <td class="nbHitsCovered"><a title="Line 397: Conditional coverage 100% (2/2).">&nbsp;48</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 397: Conditional coverage 100% (2/2).">                                                        <span class="keyword">if</span> (Large[node] == 0) {</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;398</td>  <td class="nbHitsCovered">&nbsp;24</td>  <td class="src"><pre class="src">&nbsp;                                                                node = Large[node] = (<span class="keyword">short</span>) avail++;</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;399</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                                                        } <span class="keyword">else</span> {</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;400</td>  <td class="nbHitsCovered">&nbsp;24</td>  <td class="src"><pre class="src">&nbsp;                                                                node = Large[node];</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;401</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                                                        }</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;402</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                                                }</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;403</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                                        }</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;404</td>  <td class="nbHitsCovered"><a title="Line 404: Conditional coverage 100% (2/2).">&nbsp;144</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 404: Conditional coverage 100% (2/2).">                                        <span class="keyword">if</span> (0 == (CodeList[i] &amp; 0x01)) {</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;405</td>  <td class="nbHitsCovered">&nbsp;72</td>  <td class="src"><pre class="src">&nbsp;                                                Small[node] = (<span class="keyword">short</span>) ~i;</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;406</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                                        } <span class="keyword">else</span> {</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;407</td>  <td class="nbHitsCovered">&nbsp;72</td>  <td class="src"><pre class="src">&nbsp;                                                Large[node] = (<span class="keyword">short</span>) ~i;</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;408</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                                        }</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;409</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                                }</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;410</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                        }</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;411</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                }</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;412</td>  <td class="nbHitsCovered">&nbsp;50</td>  <td class="src"><pre class="src">&nbsp;                <span class="keyword">return</span> <span class="keyword">new</span> <span class="keyword">short</span>[][] { Table, Small, Large };</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;413</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;        }</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;414</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;415</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;        <span class="comment">// ------------------------------------------------------------------</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;416</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;        <span class="comment">// local method</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;417</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;418</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;        <span class="comment">/**</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;419</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment">         * マージソート、再帰関数&lt;br&gt;</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;420</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment">         * arrayは weightの添字、arrayのfirstからlastの区間内で weightが小さい順に並ぶようにソートする。 workはそのための作業領域。</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;421</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment">         * </span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;422</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment">         * @param array ソート対象の配列</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;423</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment">         * @param first ソート区間の最初</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;424</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment">         * @param last ソート区間の最後</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;425</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment">         * @param weight ソートの際に参照される重みのリスト</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;426</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment">         * @param work マージソート用作業領域</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;427</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment">         */</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;428</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;        <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> mergeSort(<span class="keyword">final</span> <span class="keyword">int</span>[] array, <span class="keyword">final</span> <span class="keyword">int</span> first, <span class="keyword">final</span> <span class="keyword">int</span> last, <span class="keyword">final</span> <span class="keyword">int</span>[] weight, <span class="keyword">final</span> <span class="keyword">int</span>[] work) {</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;429</td>  <td class="nbHitsCovered"><a title="Line 429: Conditional coverage 100% (2/2).">&nbsp;64</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 429: Conditional coverage 100% (2/2).">                <span class="keyword">if</span> (first &lt; last) {</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;430</td>  <td class="nbHitsCovered">&nbsp;30</td>  <td class="src"><pre class="src">&nbsp;                        <span class="keyword">final</span> <span class="keyword">int</span> middle = (first + last) / 2 + (first + last) % 2;</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;431</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                        <span class="comment">// 前半をソート</span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;432</td>  <td class="nbHitsCovered">&nbsp;30</td>  <td class="src"><pre class="src">&nbsp;                        mergeSort(array, first, middle - 1, weight, work);</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;433</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                        <span class="comment">// 後半をソート</span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;434</td>  <td class="nbHitsCovered">&nbsp;30</td>  <td class="src"><pre class="src">&nbsp;                        mergeSort(array, middle, last, weight, work);</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;435</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;436</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                        <span class="comment">// 前半を workへ</span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;437</td>  <td class="nbHitsCovered">&nbsp;30</td>  <td class="src"><pre class="src">&nbsp;                        System.arraycopy(array, first, work, 0, middle - first);</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;438</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;439</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                        <span class="comment">// ソートされた前半と ソートされた後半を</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;440</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                        <span class="comment">// 整列しつつマージする。</span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;441</td>  <td class="nbHitsCovered">&nbsp;30</td>  <td class="src"><pre class="src">&nbsp;                        <span class="keyword">int</span> srcIndex = middle;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;442</td>  <td class="nbHitsCovered">&nbsp;30</td>  <td class="src"><pre class="src">&nbsp;                        <span class="keyword">int</span> workIndex = 0;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;443</td>  <td class="nbHitsCovered">&nbsp;30</td>  <td class="src"><pre class="src">&nbsp;                        <span class="keyword">int</span> dstIndex = first;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;444</td>  <td class="nbHitsCovered"><a title="Line 444: Conditional coverage 100% (4/4) [each condition: 100%, 100%].">&nbsp;100</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 444: Conditional coverage 100% (4/4) [each condition: 100%, 100%].">                        <span class="keyword">while</span> (srcIndex &lt;= last &amp;&amp; workIndex &lt; middle - first) {</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;445</td>  <td class="nbHitsCovered"><a title="Line 445: Conditional coverage 100% (2/2).">&nbsp;70</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 445: Conditional coverage 100% (2/2).">                                array[dstIndex++] = weight[work[workIndex]] &lt; weight[array[srcIndex]] ? work[workIndex++] : array[srcIndex++];</a></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;446</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                        }</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;447</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;448</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                        <span class="comment">// workに残った要素を arrayに戻す</span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;449</td>  <td class="nbHitsCovered"><a title="Line 449: Conditional coverage 100% (2/2).">&nbsp;30</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 449: Conditional coverage 100% (2/2).">                        <span class="keyword">if</span> (workIndex &lt; middle - first) {</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;450</td>  <td class="nbHitsCovered">&nbsp;21</td>  <td class="src"><pre class="src">&nbsp;                                System.arraycopy(work, workIndex, array, dstIndex, middle - first - workIndex);</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;451</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                        }</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;452</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                }</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;453</td>  <td class="nbHitsCovered">&nbsp;64</td>  <td class="src"><pre class="src">&nbsp;        }</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;454</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;455</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;        <span class="comment">/**</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;456</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment">         * heapはweightの添え字 num*2, num*2+1の地点でヒープが出来ていることを 前提として heap に numを頂点とするヒープを作る。&lt;br&gt;</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;457</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment">         * ヒープソートの一部分。</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;458</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment">         * </span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;459</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment">         * @param heap ヒープを生成する配列</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;460</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment">         * @param size ヒープのサイズ</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;461</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment">         * @param weight 整列の基準となる重みのリスト</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;462</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment">         * @param num 今回作成するヒープの頂点</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;463</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment">         */</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;464</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;        <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> downHeap(<span class="keyword">final</span> <span class="keyword">int</span>[] heap, <span class="keyword">final</span> <span class="keyword">int</span> size, <span class="keyword">final</span> <span class="keyword">int</span>[] weight, <span class="keyword">int</span> num) {</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;465</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;                <span class="keyword">final</span> <span class="keyword">int</span> top = heap[num];</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;466</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                <span class="keyword">int</span> i;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;467</td>  <td class="nbHitsUncovered"><a title="Line 467: Conditional coverage 0% (0/2).">&nbsp;0</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 467: Conditional coverage 0% (0/2).">                <span class="keyword">while</span> ((i = 2 * num) &lt;= size) {</a></span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;468</td>  <td class="nbHitsUncovered"><a title="Line 468: Conditional coverage 0% (0/4) [each condition: 0%, 0%].">&nbsp;0</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 468: Conditional coverage 0% (0/4) [each condition: 0%, 0%].">                        <span class="keyword">if</span> (i &lt; size &amp;&amp; weight[heap[i]] &gt; weight[heap[i + 1]]) {</a></span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;469</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;                                i++;</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;470</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                        }</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;471</td>  <td class="nbHitsUncovered"><a title="Line 471: Conditional coverage 0% (0/2).">&nbsp;0</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 471: Conditional coverage 0% (0/2).">                        <span class="keyword">if</span> (weight[top] &lt;= weight[heap[i]]) {</a></span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;472</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;                                <span class="keyword">break</span>;</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;473</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                        }</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;474</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;475</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;                        heap[num] = heap[i];</span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;476</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;                        num = i;</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;477</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                }</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;478</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;                heap[num] = top;</span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;479</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;        }</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;480</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;481</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;        <span class="comment">/**</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;482</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment">         * ハフマン木から ハフマン符号長の頻度表を作成する。&lt;br&gt;</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;483</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment">         * ハフマン木を辿って ハフマン符号長の頻度表を作成する。 また、符号長を 16ビットに制限するための処理もここで行う。</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;484</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment">         * </span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;485</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment">         * @param SmallNode 小さい子ノードのノード番号の表</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;486</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment">         * @param LargeNode 大きい子ノードのノード番号の表</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;487</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment">         * @param root ハフマン木のルートノード</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;488</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment">         * @return ハフマン符号長を最大16ビットに制限した ハフマン符号長表</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;489</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment">         */</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;490</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;        <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span>[] huffmanTreeToLenFreq(<span class="keyword">final</span> <span class="keyword">int</span>[] SmallNode, <span class="keyword">final</span> <span class="keyword">int</span>[] LargeNode, <span class="keyword">final</span> <span class="keyword">int</span> root) {</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;491</td>  <td class="nbHitsCovered">&nbsp;4</td>  <td class="src"><pre class="src">&nbsp;                <span class="keyword">final</span> <span class="keyword">int</span>[] LenFreq = <span class="keyword">new</span> <span class="keyword">int</span>[LIMIT_LEN + 1];</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;492</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;493</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                <span class="comment">// ハフマン木から頻度表作成</span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;494</td>  <td class="nbHitsCovered">&nbsp;4</td>  <td class="src"><pre class="src">&nbsp;                internalHuffmanTreeToLenFreq(SmallNode, LargeNode, root, 0, LenFreq);</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;495</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;496</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                <span class="comment">// System.out.println( "到達::StaticHuffman.HuffmanTreeToLenFreq--ハフマン木からハフマン符号長のリスト取得--" );</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;497</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;498</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                <span class="comment">// 最大16ビットの制限により、修正を受けている場合は</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;499</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                <span class="comment">// 符号長の表から、上位のノードを下位へと引きずりおろす</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;500</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                <span class="comment">// ことによって符号長の表を修正する。</span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;501</td>  <td class="nbHitsCovered">&nbsp;4</td>  <td class="src"><pre class="src">&nbsp;                <span class="keyword">int</span> weight = 0;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;502</td>  <td class="nbHitsCovered"><a title="Line 502: Conditional coverage 100% (2/2).">&nbsp;68</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 502: Conditional coverage 100% (2/2).">                <span class="keyword">for</span> (<span class="keyword">int</span> i = LIMIT_LEN; 0 &lt; i; i--) {</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;503</td>  <td class="nbHitsCovered">&nbsp;64</td>  <td class="src"><pre class="src">&nbsp;                        weight += LenFreq[i] &lt;&lt; LIMIT_LEN - i;</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;504</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                }</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;505</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;506</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                <span class="comment">// System.out.println( "weight::" + weight );</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;507</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;508</td>  <td class="nbHitsUncovered"><a title="Line 508: Conditional coverage 50% (1/2).">&nbsp;4</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 508: Conditional coverage 50% (1/2).">                <span class="keyword">while</span> (1 &lt;&lt; LIMIT_LEN &lt; weight) {</a></span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;509</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;                        LenFreq[LIMIT_LEN]--;</span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;510</td>  <td class="nbHitsUncovered"><a title="Line 510: Conditional coverage 0% (0/2).">&nbsp;0</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 510: Conditional coverage 0% (0/2).">                        <span class="keyword">for</span> (<span class="keyword">int</span> i = LIMIT_LEN - 1; 0 &lt; i; i--) {</a></span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;511</td>  <td class="nbHitsUncovered"><a title="Line 511: Conditional coverage 0% (0/2).">&nbsp;0</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 511: Conditional coverage 0% (0/2).">                                <span class="keyword">if</span> (0 &lt; LenFreq[i]) {</a></span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;512</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;                                        LenFreq[i]--;</span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;513</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;                                        LenFreq[i + 1] += 2;</span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;514</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;                                        <span class="keyword">break</span>;</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;515</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                                }</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;516</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                        }</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;517</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;518</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;                        weight--;</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;519</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                }</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;520</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;521</td>  <td class="nbHitsCovered">&nbsp;4</td>  <td class="src"><pre class="src">&nbsp;                <span class="keyword">return</span> LenFreq;</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;522</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;        }</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;523</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;524</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;        <span class="comment">/**</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;525</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment">         * ハフマン木探索メソッド、再帰関数。&lt;br&gt;</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;526</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment">         * ハフマン木を探索していき、nodeが葉であれば 渡された符号長の頻度表を更新し、 ノードであれば、小さい方と大きい方の両方の 子ノードを再帰的に探索する。&lt;br&gt;</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;527</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment">         * </span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;528</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment">         * @param SmallNode 小さい子ノードのノード番号の表</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;529</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment">         * @param LargeNode 大きい子ノードのノード番号の表</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;530</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment">         * @param node 処理するノード番号</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;531</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment">         * @param len ハフマン木のrootからの長さ</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;532</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment">         * @param LenFreq 符号長の頻度表</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;533</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment">         */</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;534</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;        <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> internalHuffmanTreeToLenFreq(<span class="keyword">final</span> <span class="keyword">int</span>[] SmallNode, <span class="keyword">final</span> <span class="keyword">int</span>[] LargeNode, <span class="keyword">final</span> <span class="keyword">int</span> node, <span class="keyword">final</span> <span class="keyword">int</span> len, <span class="keyword">final</span> <span class="keyword">int</span>[] LenFreq) {</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;535</td>  <td class="nbHitsCovered"><a title="Line 535: Conditional coverage 100% (2/2).">&nbsp;64</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 535: Conditional coverage 100% (2/2).">                <span class="keyword">if</span> (node &lt; (SmallNode.length + 1) / 2) {</a></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;536</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                        <span class="comment">// nodeが葉なら頻度表更新</span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;537</td>  <td class="nbHitsUncovered"><a title="Line 537: Conditional coverage 50% (1/2).">&nbsp;34</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 537: Conditional coverage 50% (1/2).">                        LenFreq[len &lt; LIMIT_LEN ? len : LIMIT_LEN]++;</a></span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;538</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                } <span class="keyword">else</span> {</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;539</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                        <span class="comment">// nodeがノードなら両方のノードを再帰的に探索</span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;540</td>  <td class="nbHitsCovered">&nbsp;30</td>  <td class="src"><pre class="src">&nbsp;                        internalHuffmanTreeToLenFreq(SmallNode, LargeNode, SmallNode[node], len + 1, LenFreq);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;541</td>  <td class="nbHitsCovered">&nbsp;30</td>  <td class="src"><pre class="src">&nbsp;                        internalHuffmanTreeToLenFreq(SmallNode, LargeNode, LargeNode[node], len + 1, LenFreq);</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;542</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;                }</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;543</td>  <td class="nbHitsCovered">&nbsp;64</td>  <td class="src"><pre class="src">&nbsp;        }</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;544</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;545</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;}</pre></td></tr>
+</table>
+
+<div class="footer">Report generated by <a href="http://cobertura.sourceforge.net/" target="_top">Cobertura</a> 2.0.3 on 14/01/20 2:48.</div>
+</body>
+</html>

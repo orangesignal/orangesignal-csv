@@ -1,0 +1,118 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+           "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title>Coverage Report</title>
+<link title="Style" type="text/css" rel="stylesheet" href="css/main.css"/>
+<script type="text/javascript" src="js/popup.js"></script>
+</head>
+<body>
+<h5>Coverage Report - com.orangesignal.jlha.Disconnectable</h5>
+<div class="separator">&nbsp;</div>
+<table class="report">
+<thead><tr>  <td class="heading">Classes in this File</td>  <td class="heading"><a class="dfn" href="help.html" onclick="popupwindow('help.html'); return false;">Line Coverage</a></td>  <td class="heading"><a class="dfn" href="help.html" onclick="popupwindow('help.html'); return false;">Branch Coverage</a></td>  <td class="heading"><a class="dfn" href="help.html" onclick="popupwindow('help.html'); return false;">Complexity</a></td></tr></thead>
+  <tr><td><a href="com.orangesignal.jlha.Disconnectable.html">Disconnectable</a></td><td><table cellpadding="0px" cellspacing="0px" class="percentgraph"><tr class="percentgraph"><td align="right" class="percentgraph" width="40"><a class="dfn" href="help.html" onclick="popupwindow('help.html'); return false;">N/A</a></td><td class="percentgraph"><div class="percentgraph"><div class="na" style="width:100px"><span class="text"><a class="dfn" href="help.html" onclick="popupwindow('help.html'); return false;">N/A</a></span></div></div></td></tr></table></td><td><table cellpadding="0px" cellspacing="0px" class="percentgraph"><tr class="percentgraph"><td align="right" class="percentgraph" width="40"><a class="dfn" href="help.html" onclick="popupwindow('help.html'); return false;">N/A</a></td><td class="percentgraph"><div class="percentgraph"><div class="na" style="width:100px"><span class="text"><a class="dfn" href="help.html" onclick="popupwindow('help.html'); return false;">N/A</a></span></div></div></td></tr></table></td><td class="value"><span class="hidden">1.0;</span>1</td></tr>
+
+</table>
+<div class="separator">&nbsp;</div>
+<table cellspacing="0" cellpadding="0" class="src">
+<tr>  <td class="numLine">&nbsp;1</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment">/**</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;2</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment"> * Copyright (C) 2001-2002  Michel Ishizuka  All rights reserved.</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;3</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment"> * </span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;4</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment"> * 以下の条件に同意するならばソースとバイナリ形式の再配布と使用を</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;5</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment"> * 変更の有無にかかわらず許可する。</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;6</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment"> * </span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;7</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment"> * １．ソースコードの再配布において著作権表示と この条件のリスト</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;8</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment"> *     および下記の声明文を保持しなくてはならない。</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;9</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment"> * </span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;10</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment"> * ２．バイナリ形式の再配布において著作権表示と この条件のリスト</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;11</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment"> *     および下記の声明文を使用説明書もしくは その他の配布物内に</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;12</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment"> *     含む資料に記述しなければならない。</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;13</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment"> * </span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;14</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment"> * このソフトウェアは石塚美珠瑠によって無保証で提供され、特定の目</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;15</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment"> * 的を達成できるという保証、商品価値が有るという保証にとどまらず、</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;16</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment"> * いかなる明示的および暗示的な保証もしない。</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;17</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment"> * 石塚美珠瑠は このソフトウェアの使用による直接的、間接的、偶発</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;18</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment"> * 的、特殊な、典型的な、あるいは必然的な損害(使用によるデータの</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;19</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment"> * 損失、業務の中断や見込まれていた利益の遺失、代替製品もしくは</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;20</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment"> * サービスの導入費等が考えられるが、決してそれだけに限定されない</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;21</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment"> * 損害)に対して、いかなる事態の原因となったとしても、契約上の責</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;22</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment"> * 任や無過失責任を含む いかなる責任があろうとも、たとえそれが不</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;23</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment"> * 正行為のためであったとしても、またはそのような損害の可能性が報</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;24</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment"> * 告されていたとしても一切の責任を負わないものとする。</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;25</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment"> */</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;26</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;27</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="keyword">package</span> com.orangesignal.jlha;</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;28</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;29</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="keyword">import</span> java.io.IOException;</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;30</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;31</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment">/**</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;32</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment"> * 接続を解除できるストリームのための インターフェイス。&lt;br&gt;</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;33</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment"> * このインターフェイスを実装するストリームは close() は disconnect() を呼ぶべきである。&lt;br&gt;</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;34</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment"> * </span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;35</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment"> * @author $Author: dangan $</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;36</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment"> * @version $Revision: 1.0 $</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;37</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment"> */</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;38</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="keyword">public</span> <span class="keyword">interface</span> Disconnectable {</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;39</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;40</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;        <span class="comment">/**</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;41</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment">         * 接続されていたストリームとの接続を解除する。</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;42</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment">         * </span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;43</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment">         * @exception IOException 入出力エラーが発生した場合</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;44</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment">         */</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;45</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;        <span class="keyword">void</span> disconnect() <span class="keyword">throws</span> IOException;</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;46</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;47</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;}</pre></td></tr>
+</table>
+
+<div class="footer">Report generated by <a href="http://cobertura.sourceforge.net/" target="_top">Cobertura</a> 2.0.3 on 14/01/20 2:48.</div>
+</body>
+</html>
