@@ -238,17 +238,22 @@ import jp.gr.java_conf.dangan.lang.reflect.Factory;
  * @author $Author: dangan $
  * @version $Revision: 1.0.2.2 $
  */
-public final class LhaProperty {
-
-	/**
-	 * LHA Library for Java の設定を保持するプロパティ
-	 */
-	private static final Properties properties = LhaProperty.createLhaProperty();
+final class LhaProperty {
 
 	/**
 	 * LHA Library for Java 内 で デフォルトで使用されるエンコーディング
 	 */
-	public static final String ENCODING = LhaProperty.properties.getProperty("lha.encoding");
+	public static final String ENCODING;
+
+	/**
+	 * LHA Library for Java の設定を保持するプロパティ
+	 */
+	private static final Properties properties;
+
+	static {
+		properties = createLhaProperty();
+		ENCODING = properties.getProperty("lha.encoding");
+	}
 
 	// ------------------------------------------------------------------
 	// Constructpr
@@ -267,14 +272,14 @@ public final class LhaProperty {
 	 * @param key プロパティのキー
 	 * @return ブロパティの文字列
 	 */
-	public static String getProperty(final String key) {
-		final String def = LhaProperty.properties.getProperty(key);
+	static String getProperty(final String key) {
+		final String def = properties.getProperty(key);
 		try {
 			if (key.equals("lha.encoding")
 					&& System.getProperty(key, def).equals("ShiftJISAuto")) {
 				try {
 					final String encoding = System.getProperty("file.encoding");
-					if (LhaProperty.isCategoryOfShiftJIS(encoding)) {
+					if (isCategoryOfShiftJIS(encoding)) {
 						return encoding;
 					}
 					return "SJIS";
@@ -294,9 +299,9 @@ public final class LhaProperty {
 	 * 
 	 * @return プロパティのコピー
 	 */
-	public static Properties getProperties() {
-		final Properties property = (Properties) LhaProperty.properties.clone();
-		final Enumeration enumkey = property.propertyNames();
+	static Properties getProperties() {
+		final Properties property = (Properties) properties.clone();
+		final Enumeration<?> enumkey = property.propertyNames();
 
 		while (enumkey.hasMoreElements()) {
 			final String key = (String) enumkey.nextElement();
@@ -312,7 +317,7 @@ public final class LhaProperty {
 		if (property.getProperty("lha.encoding").equals("ShiftJISAuto")) {
 			try {
 				final String encoding = System.getProperty("file.encoding");
-				if (LhaProperty.isCategoryOfShiftJIS(encoding)) {
+				if (isCategoryOfShiftJIS(encoding)) {
 					property.put("lha.encoding", encoding);
 				} else {
 					property.put("lha.encoding", "SJIS");
@@ -327,36 +332,23 @@ public final class LhaProperty {
 
 	// ------------------------------------------------------------------
 	// parse
-	// ------------------------------------------------------------------
-	// public static Object parse( String source,
-	// Hashtable substitute, String packages )
-	// public static Object parse( String source,
-	// Hashtable substitute, String[] packages )
-	// private static Object parseConstructor( String source,
-	// Hashtable substitute, String[] packages )
-	// private static Object[] parseArray( String source,
-	// Hashtable substitute, String[] packages )
-	// private static String applyPackages( String str, String[] packages )
-	// ------------------------------------------------------------------
+
 	/**
 	 * LHA Library for Java のプロパティ用の 生成式 source を解析して 新しい Object を生成する。
 	 * 
 	 * @param souce 解析すべき生成式
 	 * @param substitute 置換対象文字列をkeyにもち、置換するObjectを値に持つ Hashtable
 	 * @param packages カンマで区切られたパッケージ名の列挙
-	 * 
 	 * @return 生成された Object
 	 */
-	public static Object parse(final String source, final Hashtable substitute, final String packages) {
-
+	static Object parse(final String source, final Hashtable<String, Object> substitute, final String packages) {
 		final StringTokenizer tokenizer = new StringTokenizer(packages, ",");
 		final String[] packageArray = new String[tokenizer.countTokens()];
 		int i = 0;
 		while (tokenizer.hasMoreTokens()) {
 			packageArray[i++] = tokenizer.nextToken().trim();
 		}
-
-		return LhaProperty.parse(source, substitute, packageArray);
+		return parse(source, substitute, packageArray);
 	}
 
 	/**
@@ -365,23 +357,21 @@ public final class LhaProperty {
 	 * @param souce 解析すべき文字列
 	 * @param substitute 置換対象文字列をkeyにもち、置換するObjectを値に持つ Hashtable
 	 * @param packages パッケージ名の配列
-	 * 
 	 * @return 生成された Object
 	 */
-	public static Object parse(String source, final Hashtable substitute, final String[] packages) {
-
+	private static Object parse(String source, final Hashtable<String, Object> substitute, final String[] packages) {
 		source = source.trim();
 		final int casearcpos = source.indexOf("(");
 		final int bracepos = source.indexOf("[");
 
 		if (0 <= casearcpos && (bracepos < 0 || casearcpos < bracepos)) {
-			return LhaProperty.parseConstructor(source, substitute, packages);
+			return parseConstructor(source, substitute, packages);
 		} else if (0 <= bracepos && (casearcpos < 0 || bracepos < casearcpos)) {
-			return LhaProperty.parseArray(source, substitute, packages);
+			return parseArray(source, substitute, packages);
 		} else if (substitute.containsKey(source)) {
 			return substitute.get(source);
 		} else {
-			return LhaProperty.applyPackages(source, packages);
+			return applyPackages(source, packages);
 		}
 	}
 
@@ -391,21 +381,18 @@ public final class LhaProperty {
 	 * @param souce 解析すべきコンストラクタを示す文字列
 	 * @param substitute 置換対象文字列をkeyにもち、置換するObjectを値に持つ Hashtable
 	 * @param packages パッケージ名の配列
-	 * 
 	 * @return 生成されたインスタンス
 	 */
-	private static Object parseConstructor(final String source, final Hashtable substitute, final String[] packages) {
-
+	private static Object parseConstructor(final String source, final Hashtable<String, Object> substitute, final String[] packages) {
 		String classname = source.substring(0, source.indexOf('(')).trim();
-		final String arguments = source.substring(source.indexOf('(') + 1,
-				source.lastIndexOf(')')).trim();
+		final String arguments = source.substring(source.indexOf('(') + 1, source.lastIndexOf(')')).trim();
 
-		classname = LhaProperty.applyPackages(classname, packages);
+		classname = applyPackages(classname, packages);
 		Object[] args;
 		if (!arguments.equals("")) {
 			final StringTokenizer tokenizer = new StringTokenizer(arguments,
 					",()[]", true);
-			final Stack stack = new Stack();
+			final Stack<Object> stack = new Stack<Object>();
 			int pos = 0;
 			while (tokenizer.hasMoreTokens()) {
 				final String token = tokenizer.nextToken();
@@ -441,7 +428,7 @@ public final class LhaProperty {
 					arg = arguments.substring(pos);
 				}
 				pos += arg.length() + 1;
-				args[i] = LhaProperty.parse(arg, substitute, packages);
+				args[i] = parse(arg, substitute, packages);
 			}
 
 		} else {
@@ -473,18 +460,13 @@ public final class LhaProperty {
 	 * @param souce 解析すべきコンストラクタを示す文字列
 	 * @param substitute 置換対象文字列をkeyにもち、置換するObjectを値に持つ Hashtable
 	 * @param packages パッケージ名の配列
-	 * 
 	 * @return 生成された Object の配列
 	 */
-	private static Object[] parseArray(final String source, final Hashtable substitute, final String[] packages) {
-
-		final String arguments = source.substring(source.indexOf('[') + 1,
-				source.lastIndexOf(']')).trim();
-
+	private static Object[] parseArray(final String source, final Hashtable<String, Object> substitute, final String[] packages) {
+		final String arguments = source.substring(source.indexOf('[') + 1, source.lastIndexOf(']')).trim();
 		if (!arguments.equals("")) {
-			final StringTokenizer tokenizer = new StringTokenizer(arguments,
-					",()[]", true);
-			final Stack stack = new Stack();
+			final StringTokenizer tokenizer = new StringTokenizer(arguments, ",()[]", true);
+			final Stack<Object> stack = new Stack<Object>();
 			int pos = 0;
 			while (tokenizer.hasMoreTokens()) {
 				final String token = tokenizer.nextToken();
@@ -501,8 +483,7 @@ public final class LhaProperty {
 						stack.pop();
 					}
 				} else if (token.equals(",")) {
-					if (stack.empty() || !stack.peek().equals("(")
-							&& !stack.peek().equals("[")) {
+					if (stack.empty() || !stack.peek().equals("(") && !stack.peek().equals("[")) {
 						stack.push(new Integer(pos));
 					}
 				}
@@ -514,18 +495,16 @@ public final class LhaProperty {
 			for (int i = 0; i < stack.size() + 1; i++) {
 				String arg;
 				if (i < stack.size()) {
-					arg = arguments.substring(pos,
-							((Integer) stack.elementAt(i)).intValue());
+					arg = arguments.substring(pos, ((Integer) stack.elementAt(i)).intValue());
 				} else {
 					arg = arguments.substring(pos);
 				}
 				pos += arg.length() + 1;
-				array[i] = LhaProperty.parse(arg, substitute, packages);
+				array[i] = parse(arg, substitute, packages);
 			}
 			return array;
-		} else {
-			return new Object[0];
 		}
+		return new Object[0];
 	}
 
 	/**
@@ -533,7 +512,6 @@ public final class LhaProperty {
 	 * 
 	 * @param str クラス名かもしれない文字列
 	 * @param packages パッケージ名の列挙
-	 * 
 	 * @return 完全修飾名、もしくは str
 	 */
 	private static String applyPackages(final String str, final String[] packages) {
@@ -556,19 +534,14 @@ public final class LhaProperty {
 
 	// ------------------------------------------------------------------
 	// local method
-	// ------------------------------------------------------------------
-	// create property
-	// ------------------------------------------------------------------
-	// private static final Properties createLhaProperty()
-	// private static final Properties createDefaultProperty()
-	// ------------------------------------------------------------------
+
 	/**
 	 * LHA Library for Java のプロパティを生成する。
 	 * 
 	 * @return 生成されたプロパティ
 	 */
 	private static final Properties createLhaProperty() {
-		final Properties property = LhaProperty.createDefaultProperty();
+		final Properties property = createDefaultProperty();
 		try {
 			final ResourceBundle bundle = ResourceBundle.getBundle("jlha");
 			final Enumeration<String> enumkey = bundle.getKeys();
@@ -582,7 +555,7 @@ public final class LhaProperty {
 		if (property.getProperty("lha.encoding").equals("ShiftJISAuto")) {
 			try {
 				final String encoding = System.getProperty("file.encoding");
-				if (LhaProperty.isCategoryOfShiftJIS(encoding)) {
+				if (isCategoryOfShiftJIS(encoding)) {
 					property.put("lha.encoding", encoding);
 				} else {
 					property.put("lha.encoding", "SJIS");
