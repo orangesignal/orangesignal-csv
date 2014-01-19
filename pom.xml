@@ -77,14 +77,6 @@
 			<scope>test</scope>
 		</dependency>
 
-		<!-- Bean Validation integration test jars -->
-		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-validator</artifactId>
-			<version>5.0.2.Final</version>
-			<scope>test</scope>
-		</dependency>
-
 		<!-- Spring integration test jars -->
 		<dependency>
 			<groupId>org.springframework</groupId>

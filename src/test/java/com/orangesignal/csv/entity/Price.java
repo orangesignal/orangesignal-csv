@@ -19,9 +19,6 @@ package com.orangesignal.csv.entity;
 
 import java.util.Date;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Past;
-
 import com.orangesignal.csv.annotation.CsvColumn;
 import com.orangesignal.csv.annotation.CsvColumns;
 import com.orangesignal.csv.annotation.CsvEntity;
@@ -40,27 +37,21 @@ public class Price {
 	}
 
 	@CsvColumn(position = 0, name = "シンボル")
-	@NotNull
 	public String symbol;
 
 	@CsvColumns({
 		@CsvColumn(position = 4, name = "日付", format = "yyyy/MM/dd", language = "ja", country = "JP", timezone = "Asia/Tokyo"),
 		@CsvColumn(position = 5, name = "時刻", format = "HH:mm:ss", language = "ja", country = "JP", timezone = "Asia/Tokyo")
 	})
-	@NotNull
-	@Past
 	public Date date;
 
 	@CsvColumns({ @CsvColumn(position = 1, name = "名称") })
-	@NotNull
 	public String name;
 
 	@CsvColumn(position = 2, name = "価格", format = "#,##0", language = "ja", country = "JP")
-	@NotNull
 	public Number price;
 
 	@CsvColumn(position = 3, name = "出来高")
-	@NotNull
 	public Number volume;
 
 }

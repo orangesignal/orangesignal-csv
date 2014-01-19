@@ -27,11 +27,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Set;
 
-import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
-import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
-
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
@@ -269,45 +264,6 @@ public class CsvEntityReaderTest {
 			assertThat(o2.price.doubleValue(), is(1098.70D));
 			assertThat(o2.volume.longValue(), is(13L));
 			assertThat(o2.date, is(df.parse("2008/12/06 12:00:00")));
-
-			final Price last = reader.read();
-			assertNull(last);
-		} finally {
-			reader.close();
-		}
-	}
-
-	@Test
-	public void testBeanValidation() throws IOException {
-		final ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory();
-		final Validator validator = validatorFactory.getValidator();
-
-		final CsvEntityReader<Price> reader = CsvEntityReader.newInstance(
-				new CsvReader(new StringReader("シンボル,名称,価格,出来高,日付,時刻\r\nAAAA,aaa,10\\,000,10,2009/10/28,10:24:00\r\nBBBB,bbb,NULL,0,NULL,NULL"), cfg),
-				Price.class
-			);
-		try {
-			Set<ConstraintViolation<Price>> violations;
-
-			final Price o1 = reader.read();
-			assertThat(o1.symbol, is("AAAA"));
-			assertThat(o1.name, is("aaa"));
-			assertThat(o1.price.longValue(), is(10000L));
-			assertThat(o1.volume.longValue(), is(10L));
-			assertThat(new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(o1.date), is("2009/10/28 10:24:00"));
-
-			violations = validator.validate(o1);
-			assertThat(violations.size(), is(0));
-
-			final Price o2 = reader.read();
-			assertThat(o2.symbol, is("BBBB"));
-			assertThat(o2.name, is("bbb"));
-			assertNull(o2.price);
-			assertThat(o2.volume.longValue(), is(0L));
-			assertNull(o2.date);
-
-			violations = validator.validate(o2);
-			assertThat(violations.size(), is(2));
 
 			final Price last = reader.read();
 			assertNull(last);
