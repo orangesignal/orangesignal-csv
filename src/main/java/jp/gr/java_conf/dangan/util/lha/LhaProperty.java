@@ -543,7 +543,7 @@ final class LhaProperty {
 	private static final Properties createLhaProperty() {
 		final Properties property = createDefaultProperty();
 		try {
-			final ResourceBundle bundle = ResourceBundle.getBundle("jlha");
+			final ResourceBundle bundle = ResourceBundle.getBundle("orangesignal-jlha");
 			final Enumeration<String> enumkey = bundle.getKeys();
 			while (enumkey.hasMoreElements()) {
 				final String key = enumkey.nextElement();
