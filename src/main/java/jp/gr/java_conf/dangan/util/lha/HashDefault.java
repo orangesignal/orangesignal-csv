@@ -1,9 +1,4 @@
-//start of HashDefault.java
-//TEXT_STYLE:CODE=Shift_JIS(Japanese):RET_CODE=CRLF
-
 /**
- * HashDefault.java
- * 
  * Copyright (C) 2002  Michel Ishizuka  All rights reserved.
  * 
  * 以下の条件に同意するならばソースとバイナリ形式の再配布と使用を
@@ -31,12 +26,6 @@
 
 package jp.gr.java_conf.dangan.util.lha;
 
-//import classes and interfaces
-import jp.gr.java_conf.dangan.util.lha.HashMethod;
-
-//import exceptions
-
-
 /**
  * 試作プログラム ar940528 や LHa for Unix で使用されているハッシュ関数。<br>
  * gzip で使用されているを参考にしたようだ。<br>
@@ -53,108 +42,71 @@ import jp.gr.java_conf.dangan.util.lha.HashMethod;
  *     ソース整備
  *     タブ廃止
  *     ライセンス文の修正
- *
+ * 
  * </pre>
  * 
- * @author  $Author: dangan $
+ * @author $Author: dangan $
  * @version $Revision: 1.0 $
  */
-public class HashDefault implements HashMethod{
+public class HashDefault implements HashMethod {
 
+	/**
+	 * LZSS圧縮を施すためのバッファ。 前半は辞書領域、 後半は圧縮を施すためのデータの入ったバッファ。 HashMethodの実装内では Hash値の生成のための読み込みにのみ使用する。
+	 */
+	private byte[] textBuffer;
 
-    //------------------------------------------------------------------
-    //  class field
-    //------------------------------------------------------------------
-    //  private static final int HashMask
-    //------------------------------------------------------------------
-    /**
-     * ハッシュ値を生成するためのマスク値
-     */
-    private static final int HashMask = 0x7FFF;
+	// ------------------------------------------------------------------
+	// Constructor
 
+	/**
+	 * ar940528 や LHa for Unix で使用されているハッシュ関数を構築する。
+	 * 
+	 * @param textBuffer LZSS圧縮用のバッファ。 Hash値生成のため読み込み用に使用する。
+	 */
+	public HashDefault(final byte[] textBuffer) {
+		this.textBuffer = textBuffer;
+	}
 
-    //------------------------------------------------------------------
-    //  instance field
-    //------------------------------------------------------------------
-    //  private byte[] TextBuffer
-    //------------------------------------------------------------------
-    /**
-     * LZSS圧縮を施すためのバッファ。
-     * 前半は辞書領域、
-     * 後半は圧縮を施すためのデータの入ったバッファ。
-     * HashMethodの実装内では Hash値の生成のための読み込みにのみ使用する。
-     */
-    private byte[] TextBuffer;
+	// ------------------------------------------------------------------
+	// method of jp.gr.java_conf.dangan.util.lha.HashMethod
 
+	/**
+	 * ハッシュ値を生成するためのマスク値
+	 */
+	private static final int HASH_MASK = 0x7FFF;
 
-    //------------------------------------------------------------------
-    //  constructor
-    //------------------------------------------------------------------
-    //  private HashDefault()
-    //  public HashDefault( byte[] TextBuffer )
-    //------------------------------------------------------------------
-    /**
-     * デフォルトコンストラクタ。
-     * 使用不可
-     */
-    private HashDefault(){  }
+	/**
+	 * ハッシュ関数。<br>
+	 * コンストラクタで渡された TextBuffer の position からの データパタンの hash値を生成する。
+	 * 
+	 * @param position データパタンの開始位置
+	 * @return ハッシュ値
+	 */
+	@Override
+	public int hash(final int position) {
+		return ((textBuffer[position] << 5 ^ textBuffer[position + 1] & 0xFF) << 5 ^ textBuffer[position + 2] & 0xFF) & HASH_MASK;
+	}
 
-    /**
-     * ar940528 や LHa for Unix で使用されているハッシュ関数を構築する。
-     * 
-     * @param TextBuffer LZSS圧縮用のバッファ。
-     *                   Hash値生成のため読み込み用に使用する。
-     */
-    public HashDefault( byte[] TextBuffer ){
-        this.TextBuffer = TextBuffer;
-    }
+	/**
+	 * ハッシュ関数がハッシュ値を生成するために使用するバイト数を得る。<br>
+	 * このハッシュ関数は 3バイトのデータから シフトとXORを使用してハッシュ値を生成するため、 このメソッドは常に 3 を返す。
+	 * 
+	 * @return 常に 3
+	 */
+	@Override
+	public int hashRequires() {
+		return 3;
+	}
 
-
-    //------------------------------------------------------------------
-    //  method of jp.gr.java_conf.dangan.util.lha.HashMethod
-    //------------------------------------------------------------------
-    //  public int hash( int position )
-    //  public int hashRequires()
-    //  public int tableSize()
-    //------------------------------------------------------------------
-    /**
-     * ハッシュ関数。<br>
-     * コンストラクタで渡された TextBuffer の position からの
-     * データパタンの hash値を生成する。
-     *
-     * @param position データパタンの開始位置
-     * 
-     * @return ハッシュ値
-     */
-    public int hash( int position ){
-        return ( ( ( this.TextBuffer[ position ] << 5 ) 
-                 ^ ( this.TextBuffer[ position + 1 ] & 0xFF ) )
-               << 5 ^( this.TextBuffer[ position + 2 ] & 0xFF ) )
-             & HashDefault.HashMask;
-    }
-
-    /**
-     * ハッシュ関数がハッシュ値を生成するために使用するバイト数を得る。<br>
-     * このハッシュ関数は 3バイトのデータから
-     * シフトとXORを使用してハッシュ値を生成するため、
-     * このメソッドは常に 3 を返す。
-     * 
-     * @return 常に 3
-     */
-    public int hashRequires(){
-        return 3;
-    }
-
-    /**
-     * ハッシュテーブルのサイズを得る。<br>
-     * このハッシュ関数は 0x0000 ～ 0x7FFF のハッシュ値を生成するため、
-     * このメソッドは常に 0x8000(32768) を返す。
-     * 
-     * @return 常に 0x8000(32768)
-     */
-    public int tableSize(){
-        return 0x8000;
-    }
+	/**
+	 * ハッシュテーブルのサイズを得る。<br>
+	 * このハッシュ関数は 0x0000 ～ 0x7FFF のハッシュ値を生成するため、 このメソッドは常に 0x8000(32768) を返す。
+	 * 
+	 * @return 常に 0x8000(32768)
+	 */
+	@Override
+	public int tableSize() {
+		return 0x8000;
+	}
 
 }
-//end of HashDefault.java
