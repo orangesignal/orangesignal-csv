@@ -29,9 +29,8 @@ import com.orangesignal.csv.LhaEntryFilter;
 import com.orangesignal.csv.ZipEntryFilter;
 import com.orangesignal.csv.filters.BeanFilter;
 import com.orangesignal.csv.handlers.BeanOrder;
-
-import jp.gr.java_conf.dangan.util.lha.LhaFile;
-import jp.gr.java_conf.dangan.util.lha.LhaInputStream;
+import com.orangesignal.jlha.LhaFile;
+import com.orangesignal.jlha.LhaInputStream;
 
 /**
  * 区切り文字形式データの統合入力インタフェースです。

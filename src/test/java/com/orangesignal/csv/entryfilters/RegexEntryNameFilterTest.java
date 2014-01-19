@@ -25,13 +25,12 @@ import static org.junit.Assert.assertTrue;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 
-import jp.gr.java_conf.dangan.util.lha.LhaHeader;
-
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import com.orangesignal.csv.entryfilters.RegexEntryNameFilter;
+import com.orangesignal.jlha.LhaHeader;
 
 /**
  * {@link RegexEntryNameFilter} の単体テストです。

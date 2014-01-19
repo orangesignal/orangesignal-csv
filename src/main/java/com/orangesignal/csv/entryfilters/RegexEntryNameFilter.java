@@ -20,7 +20,7 @@ package com.orangesignal.csv.entryfilters;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 
-import jp.gr.java_conf.dangan.util.lha.LhaHeader;
+import com.orangesignal.jlha.LhaHeader;
 
 /**
  * 指定されたエントリ名の正規表現パターンを使ってフィルタを適用するエントリフィルタの実装です。

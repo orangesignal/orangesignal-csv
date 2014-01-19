@@ -17,7 +17,7 @@
 
 package com.orangesignal.csv;
 
-import jp.gr.java_conf.dangan.util.lha.LhaHeader;
+import com.orangesignal.jlha.LhaHeader;
 
 /**
  * LHA エントリフィルタのインタフェースです。

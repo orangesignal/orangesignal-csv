@@ -19,7 +19,7 @@ package com.orangesignal.csv.entryfilters;
 
 import java.util.zip.ZipEntry;
 
-import jp.gr.java_conf.dangan.util.lha.LhaHeader;
+import com.orangesignal.jlha.LhaHeader;
 
 /**
  * ディレクトリエントリをフィルタするエントリフィルタの実装です。

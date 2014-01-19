@@ -27,13 +27,12 @@ import java.util.Collection;
 import java.util.List;
 import java.util.zip.ZipEntry;
 
-import jp.gr.java_conf.dangan.util.lha.LhaHeader;
-
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import com.orangesignal.csv.entryfilters.EntryNameFilter;
+import com.orangesignal.jlha.LhaHeader;
 
 /**
  * {@link EntryNameFilter} の単体テストです。

@@ -36,10 +36,10 @@ import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
-import jp.gr.java_conf.dangan.util.lha.LhaFile;
-import jp.gr.java_conf.dangan.util.lha.LhaHeader;
-import jp.gr.java_conf.dangan.util.lha.LhaInputStream;
-import jp.gr.java_conf.dangan.util.lha.LhaOutputStream;
+import com.orangesignal.jlha.LhaFile;
+import com.orangesignal.jlha.LhaHeader;
+import com.orangesignal.jlha.LhaInputStream;
+import com.orangesignal.jlha.LhaOutputStream;
 
 /**
  * 区切り文字形式データの統合アクセスユーティリティを提供します。

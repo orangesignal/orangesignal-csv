@@ -24,11 +24,10 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.zip.ZipEntry;
 
-import jp.gr.java_conf.dangan.util.lha.LhaHeader;
-
 import org.junit.Test;
 
 import com.orangesignal.csv.entryfilters.DirectoryEntryFilter;
+import com.orangesignal.jlha.LhaHeader;
 
 /**
  * {@link DirectoryEntryFilter} の単体テストです。

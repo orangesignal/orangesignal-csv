@@ -37,10 +37,6 @@ import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
-import jp.gr.java_conf.dangan.util.lha.LhaFile;
-import jp.gr.java_conf.dangan.util.lha.LhaInputStream;
-import jp.gr.java_conf.dangan.util.lha.LhaOutputStream;
-
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
@@ -57,6 +53,9 @@ import com.orangesignal.csv.handlers.BeanOrder;
 import com.orangesignal.csv.handlers.CsvEntityListHandler;
 import com.orangesignal.csv.handlers.StringArrayListHandler;
 import com.orangesignal.csv.model.Sample;
+import com.orangesignal.jlha.LhaFile;
+import com.orangesignal.jlha.LhaInputStream;
+import com.orangesignal.jlha.LhaOutputStream;
 
 /**
  * {@link Csv} クラスの単体テストです。

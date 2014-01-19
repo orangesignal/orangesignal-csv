@@ -25,9 +25,6 @@ import java.util.List;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 
-import jp.gr.java_conf.dangan.util.lha.LhaFile;
-import jp.gr.java_conf.dangan.util.lha.LhaInputStream;
-
 import com.orangesignal.csv.Csv;
 import com.orangesignal.csv.CsvConfig;
 import com.orangesignal.csv.LhaEntryFilter;
@@ -36,6 +33,8 @@ import com.orangesignal.csv.bean.AbstractCsvBeanTemplate;
 import com.orangesignal.csv.filters.BeanFilter;
 import com.orangesignal.csv.handlers.AbstractBeanListHandler;
 import com.orangesignal.csv.handlers.BeanOrder;
+import com.orangesignal.jlha.LhaFile;
+import com.orangesignal.jlha.LhaInputStream;
 
 /**
  * 区切り文字形式データの統合入力インタフェースの実装を容易にするための抽象クラスを提供します。

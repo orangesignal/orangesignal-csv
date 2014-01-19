@@ -23,7 +23,7 @@ import java.io.OutputStream;
 import java.io.Writer;
 import java.util.zip.ZipOutputStream;
 
-import jp.gr.java_conf.dangan.util.lha.LhaOutputStream;
+import com.orangesignal.jlha.LhaOutputStream;
 
 /**
  * 区切り文字形式データの統合出力インタフェースです。

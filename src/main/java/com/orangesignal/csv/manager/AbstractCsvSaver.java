@@ -27,8 +27,7 @@ import java.util.zip.ZipOutputStream;
 import com.orangesignal.csv.Csv;
 import com.orangesignal.csv.CsvConfig;
 import com.orangesignal.csv.CsvListHandler;
-
-import jp.gr.java_conf.dangan.util.lha.LhaOutputStream;
+import com.orangesignal.jlha.LhaOutputStream;
 
 /**
  * 区切り文字形式データの統合出力インタフェースの実装を容易にするための抽象クラスを提供します。
