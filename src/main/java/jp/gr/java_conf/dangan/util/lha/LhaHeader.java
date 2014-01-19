@@ -327,9 +327,9 @@ public class LhaHeader implements Cloneable{
         this();
         if( HeaderData != null ){
             try{
-                this.importHeader( HeaderData, LhaProperty.encoding );
+                this.importHeader( HeaderData, LhaProperty.ENCODING );
             }catch( UnsupportedEncodingException exception ){
-                throw new Error( "Java Runtime Environment not support " + LhaProperty.encoding + " encoding" );
+                throw new Error( "Java Runtime Environment not support " + LhaProperty.ENCODING + " encoding" );
             }
         }else{
             throw new NullPointerException( "HeaderData" );
@@ -588,9 +588,9 @@ public class LhaHeader implements Cloneable{
      */
     public byte[] getBytes(){
         try{
-            return this.exportHeader( LhaProperty.encoding );
+            return this.exportHeader( LhaProperty.ENCODING );
         }catch( UnsupportedEncodingException exception ){
-            throw new Error( "Java Runtime Environment not support " + LhaProperty.encoding + " encoding" );
+            throw new Error( "Java Runtime Environment not support " + LhaProperty.ENCODING + " encoding" );
         }
     }
 
