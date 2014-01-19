@@ -186,7 +186,7 @@
 					<splitindex>true</splitindex>
 					<docfilessubdirs>true</docfilessubdirs>
 					<header>${project.name}</header>
-					<excludePackageNames>com.orangesignal.lha:com.orangesignal.lha.*</excludePackageNames>
+					<excludePackageNames>com.orangesignal.jlha</excludePackageNames>
 				</configuration>
 				<executions>
 					<execution>
@@ -305,6 +305,7 @@
 					<splitindex>true</splitindex>
 					<docfilessubdirs>true</docfilessubdirs>
 					<header>${project.name}</header>
+					<excludePackageNames>com.orangesignal.jlha</excludePackageNames>
 				</configuration>
 				<reportSets>
 					<reportSet>
