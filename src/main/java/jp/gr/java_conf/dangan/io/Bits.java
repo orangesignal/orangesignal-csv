@@ -1,9 +1,4 @@
-//start of Bits.java
-//TEXT_STYLE:CODE=Shift_JIS(Japanese):RET_CODE=CRLF
-
 /**
- * Bits.java
- * 
  * Copyright (C) 2002  Michel Ishizuka  All rights reserved.
  * 
  * 以下の条件に同意するならばソースとバイナリ形式の再配布と使用を
@@ -31,66 +26,30 @@
 
 package jp.gr.java_conf.dangan.io;
 
-//import classes and interfaces
-
-//import exceptions
-
-
 /**
- * ビット処理のためのユーティリティメソッド群。<br>
+ * ビット処理のためのユーティリティメソッド群。
  * 
- * <pre>
- * -- revision history --
- * $Log: Bits.java,v $
- * Revision 1.0  2002/12/05 00:00:00  dangan
- * first edition
- * add to version control
- *
- * </pre>
- * 
- * @author  $Author: dangan $
+ * @author $Author: dangan $
  * @version $Revision: 1.0 $
  */
-public class Bits{
+public final class Bits {
 
+	private Bits() {}
 
-    //------------------------------------------------------------------
-    //  constructor
-    //------------------------------------------------------------------
-    //  private Bits()
-    //------------------------------------------------------------------
-    /**
-     * デフォルトコンストラクタ。
-     * 使用不可。
-     */
-    private Bits(){     }
-
-
-    //------------------------------------------------------------------
-    //  shared method
-    //------------------------------------------------------------------
-    //  length of bits
-    //------------------------------------------------------------------
-    //  public static int len( int val )
-    //------------------------------------------------------------------
-    /**
-     * val のビット長を得る。
-     * val は符号なし 32ビット整数とみなされる。
-     * log2( (long)val & 0xFFFFFFFFL ) の戻り値の
-     * 小数点以下を切り捨てたものと同等。
-     * 
-     * @param val 整数値
-     * 
-     * @return val のビット長
-     */
-    public static int len( int val ){
-        int len = 0;
-        while( 0 != val ){
-            val >>>= 1;
-            len++;
-        }
-        return len;
-    }
+	/**
+	 * val のビット長を得る。 val は符号なし 32ビット整数とみなされる。 log2( (long)val & 0xFFFFFFFFL ) の戻り値の 小数点以下を切り捨てたものと同等。
+	 * 
+	 * @param val 整数値
+	 * 
+	 * @return val のビット長
+	 */
+	public static int len(int val) {
+		int len = 0;
+		while (0 != val) {
+			val >>>= 1;
+			len++;
+		}
+		return len;
+	}
 
 }
-//end of Bits.java
