@@ -1,9 +1,4 @@
-//start of NotEnoughBitsException.java
-//TEXT_STYLE:CODE=Shift_JIS(Japanese):RET_CODE=CRLF
-
 /**
- * NotEnoughBitsException.java
- * 
  * Copyright (C) 2001-2002  Michel Ishizuka  All rights reserved.
  * 
  * 以下の条件に同意するならばソースとバイナリ形式の再配布と使用を
@@ -31,18 +26,11 @@
 
 package jp.gr.java_conf.dangan.io;
 
-//import classes and interfaces
-
-//import exceptions
 import java.io.IOException;
 
 /**
- * 要求されたビット数のデータを得られなかった場合に
- * 投げられる例外。<br>
- * BitDataBrokenException と違い、こちらの例外を
- * 投げる場合には 実際には読み込み動作を行ってい
- * ないため、読み込み位置は例外を投げる前の時点と
- * 同じである点に注意すること。<br>
+ * 要求されたビット数のデータを得られなかった場合に 投げられる例外。<br>
+ * BitDataBrokenException と違い、こちらの例外を 投げる場合には 実際には読み込み動作を行ってい ないため、読み込み位置は例外を投げる前の時点と 同じである点に注意すること。<br>
  * 
  * <pre>
  * -- revision history --
@@ -52,78 +40,55 @@ import java.io.IOException;
  * [maintenance]
  *     タブ廃止
  *     ライセンス文の修正
- *
+ * 
  * </pre>
  * 
- * @author  $Author: dangan $
+ * @author $Author: dangan $
  * @version $Revision: 1.0 $
  */
-public class NotEnoughBitsException extends IOException{
+@SuppressWarnings("serial")
+public class NotEnoughBitsException extends IOException {
 
+	/**
+	 * 実際に読み込めるビット数
+	 */
+	private final int availableBits;
 
-    //------------------------------------------------------------------
-    //  instance field
-    //------------------------------------------------------------------
-    //  private int availableBits
-    //------------------------------------------------------------------
-    /**
-     * 実際に読み込めるビット数
-     */
-    private int availableBits;
+	// ------------------------------------------------------------------
+	// Constructor
 
+	/**
+	 * availableBits 使用可能であることを示す NotEnoughBitsException を構築する。
+	 * 
+	 * @param availableBits 使用可能なビット数
+	 */
+	public NotEnoughBitsException(final int availableBits) {
+		super();
+		this.availableBits = availableBits;
+	}
 
-    //------------------------------------------------------------------
-    //  constructor
-    //------------------------------------------------------------------
-    //  private NotEnoughBitsException()
-    //  public NotEnoughBitsException( int availableBits )
-    //  public NotEnoughBitsException( String message, int availableBits )
-    //------------------------------------------------------------------
-    /**
-     * デフォルトコンストラクタ。
-     * 使用不可。
-     */
-    private NotEnoughBitsException(){ }
+	/**
+	 * availableBits 使用可能であることを示し、 詳細なメッセージを持つ NotEnoughBitsException を構築する。
+	 * 
+	 * @param message 詳細なメッセージ
+	 * @param availableBits 使用可能なビット数
+	 */
+	public NotEnoughBitsException(final String message, final int availableBits) {
+		super(message);
+		this.availableBits = availableBits;
+	}
 
-    /**
-     * availableBits 使用可能であることを示す
-     * NotEnoughBitsException を構築する。
-     * 
-     * @param availableBits 使用可能なビット数
-     */
-    public NotEnoughBitsException( int availableBits ){
-        super();
-        this.availableBits = availableBits;
-    }
+	// ------------------------------------------------------------------
+	// Public method
 
-    /**
-     * availableBits 使用可能であることを示し、
-     * 詳細なメッセージを持つ
-     * NotEnoughBitsException を構築する。
-     * 
-     * @param message       詳細なメッセージ
-     * @param availableBits 使用可能なビット数
-     */
-    public NotEnoughBitsException( String message, int availableBits ){
-        super( message );
-        this.availableBits = availableBits;
-    }
-
-
-    //------------------------------------------------------------------
-    //  access method
-    //------------------------------------------------------------------
-    //  public int getAvailableBits()
-    //------------------------------------------------------------------
-    /**
-     * 使用可能なビット数を得る。<br>
-     * この例外を投げたメソッドにおいて、現在使用可能なビット数を返す。<br>
-     * 
-     * @return 使用可能なビット数
-     */
-    public int getAvailableBits(){
-        return this.availableBits;
-    }
+	/**
+	 * 使用可能なビット数を得る。<br>
+	 * この例外を投げたメソッドにおいて、現在使用可能なビット数を返す。<br>
+	 * 
+	 * @return 使用可能なビット数
+	 */
+	public int getAvailableBits() {
+		return this.availableBits;
+	}
 
 }
-//end of NotEnoughBitsException.java
