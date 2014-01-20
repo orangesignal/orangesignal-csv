@@ -87,7 +87,7 @@ public final class LittleEndian {
 	 * @exception ArrayIndexOutOfBoundsException indexから始まるデータが ByteArrayの範囲内に無い場合。
 	 */
 	public static final long readLong(final byte[] ByteArray, final int index) {
-		return LittleEndian.readInt(ByteArray, index) & 0xFFFFFFFFL | (long) LittleEndian.readInt(ByteArray, index + 4) << 32L;
+		return readInt(ByteArray, index) & 0xFFFFFFFFL | (long) readInt(ByteArray, index + 4) << 32L;
 	}
 
 	// ------------------------------------------------------------------
@@ -142,7 +142,7 @@ public final class LittleEndian {
 	 * @exception IOException 入出力エラーが発生した場合
 	 */
 	public static final long readLong(final InputStream in) throws IOException {
-		return LittleEndian.readInt(in) & 0xFFFFFFFFL | (long) LittleEndian.readInt(in) << 32;
+		return readInt(in) & 0xFFFFFFFFL | (long) readInt(in) << 32;
 
 	}
 
@@ -197,8 +197,8 @@ public final class LittleEndian {
 	 */
 	public static final void writeLong(final byte[] bytes, final int index, final long value) {
 		if (0 <= index && index + 7 < bytes.length) {
-			LittleEndian.writeInt(bytes, index, (int) value);
-			LittleEndian.writeInt(bytes, index + 4, (int) (value >> 32));
+			writeInt(bytes, index, (int) value);
+			writeInt(bytes, index + 4, (int) (value >> 32));
 		} else {
 			throw new ArrayIndexOutOfBoundsException();
 		}
