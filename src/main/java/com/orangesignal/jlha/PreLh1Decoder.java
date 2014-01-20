@@ -1,9 +1,4 @@
-//start of PreLh1Decoder.java
-//TEXT_STYLE:CODE=Shift_JIS(Japanese):RET_CODE=CRLF
-
 /**
- * PreLh1Decoder.java
- * 
  * Copyright (C) 2002  Michel Ishizuka  All rights reserved.
  * 
  * 以下の条件に同意するならばソースとバイナリ形式の再配布と使用を
@@ -31,380 +26,251 @@
 
 package com.orangesignal.jlha;
 
-//import classes and interfaces
-import java.io.InputStream;
-import java.lang.Math;
-
-
-
-
-//import exceptions
-import java.io.IOException;
 import java.io.EOFException;
-import java.lang.NullPointerException;
-
-import com.orangesignal.jlha.BadHuffmanTableException;
-import com.orangesignal.jlha.DynamicHuffman;
-import com.orangesignal.jlha.PreLzssDecoder;
-import com.orangesignal.jlha.StaticHuffman;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * -lh1- 解凍用の PreLzssDecoder。<br>
  * 
- * <pre>
- * -- revision history --
- * $Log: PreLh1Decoder.java,v $
- * Revision 1.1  2002/12/01 00:00:00  dangan
- * [maintenance]
- *     ソース整備
- *
- * Revision 1.0  2002/08/05 00:00:00  dangan
- * add to version control
- * [bug fix]
- *     available の計算が甘かったのを修正。
- * [maintenance]
- *     ソース整備
- *
- * </pre>
- * 
- * @author  $Author: dangan $
+ * @author $Author: dangan $
  * @version $Revision: 1.1 $
  */
-public class PreLh1Decoder implements PreLzssDecoder{
+public class PreLh1Decoder implements PreLzssDecoder {
 
+	/** 辞書サイズ */
+	private static final int DICTIONARY_SIZE = 4096;
 
-    //------------------------------------------------------------------
-    //  class field
-    //------------------------------------------------------------------
-    //  LZSS parameter
-    //------------------------------------------------------------------
-    //  private static final int DictionarySize
-    //  private static final int MaxMatch
-    //  private static final int Threshold
-    //------------------------------------------------------------------
-    /** 辞書サイズ */
-    private static final int DictionarySize = 4096;
+	/** 最大一致長 */
+	private static final int MAX_MATCH = 60;
 
-    /** 最大一致長 */
-    private static final int MaxMatch       = 60;
+	/** 最小一致長 */
+	private static final int THRESHOLD = 3;
 
-    /** 最小一致長 */
-    private static final int Threshold      = 3;
+	/**
+	 * -lh1- の圧縮データを供給する BitInputStream
+	 */
+	BitInputStream in;
 
+	/**
+	 * code部復号用の動的ハフマン木
+	 */
+	DynamicHuffman huffman;
 
-    //------------------------------------------------------------------
-    //  instance field
-    //------------------------------------------------------------------
-    //  source
-    //------------------------------------------------------------------
-    //  BitInputStream in
-    //------------------------------------------------------------------
-    /**
-     * -lh1- の圧縮データを供給する BitInputStream
-     */
-    BitInputStream in;
+	/**
+	 * オフセット部の上位6bit復号用 ハフマン符号長リスト。
+	 */
+	int[] offHiLen;
 
+	/**
+	 * オフセット部の上位6bit復号用テーブル。
+	 */
+	short[] offHiTable;
 
-    //------------------------------------------------------------------
-    //  instance field
-    //------------------------------------------------------------------
-    //  huffman decoder
-    //------------------------------------------------------------------
-    //  DynamicHuffman huffman
-    //  int[] offHiLen
-    //  short[] offHiTable
-    //  int offHiTableBits
-    //------------------------------------------------------------------
-    /**
-     * code部復号用の動的ハフマン木
-     */
-    DynamicHuffman huffman;
+	/**
+	 * オフセット部の上位6bit復号用テーブルを引くのに必要なbit数。
+	 */
+	int offHiTableBits;
 
-    /**
-     * オフセット部の上位6bit復号用 
-     * ハフマン符号長リスト。
-     */
-    int[] offHiLen;
+	/** huffman のバックアップ用 */
+	DynamicHuffman markHuffman;
 
-    /**
-     * オフセット部の上位6bit復号用テーブル。
-     */
-    short[] offHiTable;
+	// ------------------------------------------------------------------
+	// Constructers
 
-    /**
-     * オフセット部の上位6bit復号用テーブルを引くのに必要なbit数。
-     */
-    int offHiTableBits;
+	/**
+	 * -lh1- 解凍用 PreLzssDecoder を構築する。
+	 * 
+	 * @param in -lh1- で圧縮されたデータを供給する入力ストリーム
+	 */
+	public PreLh1Decoder(final InputStream in) {
+		if (in != null) {
+			if (in instanceof BitInputStream) {
+				this.in = (BitInputStream) in;
+			} else {
+				this.in = new BitInputStream(in);
+			}
+			huffman = new DynamicHuffman(314);
+			markHuffman = null;
 
+			offHiLen = PreLh1Decoder.createLenList();
+			try {
+				offHiTable = StaticHuffman.createTable(offHiLen);
+			} catch (final BadHuffmanTableException exception) {
+			}
+			offHiTableBits = Bits.len(offHiTable.length - 1);
+		} else {
+			throw new NullPointerException("in");
+		}
+	}
 
-    //------------------------------------------------------------------
-    //  instance field
-    //------------------------------------------------------------------
-    //  backup for mark/reset
-    //------------------------------------------------------------------
-    //  DynamicHuffman markHuffman
-    //------------------------------------------------------------------
-    /** huffman のバックアップ用 */
-    DynamicHuffman markHuffman;
+	// ------------------------------------------------------------------
+	// method of jp.gr.java_conf.dangan.util.lha.PreLzssDecoder
 
+	/**
+	 * -lh1- で圧縮された 1byte のLZSS未圧縮のデータ、 もしくは圧縮コードのうち一致長を読み込む。<br>
+	 * 
+	 * @return 1byte の 未圧縮のデータもしくは、 圧縮された圧縮コードのうち一致長
+	 * @exception IOException 入出力エラーが発生した場合
+	 * @exception EOFException EndOfStreamに達した場合
+	 */
+	@Override
+	public int readCode() throws IOException {
+		int node = huffman.childNode(DynamicHuffman.ROOT);
+		while (0 <= node) {
+			node = huffman.childNode(node - (in.readBoolean() ? 1 : 0));// throws EOFException,IOException
+		}
+		final int code = ~node;
+		huffman.update(code);
+		return code;
+	}
 
-    //------------------------------------------------------------------
-    //  constructers
-    //------------------------------------------------------------------
-    //  public PreLh1Decoder( InputStream in )
-    //------------------------------------------------------------------
-    /**
-     * -lh1- 解凍用 PreLzssDecoder を構築する。
-     * 
-     * @param in -lh1- で圧縮されたデータを供給する入力ストリーム
-     */
-    public PreLh1Decoder( InputStream in ){
-        if( in != null ){
-            if( in instanceof BitInputStream ){
-                this.in         = (BitInputStream)in;
-            }else{
-                this.in         = new BitInputStream( in );
-            }
-            this.huffman        = new DynamicHuffman( 314 );
-            this.markHuffman    = null;
+	/**
+	 * -lh1- で圧縮された LZSS圧縮コードのうち一致位置を読み込む。<br>
+	 * 
+	 * @return -lh1- で圧縮された圧縮コードのうち一致位置
+	 * @exception IOException 入出力エラーが発生した場合。
+	 * @exception EOFException データが途中までしかないため 予期せぬ EndOfStream に到達した場合。
+	 * @exception BitDataBrokenException データが途中までしかないため 予期せぬ EndOfStream に到達したか、 他の入出力エラーが発生した。
+	 * @exception NotEnoughBitsException データが途中までしかないため 予期せぬ EndOfStream に到達したか、 他の入出力エラーが発生した。
+	 */
+	@Override
+	public int readOffset() throws IOException {
+		// offHiをあらわすのに最短の場合は 0 の 3bit で
+		// offHiTableBits は 8bitで 両者の差は 5bit。
+		// そのため、下位6bitを読み込む事を加味すると
+		// 正常なデータでは peekBits が
+		// NotEnoughBitsException を投げることは無い。
+		final int offHi = offHiTable[in.peekBits(offHiTableBits)]; // throws NotEnoughBitsException IOException
+		in.skipBits(offHiLen[offHi]);                             // throws IOException
 
-            this.offHiLen       = PreLh1Decoder.createLenList();
-            try{
-                this.offHiTable = StaticHuffman.createTable( this.offHiLen );
-            }catch( BadHuffmanTableException exception ){
-            }
-            this.offHiTableBits = Bits.len( this.offHiTable.length - 1 );
-        }else{
-            throw new NullPointerException( "in" );
-        }
-    }
+		return offHi << 6 | in.readBits(6);                          // throws BitDataBrokenException NotEnoughBitsException IOException
+	}
 
-    //------------------------------------------------------------------
-    //  method of jp.gr.java_conf.dangan.util.lha.PreLzssDecoder
-    //------------------------------------------------------------------
-    //  read
-    //------------------------------------------------------------------
-    //  public int readCode()
-    //  public int readOffset()
-    //------------------------------------------------------------------
-    /**
-     * -lh1- で圧縮された 
-     * 1byte のLZSS未圧縮のデータ、
-     * もしくは圧縮コードのうち一致長を読み込む。<br>
-     * 
-     * @return 1byte の 未圧縮のデータもしくは、
-     *         圧縮された圧縮コードのうち一致長
-     * 
-     * @exception IOException  入出力エラーが発生した場合
-     * @exception EOFException EndOfStreamに達した場合
-     */
-    public int readCode() throws IOException {
-        int node = this.huffman.childNode( DynamicHuffman.ROOT );
-        while( 0 <= node ){
-            node = this.huffman.childNode( node - ( in.readBoolean() ? 1 : 0 ) );//throws EOFException,IOException
-        }
-        int code = ~node;
-        this.huffman.update( code );
-        return code;
-    }
+	/**
+	 * 接続された入力ストリームの現在位置にマークを設定し、 reset() メソッドでマークした時点の 読み込み位置に 戻れるようにする。<br>
+	 * InputStream の mark() と違い、readLimit で設定した 限界バイト数より前にマーク位置が無効になる可能性が ある事に注意すること。<br>
+	 * 
+	 * @param readLimit マーク位置に戻れる限界のバイト数。 このバイト数を超えてデータを読み 込んだ場合 reset()できなくなる可 能性がある。<br>
+	 * @see PreLzssDecoder#mark(int)
+	 */
+	@Override
+	public void mark(final int readLimit) {
+		in.mark(readLimit * 18 / 8 + 4);
+		markHuffman = (DynamicHuffman) huffman.clone();
+	}
 
-    /**
-     * -lh1- で圧縮された
-     * LZSS圧縮コードのうち一致位置を読み込む。<br>
-     * 
-     * @return -lh1- で圧縮された圧縮コードのうち一致位置
-     * 
-     * @exception IOException  入出力エラーが発生した場合。
-     * @exception EOFException データが途中までしかないため
-     *                         予期せぬ EndOfStream に到達した場合。
-     * @exception BitDataBrokenException
-     *                         データが途中までしかないため
-     *                         予期せぬ EndOfStream に到達したか、
-     *                         他の入出力エラーが発生した。  
-     * @exception NotEnoughBitsException
-     *                         データが途中までしかないため
-     *                         予期せぬ EndOfStream に到達したか、
-     *                         他の入出力エラーが発生した。  
-     */
-    public int readOffset() throws IOException {
-        //offHiをあらわすのに最短の場合は 0 の 3bit で
-        //offHiTableBits は 8bitで 両者の差は 5bit。 
-        //そのため、下位6bitを読み込む事を加味すると
-        //正常なデータでは peekBits が 
-        //NotEnoughBitsException を投げることは無い。
-        int offHi = this.offHiTable[ this.in.peekBits( this.offHiTableBits ) ]; //throws NotEnoughBitsException IOException
-        this.in.skipBits( this.offHiLen[ offHi ] );                             //throws IOException
+	/**
+	 * 接続された入力ストリームの読み込み位置を最後に mark() メソッドが呼び出されたときの位置に設定する。<br>
+	 * 
+	 * @exception IOException 入出力エラーが発生した場合
+	 */
+	@Override
+	public void reset() throws IOException {
+		// mark()しないで reset() しようとした場合、
+		// readLimit を超えて reset() しようとした場合、
+		// 接続された InputStream が markSupported() で false を返す場合は
+		// BitInputStream が IOException を投げる。
+		in.reset();                                                        // throws IOException
 
-        return ( offHi << 6 ) | this.in.readBits( 6 );                          //throws BitDataBrokenException NotEnoughBitsException IOException
-    }
+		huffman = (DynamicHuffman) markHuffman.clone();
+	}
 
+	/**
+	 * 接続された入力ストリームが mark() と reset() をサポートするかを得る。<br>
+	 * 
+	 * @return ストリームが mark() と reset() を サポートする場合は true。<br>サポートしない場合は false。<br>
+	 */
+	@Override
+	public boolean markSupported() {
+		return in.markSupported();
+	}
 
-    //------------------------------------------------------------------
-    //  method of jp.gr.java_conf.dangan.util.lha.PreLzssDecoder
-    //------------------------------------------------------------------
-    //  mark / reset
-    //------------------------------------------------------------------
-    //  public void mark( int readLimit )
-    //  public void reset()
-    //  public boolean markSupported()
-    //------------------------------------------------------------------
-    /**
-     * 接続された入力ストリームの現在位置にマークを設定し、
-     * reset() メソッドでマークした時点の 読み込み位置に
-     * 戻れるようにする。<br>
-     * InputStream の mark() と違い、readLimit で設定した
-     * 限界バイト数より前にマーク位置が無効になる可能性が
-     * ある事に注意すること。<br>
-     * 
-     * @param readLimit マーク位置に戻れる限界のバイト数。
-     *                  このバイト数を超えてデータを読み
-     *                  込んだ場合 reset()できなくなる可
-     *                  能性がある。<br>
-     * 
-     * @see PreLzssDecoder#mark(int)
-     */
-    public void mark( int readLimit ){
-        this.in.mark( readLimit * 18 / 8 + 4 );
-        this.markHuffman = (DynamicHuffman)this.huffman.clone();
-    }
+	/**
+	 * ブロックせずに読み出すことの出来る最低バイト数を得る。<br>
+	 * InputStream の available() と違い、 この最低バイト数は必ずしも保障されていない事に注意すること。<br>
+	 * 
+	 * @return ブロックしないで読み出せる最低バイト数。<br>
+	 * @exception IOException 入出力エラーが発生した場合
+	 * @see PreLzssDecoder#available()
+	 */
+	@Override
+	public int available() throws IOException {
+		return Math.max(in.availableBits() / 18 - 4, 0);                 // throws IOException
+	}
 
-    /**
-     * 接続された入力ストリームの読み込み位置を最後に
-     * mark() メソッドが呼び出されたときの位置に設定する。<br>
-     * 
-     * @exception IOException 入出力エラーが発生した場合
-     */
-    public void reset() throws IOException {
-        //mark()しないで reset() しようとした場合、
-        //readLimit を超えて reset() しようとした場合、
-        //接続された InputStream が markSupported() で false を返す場合は
-        //BitInputStream が IOException を投げる。
-        this.in.reset();                                                        //throws IOException
+	/**
+	 * このストリームを閉じ、使用していた全ての資源を解放する。
+	 * 
+	 * @exception IOException 入出力エラーが発生した場合
+	 */
+	@Override
+	public void close() throws IOException {
+		in.close();                                                        // throws IOException
 
-        this.huffman = (DynamicHuffman)this.markHuffman.clone();
-    }
+		in = null;
+		huffman = null;
+		markHuffman = null;
 
-    /**
-     * 接続された入力ストリームが mark() と reset() をサポートするかを得る。<br>
-     * 
-     * @return ストリームが mark() と reset() を
-     *         サポートする場合は true。<br>
-     *         サポートしない場合は false。<br>
-     */
-    public boolean markSupported(){
-        return this.in.markSupported();
-    }
+		offHiLen = null;
+		offHiTable = null;
+		offHiTableBits = 0;
+	}
 
+	/**
+	 * -lh1-形式のLZSS辞書のサイズを得る。
+	 * 
+	 * @return -lh1-形式のLZSS辞書のサイズ
+	 */
+	@Override
+	public int getDictionarySize() {
+		return PreLh1Decoder.DICTIONARY_SIZE;
+	}
 
-    //------------------------------------------------------------------
-    //  method of jp.gr.java_conf.dangan.util.lha.PreLzssDecoder
-    //------------------------------------------------------------------
-    //  other
-    //------------------------------------------------------------------
-    //  public int available()
-    //  public void close()
-    //------------------------------------------------------------------
-    /**
-     * ブロックせずに読み出すことの出来る最低バイト数を得る。<br>
-     * InputStream の available() と違い、
-     * この最低バイト数は必ずしも保障されていない事に注意すること。<br>
-     * 
-     * @return ブロックしないで読み出せる最低バイト数。<br>
-     * 
-     * @exception IOException 入出力エラーが発生した場合
-     * 
-     * @see PreLzssDecoder#available()
-     */
-    public int available() throws IOException {
-        return Math.max( this.in.availableBits() / 18 - 4, 0 );                 //throws IOException
-    }
+	/**
+	 * -lh1-形式のLZSSの最大一致長を得る。
+	 * 
+	 * @return -lh1-形式のLZSSの最大一致長
+	 */
+	@Override
+	public int getMaxMatch() {
+		return PreLh1Decoder.MAX_MATCH;
+	}
 
-    /**
-     * このストリームを閉じ、使用していた全ての資源を解放する。
-     * 
-     * @exception IOException 入出力エラーが発生した場合
-     */
-    public void close() throws IOException {
-        this.in.close();                                                        //throws IOException
+	/**
+	 * -lh1-形式のLZSSの圧縮、非圧縮の閾値を得る。
+	 * 
+	 * @return -lh1-形式のLZSSの圧縮、非圧縮の閾値
+	 */
+	@Override
+	public int getThreshold() {
+		return PreLh1Decoder.THRESHOLD;
+	}
 
-        this.in             = null;
-        this.huffman        = null;
-        this.markHuffman    = null;
+	// ------------------------------------------------------------------
+	// local method
 
-        this.offHiLen       = null;
-        this.offHiTable     = null;
-        this.offHiTableBits = 0;
-    }
+	/**
+	 * -lh1- の offsetデコード用StaticHuffmanの ハフマン符号長リストを生成する。
+	 * 
+	 * @return -lh1- の offsetデコード用StaticHuffmanの ハフマン符号長リスト
+	 */
+	private static int[] createLenList() {
+		final int length = 64;
+		final int[] list = { 3, 0x01, 0x04, 0x0C, 0x18, 0x30, 0 };
 
+		final int[] LenList = new int[length];
+		int index = 0;
+		int len = list[index++];
 
-    //------------------------------------------------------------------
-    //  method of jp.gr.java_conf.dangan.util.PreLzssDecoder
-    //------------------------------------------------------------------
-    //  get LZSS parameter
-    //------------------------------------------------------------------
-    //  public int getDictionarySize()
-    //  public int getMaxMatch()
-    //  public int getThreshold()
-    //------------------------------------------------------------------
-    /**
-     * -lh1-形式のLZSS辞書のサイズを得る。
-     * 
-     * @return -lh1-形式のLZSS辞書のサイズ
-     */
-    public int getDictionarySize(){
-        return PreLh1Decoder.DictionarySize;
-    }
-
-    /**
-     * -lh1-形式のLZSSの最大一致長を得る。
-     * 
-     * @return -lh1-形式のLZSSの最大一致長
-     */
-    public int getMaxMatch(){
-        return PreLh1Decoder.MaxMatch;
-    }
-
-    /**
-     * -lh1-形式のLZSSの圧縮、非圧縮の閾値を得る。
-     * 
-     * @return -lh1-形式のLZSSの圧縮、非圧縮の閾値
-     */
-    public int getThreshold(){
-        return PreLh1Decoder.Threshold;
-    }
-
-
-    //------------------------------------------------------------------
-    //  local method
-    //------------------------------------------------------------------
-    //  constant huffman tree
-    //------------------------------------------------------------------
-    //  private static int[] createLenList()
-    //------------------------------------------------------------------
-    /**
-     * -lh1- の offsetデコード用StaticHuffmanの
-     * ハフマン符号長リストを生成する。
-     * 
-     * @return -lh1- の offsetデコード用StaticHuffmanの
-     *         ハフマン符号長リスト
-     */
-    private static int[] createLenList(){
-        final int length = 64;
-        final int[] list = { 3, 0x01, 0x04, 0x0C, 0x18, 0x30, 0 };
-
-        int[] LenList = new int[ length ];
-        int index = 0;
-        int len = list[ index++ ];
-
-        for( int i = 0 ; i < length ; i++ ){
-            if( list[index] == i ){
-                len++;
-                index++;
-            }
-            LenList[i] = len;
-        }
-        return LenList;
-    }
+		for (int i = 0; i < length; i++) {
+			if (list[index] == i) {
+				len++;
+				index++;
+			}
+			LenList[i] = len;
+		}
+		return LenList;
+	}
 
 }
-//end of PreLh1Decoder.java
