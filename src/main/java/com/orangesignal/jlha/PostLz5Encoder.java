@@ -124,7 +124,7 @@ public class PostLz5Encoder implements PostLzssEncoder {
 	 */
 	@Override
 	public void writeOffset(final int offset) {
-		final int pos = position - offset - 1 - PostLz5Encoder.MAX_MATCH & PostLz5Encoder.DICTIONARY_SIZE - 1;
+		final int pos = position - offset - 1 - MAX_MATCH & DICTIONARY_SIZE - 1;
 
 		final int matchlen = buf[--index] & 0x0F;
 		buf[index++] = (byte) pos;

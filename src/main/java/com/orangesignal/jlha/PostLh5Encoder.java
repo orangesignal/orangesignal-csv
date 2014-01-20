@@ -250,8 +250,8 @@ public class PostLh5Encoder implements PostLzssEncoder {
 					blockOffLenFreq[i] = new int[offLenFreqSize];
 				}
 
-				group = PostLh5Encoder.createGroup(BlockNum, DivideNum);
-				pattern = PostLh5Encoder.createPattern(BlockNum, DivideNum);
+				group = createGroup(BlockNum, DivideNum);
+				pattern = createPattern(BlockNum, DivideNum);
 
 				position = 0;
 				flagBit = 0;
@@ -435,7 +435,7 @@ public class PostLh5Encoder implements PostLzssEncoder {
 					blockSize += this.blockSize[group[i][j]];
 				}
 				if (0 < blockSize && blockSize < 65536) {
-					groupHuffLen[i] = PostLh5Encoder.calcHuffmanCodeLength(dictionarySize, PostLh5Encoder.margeArrays(group[i], blockCodeFreq), PostLh5Encoder.margeArrays(group[i], blockOffLenFreq));
+					groupHuffLen[i] = calcHuffmanCodeLength(dictionarySize, margeArrays(group[i], blockCodeFreq), margeArrays(group[i], blockOffLenFreq));
 				} else if (0 == blockSize) {
 					groupHuffLen[i] = 0;
 				} else {
@@ -490,8 +490,8 @@ public class PostLh5Encoder implements PostLzssEncoder {
 	 * @exception IOException 入出力エラーが発生した場合
 	 */
 	private void writeOutGroup(final int[] group) throws IOException {
-		int[] codeFreq = PostLh5Encoder.margeArrays(group, blockCodeFreq);
-		int[] offLenFreq = PostLh5Encoder.margeArrays(group, blockOffLenFreq);
+		int[] codeFreq = margeArrays(group, blockCodeFreq);
+		int[] offLenFreq = margeArrays(group, blockOffLenFreq);
 
 		int blockSize = 0;
 		for (final int element : group) {
@@ -512,31 +512,31 @@ public class PostLh5Encoder implements PostLzssEncoder {
 
 			// ------------------------------------------------------------------
 			// code 部のハフマン符号表出力
-			if (2 <= PostLh5Encoder.countNoZeroElement(codeFreq)) {
-				final int[] codeLenFreq = PostLh5Encoder.createCodeLenFreq(codeLen);
+			if (2 <= countNoZeroElement(codeFreq)) {
+				final int[] codeLenFreq = createCodeLenFreq(codeLen);
 				final int[] codeLenLen = StaticHuffman.FreqListToLenList(codeLenFreq);
 				final int[] codeLenCode = StaticHuffman.LenListToCodeList(codeLenLen);
 
-				if (2 <= PostLh5Encoder.countNoZeroElement(codeLenFreq)) {
+				if (2 <= countNoZeroElement(codeLenFreq)) {
 					writeCodeLenLen(codeLenLen);                         // throws IOException
 				} else {
 					out.writeBits(5, 0);                                 // throws IOException
-					out.writeBits(5, PostLh5Encoder.getNoZeroElementIndex(codeLenFreq));// throws IOException
+					out.writeBits(5, getNoZeroElementIndex(codeLenFreq));// throws IOException
 				}
 				writeCodeLen(codeLen, codeLenLen, codeLenCode);          // throws IOException
 			} else {
 				out.writeBits(10, 0);                                    // throws IOException
-				out.writeBits(18, PostLh5Encoder.getNoZeroElementIndex(codeFreq));// throws IOException
+				out.writeBits(18, getNoZeroElementIndex(codeFreq));// throws IOException
 			}
 
 			// ------------------------------------------------------------------
 			// offLen 部のハフマン符号表出力
-			if (2 <= PostLh5Encoder.countNoZeroElement(offLenFreq)) {
+			if (2 <= countNoZeroElement(offLenFreq)) {
 				writeOffLenLen(offLenLen);                               // throws IOException
 			} else {
 				final int len = Bits.len(Bits.len(dictionarySize));
 				out.writeBits(len, 0);                                   // throws IOException
-				out.writeBits(len, PostLh5Encoder.getNoZeroElementIndex(offLenFreq));// throws IOException
+				out.writeBits(len, getNoZeroElementIndex(offLenFreq));// throws IOException
 			}
 
 			// ------------------------------------------------------------------
@@ -811,16 +811,16 @@ public class PostLh5Encoder implements PostLzssEncoder {
 		// ------------------------------------------------------------------
 		// code 部のハフマン頻度表の長さを算出する。
 		length += 16;
-		if (2 <= PostLh5Encoder.countNoZeroElement(codeFreq)) {
-			final int[] codeLenFreq = PostLh5Encoder.createCodeLenFreq(codeLen);
+		if (2 <= countNoZeroElement(codeFreq)) {
+			final int[] codeLenFreq = createCodeLenFreq(codeLen);
 			final int[] codeLenLen = StaticHuffman.FreqListToLenList(codeLenFreq);
-			if (2 <= PostLh5Encoder.countNoZeroElement(codeLenFreq)) {
-				length += PostLh5Encoder.calcCodeLenLen(codeLenLen);
+			if (2 <= countNoZeroElement(codeLenFreq)) {
+				length += calcCodeLenLen(codeLenLen);
 			} else {
 				length += 5;
 				length += 5;
 			}
-			length += PostLh5Encoder.calcCodeLen(codeLen, codeLenLen);
+			length += calcCodeLen(codeLen, codeLenLen);
 		} else {
 			length += 10;
 			length += 18;
@@ -828,8 +828,8 @@ public class PostLh5Encoder implements PostLzssEncoder {
 
 		// ------------------------------------------------------------------
 		// offLen 部のハフマン頻度表の長さを算出する。
-		if (2 <= PostLh5Encoder.countNoZeroElement(offLenFreq)) {
-			length += PostLh5Encoder.calcOffLenLen(DictionarySize, offLenLen);
+		if (2 <= countNoZeroElement(offLenFreq)) {
+			length += calcOffLenLen(DictionarySize, offLenLen);
 		} else {
 			final int len = Bits.len(Bits.len(DictionarySize));
 			length += len;
@@ -1032,7 +1032,7 @@ public class PostLh5Encoder implements PostLzssEncoder {
 	 */
 	private static int[][] createPattern(final int BlockNum, final int DivideNum) {
 		int index = 0;
-		final int patternNum = PostLh5Encoder.calcPatternNum(BlockNum, DivideNum);
+		final int patternNum = calcPatternNum(BlockNum, DivideNum);
 		final int[][] pattern = new int[patternNum][];
 
 		for (int div = 0; div < Math.min(BlockNum, DivideNum + 1); div++) {
