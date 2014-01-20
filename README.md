@@ -21,6 +21,4 @@ License
 
 * OrangeSignal CSV is distributed under the [Apache License, Version 2.0][Apache]
 
-Copyright (c) 2009-2014 OrangeSignal.com All rights reserved.  
-
 [Apache]: http://www.apache.org/licenses/LICENSE-2.0

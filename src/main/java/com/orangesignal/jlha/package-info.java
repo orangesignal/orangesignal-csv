@@ -1,18 +1,17 @@
 /*
- * Copyright (c) 2014 OrangeSignal.com All rights reserved.
+ * Copyright 2014 the original author or authors.
  *
- * これは Apache ライセンス Version 2.0 (以下、このライセンスと記述) に
- * 従っています。このライセンスに準拠する場合以外、このファイルを使用
- * してはなりません。このライセンスのコピーは以下から入手できます。
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0.txt
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
- * 適用可能な法律がある、あるいは文書によって明記されている場合を除き、
- * このライセンスの下で配布されているソフトウェアは、明示的であるか暗黙の
- * うちであるかを問わず、「保証やあらゆる種類の条件を含んでおらず」、
- * 「あるがまま」の状態で提供されるものとします。
- * このライセンスが適用される特定の許諾と制限については、このライセンス
- * を参照してください。
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 /**
@@ -20,7 +19,7 @@
  * "LHA Library for Java" の詳細及びライセンスについては、
  * <a href="http://homepage1.nifty.com/dangan/Content/Program/Java/jLHA/jLHA.html">LHA Library for Java</a> をご覧下さい。
  * 
- * @author 杉澤 浩二
+ * @author Koji Sugisawa
  * @since 2.0.0
  */
 package com.orangesignal.jlha;

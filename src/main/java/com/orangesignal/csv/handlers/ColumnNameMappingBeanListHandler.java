@@ -1,18 +1,17 @@
 /*
- * Copyright (c) 2013 OrangeSignal.com All rights reserved.
+ * Copyright 2013 the original author or authors.
  * 
- * これは Apache ライセンス Version 2.0 (以下、このライセンスと記述) に
- * 従っています。このライセンスに準拠する場合以外、このファイルを使用
- * してはなりません。このライセンスのコピーは以下から入手できます。
- * 
- * http://www.apache.org/licenses/LICENSE-2.0.txt
- * 
- * 適用可能な法律がある、あるいは文書によって明記されている場合を除き、
- * このライセンスの下で配布されているソフトウェアは、明示的であるか暗黙の
- * うちであるかを問わず、「保証やあらゆる種類の条件を含んでおらず」、
- * 「あるがまま」の状態で提供されるものとします。
- * このライセンスが適用される特定の許諾と制限については、このライセンス
- * を参照してください。
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package com.orangesignal.csv.handlers;
@@ -34,7 +33,7 @@ import com.orangesignal.csv.io.CsvColumnNameMappingBeanWriter;
 /**
  * 区切り文字形式データの項目名を基準として Java プログラム要素のリストと区切り文字形式データアクセスを行うハンドラを提供します。
  * 
- * @author 杉澤 浩二
+ * @author Koji Sugisawa
  * @see com.orangesignal.csv.manager.CsvColumnNameMappingBeanManager
  */
 public class ColumnNameMappingBeanListHandler<T> extends AbstractBeanListHandler<T, CsvColumnNameMappingBeanTemplate<T>, ColumnNameMappingBeanListHandler<T>> implements CsvColumnNameMappingBeanOperation<ColumnNameMappingBeanListHandler<T>> {
