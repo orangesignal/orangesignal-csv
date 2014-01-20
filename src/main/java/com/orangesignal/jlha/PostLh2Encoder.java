@@ -93,8 +93,8 @@ public class PostLh2Encoder implements PostLzssEncoder {
 			} else {
 				this.out = new BitOutputStream(out);
 			}
-			codeHuffman = new DynamicHuffman(PostLh2Encoder.CODE_SIZE);
-			offHiHuffman = new DynamicHuffman(PostLh2Encoder.DICTIONARY_SIZE >> 6, 1);
+			codeHuffman = new DynamicHuffman(CODE_SIZE);
+			offHiHuffman = new DynamicHuffman(DICTIONARY_SIZE >> 6, 1);
 			position = 0;
 			nextPosition = 1 << 6;
 		} else {
@@ -113,7 +113,7 @@ public class PostLh2Encoder implements PostLzssEncoder {
 	 */
 	@Override
 	public void writeCode(int code) throws IOException {
-		final int CodeMax = PostLh2Encoder.CODE_SIZE - 1;
+		final int CodeMax = CODE_SIZE - 1;
 
 		int node = codeHuffman.codeToNode(Math.min(code, CodeMax));
 		int hcode = 0;
@@ -133,7 +133,7 @@ public class PostLh2Encoder implements PostLzssEncoder {
 		if (code < 0x100) {
 			position++;
 		} else {
-			matchLength = (code & 0xFF) + PostLh2Encoder.THRESHOLD;
+			matchLength = (code & 0xFF) + THRESHOLD;
 
 			if (CodeMax <= code) {
 				out.writeBits(8, code - CodeMax);                        // throws IOException
@@ -150,12 +150,12 @@ public class PostLh2Encoder implements PostLzssEncoder {
 	 */
 	@Override
 	public void writeOffset(final int offset) throws IOException {
-		if (nextPosition < PostLh2Encoder.DICTIONARY_SIZE) {
+		if (nextPosition < DICTIONARY_SIZE) {
 			while (nextPosition < position) {
 				offHiHuffman.addLeaf(nextPosition >> 6);
 				nextPosition += 64;
 
-				if (PostLh2Encoder.DICTIONARY_SIZE <= nextPosition) {
+				if (DICTIONARY_SIZE <= nextPosition) {
 					break;
 				}
 			}
@@ -214,7 +214,7 @@ public class PostLh2Encoder implements PostLzssEncoder {
 	 */
 	@Override
 	public int getDictionarySize() {
-		return PostLh2Encoder.DICTIONARY_SIZE;
+		return DICTIONARY_SIZE;
 	}
 
 	/**
@@ -224,7 +224,7 @@ public class PostLh2Encoder implements PostLzssEncoder {
 	 */
 	@Override
 	public int getMaxMatch() {
-		return PostLh2Encoder.MAX_MATCH;
+		return MAX_MATCH;
 	}
 
 	/**
@@ -234,7 +234,7 @@ public class PostLh2Encoder implements PostLzssEncoder {
 	 */
 	@Override
 	public int getThreshold() {
-		return PostLh2Encoder.THRESHOLD;
+		return THRESHOLD;
 	}
 
 }

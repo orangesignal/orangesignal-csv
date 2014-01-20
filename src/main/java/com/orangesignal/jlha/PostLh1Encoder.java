@@ -79,7 +79,7 @@ public class PostLh1Encoder implements PostLzssEncoder {
 				this.out = new BitOutputStream(out);
 			}
 			huffman = new DynamicHuffman(314);
-			offHiLen = PostLh1Encoder.createLenList();
+			offHiLen = createLenList();
 			try {
 				offHiCode = StaticHuffman.LenListToCodeList(offHiLen);
 			} catch (final BadHuffmanTableException exception) {
@@ -186,7 +186,7 @@ public class PostLh1Encoder implements PostLzssEncoder {
 	 */
 	@Override
 	public int getDictionarySize() {
-		return PostLh1Encoder.DICTIONARY_SIZE;
+		return DICTIONARY_SIZE;
 	}
 
 	/**
@@ -196,7 +196,7 @@ public class PostLh1Encoder implements PostLzssEncoder {
 	 */
 	@Override
 	public int getMaxMatch() {
-		return PostLh1Encoder.MAX_MATCH;
+		return MAX_MATCH;
 	}
 
 	/**
@@ -206,7 +206,7 @@ public class PostLh1Encoder implements PostLzssEncoder {
 	 */
 	@Override
 	public int getThreshold() {
-		return PostLh1Encoder.THRESHOLD;
+		return THRESHOLD;
 	}
 
 }
