@@ -1,18 +1,17 @@
 /*
- * Copyright (c) 2009 OrangeSignal.com All rights reserved.
+ * Copyright 2009 the original author or authors.
  * 
- * これは Apache ライセンス Version 2.0 (以下、このライセンスと記述) に
- * 従っています。このライセンスに準拠する場合以外、このファイルを使用
- * してはなりません。このライセンスのコピーは以下から入手できます。
- * 
- * http://www.apache.org/licenses/LICENSE-2.0.txt
- * 
- * 適用可能な法律がある、あるいは文書によって明記されている場合を除き、
- * このライセンスの下で配布されているソフトウェアは、明示的であるか暗黙の
- * うちであるかを問わず、「保証やあらゆる種類の条件を含んでおらず」、
- * 「あるがまま」の状態で提供されるものとします。
- * このライセンスが適用される特定の許諾と制限については、このライセンス
- * を参照してください。
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package com.orangesignal.csv.filters;
@@ -24,48 +23,10 @@ import java.util.regex.Pattern;
 
 import org.junit.Test;
 
-import com.orangesignal.csv.filters.ColumnNameBetweenExpression;
-import com.orangesignal.csv.filters.ColumnNameEmptyExpression;
-import com.orangesignal.csv.filters.ColumnNameEqualExpression;
-import com.orangesignal.csv.filters.ColumnNameGreaterThanExpression;
-import com.orangesignal.csv.filters.ColumnNameGreaterThanOrEqualExpression;
-import com.orangesignal.csv.filters.ColumnNameInExpression;
-import com.orangesignal.csv.filters.ColumnNameLessThanExpression;
-import com.orangesignal.csv.filters.ColumnNameLessThanOrEqualExpression;
-import com.orangesignal.csv.filters.ColumnNameNotEmptyExpression;
-import com.orangesignal.csv.filters.ColumnNameNotEqualExpression;
-import com.orangesignal.csv.filters.ColumnNameNotInExpression;
-import com.orangesignal.csv.filters.ColumnNameNotNullExpression;
-import com.orangesignal.csv.filters.ColumnNameNullExpression;
-import com.orangesignal.csv.filters.ColumnNameRegexExpression;
-import com.orangesignal.csv.filters.ColumnPositionBetweenExpression;
-import com.orangesignal.csv.filters.ColumnPositionEmptyExpression;
-import com.orangesignal.csv.filters.ColumnPositionEqualExpression;
-import com.orangesignal.csv.filters.ColumnPositionGreaterThanExpression;
-import com.orangesignal.csv.filters.ColumnPositionGreaterThanOrEqualExpression;
-import com.orangesignal.csv.filters.ColumnPositionInExpression;
-import com.orangesignal.csv.filters.ColumnPositionLessThanExpression;
-import com.orangesignal.csv.filters.ColumnPositionLessThanOrEqualExpression;
-import com.orangesignal.csv.filters.ColumnPositionNotEmptyExpression;
-import com.orangesignal.csv.filters.ColumnPositionNotEqualExpression;
-import com.orangesignal.csv.filters.ColumnPositionNotInExpression;
-import com.orangesignal.csv.filters.ColumnPositionNotNullExpression;
-import com.orangesignal.csv.filters.ColumnPositionNullExpression;
-import com.orangesignal.csv.filters.ColumnPositionRegexExpression;
-import com.orangesignal.csv.filters.CsvExpressions;
-import com.orangesignal.csv.filters.CsvNamedValueAndExpression;
-import com.orangesignal.csv.filters.CsvNamedValueFilter;
-import com.orangesignal.csv.filters.CsvNamedValueNotExpression;
-import com.orangesignal.csv.filters.CsvNamedValueOrExpression;
-import com.orangesignal.csv.filters.CsvValueAndExpression;
-import com.orangesignal.csv.filters.CsvValueFilter;
-import com.orangesignal.csv.filters.CsvValueNotExpression;
-import com.orangesignal.csv.filters.CsvValueOrExpression;
-
 /**
  * {@link CsvExpressions} クラスの単体テストです。
  * 
- * @author 杉澤 浩二
+ * @author Koji Sugisawa
  */
 public class CsvExpressionsTest {
 
