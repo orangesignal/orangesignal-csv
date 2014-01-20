@@ -93,7 +93,7 @@ public class PreLh1Decoder implements PreLzssDecoder {
 			huffman = new DynamicHuffman(314);
 			markHuffman = null;
 
-			offHiLen = PreLh1Decoder.createLenList();
+			offHiLen = createLenList();
 			try {
 				offHiTable = StaticHuffman.createTable(offHiLen);
 			} catch (final BadHuffmanTableException exception) {
@@ -224,7 +224,7 @@ public class PreLh1Decoder implements PreLzssDecoder {
 	 */
 	@Override
 	public int getDictionarySize() {
-		return PreLh1Decoder.DICTIONARY_SIZE;
+		return DICTIONARY_SIZE;
 	}
 
 	/**
@@ -234,7 +234,7 @@ public class PreLh1Decoder implements PreLzssDecoder {
 	 */
 	@Override
 	public int getMaxMatch() {
-		return PreLh1Decoder.MAX_MATCH;
+		return MAX_MATCH;
 	}
 
 	/**
@@ -244,7 +244,7 @@ public class PreLh1Decoder implements PreLzssDecoder {
 	 */
 	@Override
 	public int getThreshold() {
-		return PreLh1Decoder.THRESHOLD;
+		return THRESHOLD;
 	}
 
 	// ------------------------------------------------------------------
