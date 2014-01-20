@@ -179,7 +179,6 @@ public class PreLh1Decoder implements PreLzssDecoder{
         }
     }
 
-
     //------------------------------------------------------------------
     //  method of jp.gr.java_conf.dangan.util.lha.PreLzssDecoder
     //------------------------------------------------------------------
