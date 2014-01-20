@@ -15,9 +15,10 @@
  */
 
 /**
- * OrangeSignal CSV 向けの "LHA Library for Java" を提供します。<p>
- * "LHA Library for Java" の詳細及びライセンスについては、
- * <a href="http://homepage1.nifty.com/dangan/Content/Program/Java/jLHA/jLHA.html">LHA Library for Java</a> をご覧下さい。
+ * OrangeSignal CSV 向けに内包させた jLHA (LHA Library for Java) のクラスやユーティリティなどを提供します。<p>
+ * jLHA の詳細やライセンスについては、jLHA の
+ * <a href="http://homepage1.nifty.com/dangan/en/Content/Program/Java/jLHA/jLHA.html">英語サイト</a> または
+ * <a href="http://homepage1.nifty.com/dangan/Content/Program/Java/jLHA/jLHA.html">日本語サイト</a> をご覧下さい。
  * 
  * @author Koji Sugisawa
  * @since 2.0.0
