@@ -69,7 +69,7 @@ public class CsvEntityWriter<T> implements Closeable, Flushable {
 	 * @param writer 区切り文字形式出力ストリーム
 	 * @param entityClass 区切り文字形式データ注釈要素 {@link CsvEntity} で注釈付けされた Java プログラム要素の型
 	 * @return 新しい {@link CsvEntityWriter} のインスタンス
-	 * @throws IllegalArgumentException {@code writer} または {@code type} が {@code null} の場合。
+	 * @throws IllegalArgumentException {@code writer} または {@code entityClass} が {@code null} の場合。
 	 */
 	public static <T> CsvEntityWriter<T> newInstance(final CsvWriter writer, final Class<T> entityClass) {
 		return new CsvEntityWriter<T>(writer, entityClass);
@@ -96,7 +96,7 @@ public class CsvEntityWriter<T> implements Closeable, Flushable {
 	 * 
 	 * @param writer 区切り文字形式出力ストリーム
 	 * @param entityClass 区切り文字形式データ注釈要素 {@link CsvEntity} で注釈付けされた Java プログラム要素の型
-	 * @throws IllegalArgumentException {@code writer} または {@code type} が {@code null} の場合。
+	 * @throws IllegalArgumentException {@code writer} または {@code entityClass} が {@code null} の場合。
 	 */
 	public CsvEntityWriter(final CsvWriter writer, final Class<T> entityClass) {
 		this(writer, new CsvEntityTemplate<T>(entityClass));
