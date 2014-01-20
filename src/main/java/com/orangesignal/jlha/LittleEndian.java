@@ -34,22 +34,10 @@ import java.io.OutputStream;
 /**
  * リトルエンディアンで バイト配列や InputStream, OutputStream にアクセスするメソッドを提供するユーティリティクラス。
  * 
- * <pre>
- * -- revision history --
- * $Log: LittleEndian.java,v $
- * Revision 1.0  2002/07/24 00:00:00  dangan
- * add to version control
- * [change]
- *     writeByte(), readByte() を撤去。
- * [maintenance]
- *     ソース整備
- * 
- * </pre>
- * 
  * @author $Author: dangan $
  * @version $Revision: 1.0 $
  */
-public class LittleEndian {
+public final class LittleEndian {
 
 	// ------------------------------------------------------------------
 	// Constructor
@@ -57,18 +45,13 @@ public class LittleEndian {
 	/**
 	 * デフォルトコンストラクタ。使用不可。
 	 */
-	private LittleEndian() {
-	}
+	private LittleEndian() {}
 
 	// ------------------------------------------------------------------
 	// shared method
 	// ------------------------------------------------------------------
 	// read from byte array
-	// ------------------------------------------------------------------
-	// public static final int readShort( byte[] ByteArray, int index )
-	// public static final int readInt( byte[] ByteArray, int index )
-	// public static final long readLong( byte[] ByteArray, int index )
-	// ------------------------------------------------------------------
+
 	/**
 	 * ByteArray の index の位置から リトルエンディアンで 2バイト値を読み出す。読み出された 2バイト値は 0x0000～0xFFFFにマップされる。
 	 * 
@@ -111,11 +94,7 @@ public class LittleEndian {
 	// shared method
 	// ------------------------------------------------------------------
 	// read from InputStream
-	// ------------------------------------------------------------------
-	// public static final int readShort( InputStream in )
-	// public static final int readInt( InputStream in )
-	// public static final long readLong( InputStream in )
-	// ------------------------------------------------------------------
+
 	/**
 	 * 入力ストリーム in から リトルエンディアンで 2byte値を読み出す。
 	 * 
@@ -171,11 +150,7 @@ public class LittleEndian {
 	// shared method
 	// ------------------------------------------------------------------
 	// write to byte array
-	// ------------------------------------------------------------------
-	// public static final void writeShort( byte[] ByteArray, int index, int value )
-	// public static final void writeInt( byte[] ByteArray, int index, int value )
-	// public static final void writeLong( byte[] ByteArray, int index, long value )
-	// ------------------------------------------------------------------
+
 	/**
 	 * ByteArray の index の位置にリトルエンディアンで 2byte値を書き出す。
 	 * 
@@ -233,11 +208,7 @@ public class LittleEndian {
 	// shared method
 	// ------------------------------------------------------------------
 	// write to OutputStream
-	// ------------------------------------------------------------------
-	// public static final void writeShort( OutputStream out, int value )
-	// public static final void writeInt( OutputStream out, int value )
-	// public static final void writeLong( OutputStream out, long value )
-	// ------------------------------------------------------------------
+
 	/**
 	 * 出力ストリーム out に リトルエンディアンで 2バイト書き出す。
 	 * 

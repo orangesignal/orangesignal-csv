@@ -32,29 +32,6 @@ import java.io.InputStream;
 /**
  * 読み込み可能なデータ量が制限された入力ストリーム。<br>
  * 
- * <pre>
- * -- revision history --
- * $Log: LimitedInputStream.java,v $
- * Revision 1.1.2.1  2003/07/20 17:03:37  dangan
- * [maintenance]
- *     最新の LimitedInputStream からソースを取り込む。
- * 
- * Revision 1.1  2002/12/05 00:00:00  dangan
- * [maintenance]
- *     ソース整備
- * 
- * Revision 1.0  2002/07/24 00:00:00  dangan
- * add to version control
- * [change]
- *     EndOfStream に達した後の read( new byte[0] ) や 
- *     read( byte[] buf, int off, 0 ) の戻り値を
- *     InputStream と同じく 0 になるようにした
- * [maintenance]
- *     タブ廃止
- *     ライセンス文の修正
- * 
- * </pre>
- * 
  * @author $Author: dangan $
  * @version $Revision: 1.1.2.1 $
  */
@@ -110,9 +87,7 @@ public class LimitedInputStream extends InputStream {
 	/**
 	 * 接続された入力ストリームから 1バイトのデータを読み込む。
 	 * 
-	 * @return 読み込まれた 1バイトのデータ<br>
-	 * 既にEndOfStream に達していたか、 制限に達した場合は -1 を返す。<br>
-	 * 
+	 * @return 読み込まれた 1バイトのデータ<br>既にEndOfStream に達していたか、 制限に達した場合は -1 を返す。<br>
 	 * @exception IOException 入出力エラーが発生した場合
 	 */
 	@Override
@@ -132,10 +107,7 @@ public class LimitedInputStream extends InputStream {
 	 * データは必ずしも buffer を満たすとは限らないことに注意。<br>
 	 * 
 	 * @param buffer 読み込んだデータを格納するためのバイト配列<br>
-	 * 
-	 * @return buffer に読み込んだデータ量をバイト数で返す。<br>
-	 * 既にEndOfStream に達していたか、 制限に達した場合は -1 を返す。<br>
-	 * 
+	 * @return buffer に読み込んだデータ量をバイト数で返す。<br>既にEndOfStream に達していたか、 制限に達した場合は -1 を返す。<br>
 	 * @exception IOException 入出力エラーが発生した場合
 	 */
 	@Override
@@ -164,15 +136,11 @@ public class LimitedInputStream extends InputStream {
 	 * @param buffer 読み込まれたデータを格納するためのバイト配列
 	 * @param index buffer内のデータ読み込み開始位置
 	 * @param length bufferに読み込むデータ量
-	 * 
-	 * @return buffer に読み込んだデータ量をバイト数で返す。<br>
-	 * 既にEndOfStream に達していたか、 制限に達した場合は -1 を返す。<br>
-	 * 
+	 * @return buffer に読み込んだデータ量をバイト数で返す。<br>既にEndOfStream に達していたか、 制限に達した場合は -1 を返す。<br>
 	 * @exception IOException 入出力エラーが発生した場合
 	 */
 	@Override
 	public int read(final byte[] buffer, final int index, int length) throws IOException {
-
 		if (0 < length) {
 			if (limit <= position) {
 				return -1;
@@ -192,14 +160,11 @@ public class LimitedInputStream extends InputStream {
 	 * 接続された入力ストリームのデータを length バイト読み飛ばす。<br>
 	 * 
 	 * @param length 読み飛ばすバイト数。<br>
-	 * 
 	 * @return 実際に読み飛ばされたバイト数。<br>
-	 * 
 	 * @exception IOException 入出力エラーが発生した場合
 	 */
 	@Override
 	public long skip(long length) throws IOException {
-
 		if (0 < length) {
 			if (limit <= position) {
 				return 0;
@@ -215,15 +180,6 @@ public class LimitedInputStream extends InputStream {
 		return 0;
 	}
 
-	// ------------------------------------------------------------------
-	// method of java.io.InputStream
-	// ------------------------------------------------------------------
-	// mark/reset
-	// ------------------------------------------------------------------
-	// public void mark( int readLimit )
-	// public void reset()
-	// public boolean markSupprted()
-	// ------------------------------------------------------------------
 	/**
 	 * 接続された入力ストリームの現在位置にマークを設定し、 reset() メソッドでマークした時点の 読み込み位置に 戻れるようにする。<br>
 	 * 
@@ -269,25 +225,15 @@ public class LimitedInputStream extends InputStream {
 		return in.markSupported();
 	}
 
-	// ------------------------------------------------------------------
-	// method of java.io.InputStream
-	// ------------------------------------------------------------------
-	// other
-	// ------------------------------------------------------------------
-	// public int available()
-	// public void close()
-	// ------------------------------------------------------------------
 	/**
 	 * 接続された入力ストリームからブロックしないで 読み込むことのできるバイト数を得る。<br>
 	 * 
 	 * @return ブロックしないで読み出せるバイト数。<br>
-	 * 
 	 * @exception IOException 入出力エラーが発生した場合
 	 */
 	@Override
 	public int available() throws IOException {
-		return (int) Math.min(in.available(),                        // throws IOException
-				limit - position);
+		return (int) Math.min(in.available(), limit - position);
 	}
 
 	/**

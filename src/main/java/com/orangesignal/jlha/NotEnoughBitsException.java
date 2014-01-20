@@ -32,17 +32,6 @@ import java.io.IOException;
  * 要求されたビット数のデータを得られなかった場合に 投げられる例外。<br>
  * BitDataBrokenException と違い、こちらの例外を 投げる場合には 実際には読み込み動作を行ってい ないため、読み込み位置は例外を投げる前の時点と 同じである点に注意すること。<br>
  * 
- * <pre>
- * -- revision history --
- * $Log: NotEnoughBitsException.java,v $
- * Revision 1.0  2002/07/24 00:00:00  dangan
- * add to version control
- * [maintenance]
- *     タブ廃止
- *     ライセンス文の修正
- * 
- * </pre>
- * 
  * @author $Author: dangan $
  * @version $Revision: 1.0 $
  */

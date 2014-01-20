@@ -1,9 +1,4 @@
-//start of LzssSearchMethod.java
-//TEXT_STYLE:CODE=Shift_JIS(Japanese):RET_CODE=CRLF
-
 /**
- * LzssSearchMethod.java
- * 
  * Copyright (C) 2002  Michel Ishizuka  All rights reserved.
  * 
  * 以下の条件に同意するならばソースとバイナリ形式の再配布と使用を
@@ -31,17 +26,12 @@
 
 package com.orangesignal.jlha;
 
-//import classes and interfaces
-
-//import exceptions
-
-
 /**
- * LzssOutputStream で使用される
- * 最長一致検索を提供するインターフェイス。<br> 
+ * LzssOutputStream で使用される 最長一致検索を提供するインターフェイス。<br>
  * 
  * <br>
  * コンストラクタの形式は
+ * 
  * <pre>
  * LzssSearchMethod( int    DictionarySize,
  *                   int    MaxMatch,
@@ -54,8 +44,10 @@ package com.orangesignal.jlha;
  *   Threshold      - LZSSの圧縮/非圧縮の閾値
  *   TextBuffer     - LZSS圧縮を施すデータの入ったバッファ
  * </pre>
+ * 
  * のような形式に則ること。<br>
  * また、追加の引数をとりたい場合は
+ * 
  * <pre>
  * LzssSearchMethod( int    DictionarySize,
  *                   int    MaxMatch,
@@ -64,9 +56,9 @@ package com.orangesignal.jlha;
  *                   Object ExtraArgument1,
  *                   Object ExtraArgument2 )
  * </pre>
+ * 
  * のような形式を用いる。<br>
- * なお、コンストラクタの引数チェックは追加の引数がある場合について行えばよい。
- * <br>
+ * なお、コンストラクタの引数チェックは追加の引数がある場合について行えばよい。 <br>
  * 
  * <pre>
  * -- revision history --
@@ -74,7 +66,7 @@ package com.orangesignal.jlha;
  * Revision 1.1  2002/12/04 00:00:00  dangan
  * [maintenance]
  *     ソース整備
- *
+ * 
  * Revision 1.0  2002/07/24 00:00:00  dangan
  * add to version control
  * [change]
@@ -84,94 +76,56 @@ package com.orangesignal.jlha;
  * [maintenance]
  *     タブ廃止
  *     ライセンス文の修正
- *
+ * 
  * </pre>
  * 
- * @author  $Author: dangan $
+ * @author $Author: dangan $
  * @version $Revision: 1.1 $
  */
-public interface LzssSearchMethod{
+public interface LzssSearchMethod {
 
-    //------------------------------------------------------------------
-    //  original method
-    //------------------------------------------------------------------
-    //  public abstract void put( int position )
-    //  public abstract int searchAndPut( int position )
-    //  public abstract int search( int position, int lastPutPos )
-    //  public abstract void slide()
-    //  public abstract int putRequires()
-    //------------------------------------------------------------------
-    /**
-     * position から始まるデータパタンを 
-     * LzssSearchMethod の持つ検索機構に登録する。<br>
-     * LzssOutputStream は 線形に、重複無く、
-     * put または searchAndPut を呼び出す。<br>
-     * 
-     * @param position TextBuffer内のデータパタンの開始位置
-     */
-    public abstract void put( int position );
+	/**
+	 * position から始まるデータパタンを LzssSearchMethod の持つ検索機構に登録する。<br>
+	 * LzssOutputStream は 線形に、重複無く、 put または searchAndPut を呼び出す。<br>
+	 * 
+	 * @param position TextBuffer内のデータパタンの開始位置
+	 */
+	void put(int position);
 
-    /**
-     * 検索機構に登録されたデータパタンから
-     * position から始まるデータパタンと
-     * 最長の一致を持つものを検索し、
-     * 同時に position から始まるデータパタンを 
-     * LzssSearchMethod の持つ検索機構に登録する。<br>
-     * LzssOutputStream は 線形に、重複無く、
-     * put または searchAndPut を呼び出す。<br>
-     * 
-     * @param position TextBuffer内のデータパタンの開始位置
-     * 
-     * @return 一致が見つかった場合は
-     *         LzssOutputStream.createSearchReturn 
-     *         によって生成された一致位置と一致長の情報を持つ値、
-     *         一致が見つからなかった場合は
-     *         LzssOutputStream.NOMATCH。
-     * 
-     * @see LzssOutputStream#createSearchReturn(int,int)
-     * @see LzssOutputStream#NOMATCH
-     */
-    public abstract int searchAndPut( int position );
+	/**
+	 * 検索機構に登録されたデータパタンから position から始まるデータパタンと 最長の一致を持つものを検索し、 同時に position から始まるデータパタンを LzssSearchMethod の持つ検索機構に登録する。<br>
+	 * LzssOutputStream は 線形に、重複無く、 put または searchAndPut を呼び出す。<br>
+	 * 
+	 * @param position TextBuffer内のデータパタンの開始位置
+	 * @return 一致が見つかった場合は LzssOutputStream.createSearchReturn によって生成された一致位置と一致長の情報を持つ値、 一致が見つからなかった場合は LzssOutputStream.NOMATCH。
+	 * @see LzssOutputStream#createSearchReturn(int,int)
+	 * @see LzssOutputStream#NOMATCH
+	 */
+	int searchAndPut(int position);
 
-    /**
-     * 検索機構に登録されたデータパタンから
-     * position から始まるデータパタンと
-     * 最長の一致を持つものを検索する。<br>
-     * このメソッドは LzssOutputStream の 
-     * flush() を実装するためだけに提供される。<br>
-     * TextBuffer.length &lt position + MaxMatch となるような 
-     * position にも対応すること。
-     * 
-     * @param position   TextBuffer内のデータパタンの開始位置
-     * @param lastPutPos 最後に登録したデータパタンの開始位置
-     * 
-     * @return 一致が見つかった場合は
-     *         LzssOutputStream.createSearchReturn 
-     *         によって生成された一致位置と一致長の情報を持つ値、
-     *         一致が見つからなかった場合は
-     *         LzssOutputStream.NOMATCH。
-     * 
-     * @see LzssOutputStream#createSearchReturn(int,int)
-     * @see LzssOutputStream#NOMATCH
-     */
-    public abstract int search( int position, int lastPutPos );
+	/**
+	 * 検索機構に登録されたデータパタンから position から始まるデータパタンと 最長の一致を持つものを検索する。<br>
+	 * このメソッドは LzssOutputStream の flush() を実装するためだけに提供される。<br>
+	 * TextBuffer.length &lt position + MaxMatch となるような position にも対応すること。
+	 * 
+	 * @param position TextBuffer内のデータパタンの開始位置
+	 * @param lastPutPos 最後に登録したデータパタンの開始位置
+	 * @return 一致が見つかった場合は LzssOutputStream.createSearchReturn によって生成された一致位置と一致長の情報を持つ値、 一致が見つからなかった場合は LzssOutputStream.NOMATCH。
+	 * @see LzssOutputStream#createSearchReturn(int,int)
+	 * @see LzssOutputStream#NOMATCH
+	 */
+	int search(int position, int lastPutPos);
 
-    /**
-     * LzssOutputStream が slide() でTextBuffer内のデータを
-     * DictionarySize だけ移動させる際に検索機構内のデータを
-     * それらと矛盾無く移動させる処理を行う。
-     */
-    public abstract void slide();
+	/**
+	 * LzssOutputStream が slide() でTextBuffer内のデータを DictionarySize だけ移動させる際に検索機構内のデータを それらと矛盾無く移動させる処理を行う。
+	 */
+	void slide();
 
-    /**
-     * put() または searchAndPut() を使用して
-     * データパタンを検索機構に登録する時に
-     * 必要とするデータ量を得る。<br>
-     * 
-     * @return put() または searchAndPut() で
-     *         検索機構に登録するデータ量
-     */
-    public abstract int putRequires();
+	/**
+	 * put() または searchAndPut() を使用して データパタンを検索機構に登録する時に 必要とするデータ量を得る。<br>
+	 * 
+	 * @return put() または searchAndPut() で 検索機構に登録するデータ量
+	 */
+	int putRequires();
 
 }
-//end of LzssSearchMethod.java
