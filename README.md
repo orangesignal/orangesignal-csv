@@ -7,17 +7,20 @@ The binary distributions includes the following third party software:
 
 ## Prerequisites
 
-* Java 1.6+
+* Java 1.6+  
+OrangeSignal CSV is compiled for Java 1.6
 
 ## Installation
 
-### Apache Maven
+### Maven users
 
-```xml:pom.xml
+If you are using Maven, simply copy the following dependency into your pom.xml file. The artifact is hosted at [Maven Central](http://search.maven.org/#search%7Cga%7C1%7Corangesignal-csv), and is standalone (no dependencies).
+
+```xml
 <dependency>
-  <groupId>com.orangesignal</groupId>
-  <artifactId>orangesignal-csv</artifactId>
-  <version>2.0.0</version>
+    <groupId>com.orangesignal</groupId>
+    <artifactId>orangesignal-csv</artifactId>
+    <version>2.0.0</version>
 </dependency>
 ```
 
