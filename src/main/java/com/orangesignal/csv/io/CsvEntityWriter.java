@@ -22,6 +22,7 @@ import static com.orangesignal.csv.bean.FieldUtils.getFieldValue;
 import java.io.Closeable;
 import java.io.Flushable;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.Collections;
@@ -217,6 +218,7 @@ public class CsvEntityWriter<T> implements Closeable, Flushable {
 		for (final Field f : entity.getClass().getDeclaredFields()) {
 			final CsvColumns columns = f.getAnnotation(CsvColumns.class);
 			if (columns != null) {
+				int arrayIndex = 0;
 				for (final CsvColumn column : columns.value()) {
 					int pos = column.position();
 					if (pos < 0) {
@@ -225,7 +227,14 @@ public class CsvEntityWriter<T> implements Closeable, Flushable {
 					if (pos == -1) {
 						throw new IOException(String.format("Invalid CsvColumn field %s", f.getName()));
 					}
-					values[pos] = template.objectToString(pos, getFieldValue(entity, f));
+					Object o = getFieldValue(entity, f);
+					if (f.getType().isArray()) {
+						if (o != null) {
+							o = Array.get(o, arrayIndex);
+						}
+						arrayIndex++;
+					}
+					values[pos] = template.objectToString(pos, o);
 				}
 			}
 			final CsvColumn column = f.getAnnotation(CsvColumn.class);

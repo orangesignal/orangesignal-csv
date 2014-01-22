@@ -21,6 +21,7 @@ import static com.orangesignal.csv.bean.FieldUtils.setFieldValue;
 
 import java.io.Closeable;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.util.Collections;
 import java.util.List;
@@ -240,17 +241,41 @@ public class CsvEntityReader<T> implements Closeable {
 			Object o = null;
 			final CsvColumns columns = f.getAnnotation(CsvColumns.class);
 			if (columns != null) {
-				final StringBuilder sb = new StringBuilder();
-				for (final CsvColumn column : columns.value()) {
-					final int pos = getPosition(column, f, columnNames);
-					if (pos != -1) {
-						final String s = values.get(pos);
-						if (s != null) {
-							sb.append(s);
+				if (f.getType().isArray()) {
+					int arrayIndex = 0;
+					for (final CsvColumn column : columns.value()) {
+						final StringBuilder sb = new StringBuilder();
+						final int pos = getPosition(column, f, columnNames);
+						if (pos != -1) {
+							final String s = values.get(pos);
+							if (s != null) {
+								sb.append(s);
+							}
+						}
+						if (f.getType().isArray()) {
+							final Object component = template.stringToObject(f, sb.toString());
+							if (o == null && component != null) {
+								o = Array.newInstance(f.getType().getComponentType(), columns.value().length);
+							}
+							if (o != null) {
+								Array.set(o, arrayIndex, component);
+							}
+							arrayIndex++;
 						}
 					}
+				} else {
+					final StringBuilder sb = new StringBuilder();
+					for (final CsvColumn column : columns.value()) {
+						final int pos = getPosition(column, f, columnNames);
+						if (pos != -1) {
+							final String s = values.get(pos);
+							if (s != null) {
+								sb.append(s);
+							}
+						}
+					}
+					o = template.stringToObject(f, sb.toString());
 				}
-				o = template.stringToObject(f, sb.toString());
 			}
 			final CsvColumn column = f.getAnnotation(CsvColumn.class);
 			if (column != null) {

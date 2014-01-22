@@ -34,6 +34,9 @@ import org.junit.rules.ExpectedException;
 
 import com.orangesignal.csv.Constants;
 import com.orangesignal.csv.CsvConfig;
+import com.orangesignal.csv.entity.IntArrayEntity;
+import com.orangesignal.csv.entity.IntegerArrayEntity;
+import com.orangesignal.csv.entity.StringArrayEntity;
 import com.orangesignal.csv.entity.Price;
 import com.orangesignal.csv.filters.SimpleBeanFilter;
 import com.orangesignal.csv.filters.SimpleCsvNamedValueFilter;
@@ -138,6 +141,153 @@ public class CsvEntityManagerTest {
 			assertThat(sw.getBuffer().toString(), is("シンボル,名称,価格,出来高,日付,時刻\r\nGCV09,COMEX 金 2009年10月限,1\\,078,11,2008/10/06,12:00:00\r\n"));
 		} finally {
 			sw.close();
+		}
+	}
+
+	@Test
+	public void testStringArraySave() throws Exception {
+		final List<StringArrayEntity> list = new ArrayList<StringArrayEntity>();
+
+		final StringArrayEntity o1 = new StringArrayEntity();
+		o1.array = new String[]{ "あ", "い", "う" };
+		o1.str = "えお";
+		list.add(o1);
+
+		final StringArrayEntity o2 = new StringArrayEntity();
+		o2.array = new String[]{ "ア", "イ", "ウ" };
+		o2.str = "エオ";
+		list.add(o2);
+
+		final StringWriter sw = new StringWriter();
+		try {
+			new CsvEntityManager(cfg).save(list, StringArrayEntity.class).to(sw);
+			assertThat(sw.getBuffer().toString(), is("あ,い,う,えお\r\nア,イ,ウ,エオ\r\n"));
+		} finally {
+			sw.close();
+		}
+	}
+
+	@Test
+	public void testStringArrayLoad() throws Exception {
+		final Reader reader = new StringReader("あ,い,う,えお\r\nア,イ,ウ,エオ\r\n");
+		try {
+			final List<StringArrayEntity> list = new CsvEntityManager(cfg).load(StringArrayEntity.class).from(reader);
+
+			assertThat(list.size(), is(2));
+
+			final StringArrayEntity o1 = list.get(0);
+			assertThat(o1.array.length, is(3));
+			assertThat(o1.array[0], is("あ"));
+			assertThat(o1.array[1], is("い"));
+			assertThat(o1.array[2], is("う"));
+			assertThat(o1.str, is("えお"));
+
+			final StringArrayEntity o2 = list.get(1);
+			assertThat(o2.array.length, is(3));
+			assertThat(o2.array[0], is("ア"));
+			assertThat(o2.array[1], is("イ"));
+			assertThat(o2.array[2], is("ウ"));
+			assertThat(o2.str, is("エオ"));
+		} finally {
+			reader.close();
+		}
+	}
+
+	@Test
+	public void testIntegerArraySave() throws Exception {
+		final List<IntegerArrayEntity> list = new ArrayList<IntegerArrayEntity>();
+
+		final IntegerArrayEntity o1 = new IntegerArrayEntity();
+		o1.array = new Integer[]{ 1, 2, 3 };
+		o1.str = "えお";
+		list.add(o1);
+
+		final IntegerArrayEntity o2 = new IntegerArrayEntity();
+		o2.array = new Integer[]{ 4, 5, 6 };
+		o2.str = "エオ";
+		list.add(o2);
+
+		final StringWriter sw = new StringWriter();
+		try {
+			new CsvEntityManager(cfg).save(list, IntegerArrayEntity.class).to(sw);
+			assertThat(sw.getBuffer().toString(), is("1,2,3,えお\r\n4,5,6,エオ\r\n"));
+		} finally {
+			sw.close();
+		}
+	}
+
+	@Test
+	public void testIntegerArrayLoad() throws Exception {
+		final Reader reader = new StringReader("1,2,3,えお\r\n4,5,6,エオ\r\n");
+		try {
+			final List<IntegerArrayEntity> list = new CsvEntityManager(cfg).load(IntegerArrayEntity.class).from(reader);
+
+			assertThat(list.size(), is(2));
+
+			final IntegerArrayEntity o1 = list.get(0);
+			assertThat(o1.array.length, is(3));
+			assertThat(o1.array[0], is(1));
+			assertThat(o1.array[1], is(2));
+			assertThat(o1.array[2], is(3));
+			assertThat(o1.str, is("えお"));
+
+			final IntegerArrayEntity o2 = list.get(1);
+			assertThat(o2.array.length, is(3));
+			assertThat(o2.array[0], is(4));
+			assertThat(o2.array[1], is(5));
+			assertThat(o2.array[2], is(6));
+			assertThat(o2.str, is("エオ"));
+		} finally {
+			reader.close();
+		}
+	}
+
+	@Test
+	public void testIntArraySave() throws Exception {
+		final List<IntArrayEntity> list = new ArrayList<IntArrayEntity>();
+
+		final IntArrayEntity o1 = new IntArrayEntity();
+		o1.array = new int[]{ 1, 2, 3 };
+		o1.str = "えお";
+		list.add(o1);
+
+		final IntArrayEntity o2 = new IntArrayEntity();
+		o2.array = new int[]{ 4, 5, 6 };
+		o2.str = "エオ";
+		list.add(o2);
+
+		final StringWriter sw = new StringWriter();
+		try {
+			new CsvEntityManager(cfg).save(list, IntArrayEntity.class).to(sw);
+			assertThat(sw.getBuffer().toString(), is("1,2,3,えお\r\n4,5,6,エオ\r\n"));
+		} finally {
+			sw.close();
+		}
+	}
+
+	@Test
+	public void testIntArrayLoad() throws Exception {
+		final Reader reader = new StringReader("1,2,3,えお\r\n4,5,6,エオ\r\n");
+		try {
+			final List<IntArrayEntity> list = new CsvEntityManager(cfg).load(IntArrayEntity.class).from(reader);
+
+			assertThat(list.size(), is(2));
+
+			final IntArrayEntity o1 = list.get(0);
+			assertThat(o1.array.length, is(3));
+			assertThat(o1.array[0], is(1));
+			assertThat(o1.array[1], is(2));
+			assertThat(o1.array[2], is(3));
+			assertThat(o1.str, is("えお"));
+
+			final IntArrayEntity o2 = list.get(1);
+			assertThat(o2.array.length, is(3));
+			assertThat(o2.array[0], is(4));
+			assertThat(o2.array[1], is(5));
+			assertThat(o2.array[2], is(6));
+			assertThat(o2.str, is("エオ"));
+		} finally {
+			reader.close();
 		}
 	}
 

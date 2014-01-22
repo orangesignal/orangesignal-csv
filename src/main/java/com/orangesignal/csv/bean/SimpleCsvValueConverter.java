@@ -41,14 +41,23 @@ public class SimpleCsvValueConverter implements CsvValueConverter {
 
 	static {
 		final Map<Class<?>, Object> primitiveMap = new HashMap<Class<?>, Object>();
-		primitiveMap.put(Boolean.TYPE, Boolean.FALSE);
-		primitiveMap.put(Byte.TYPE, Byte.valueOf((byte) 0));
-		primitiveMap.put(Character.TYPE, Character.valueOf('\u0000'));
-		primitiveMap.put(Short.TYPE, Short.valueOf((short) 0));
-		primitiveMap.put(Integer.TYPE, Integer.valueOf(0));
-		primitiveMap.put(Long.TYPE, Long.valueOf(0L));
-		primitiveMap.put(Float.TYPE, Float.valueOf(0F));
-		primitiveMap.put(Double.TYPE, Double.valueOf(0D));
+		primitiveMap.put(Boolean.TYPE,    Boolean.FALSE);
+		primitiveMap.put(Byte.TYPE,       Byte.valueOf((byte) 0));
+		primitiveMap.put(Character.TYPE,  Character.valueOf('\u0000'));
+		primitiveMap.put(Short.TYPE,      Short.valueOf((short) 0));
+		primitiveMap.put(Integer.TYPE,    Integer.valueOf(0));
+		primitiveMap.put(Long.TYPE,       Long.valueOf(0L));
+		primitiveMap.put(Float.TYPE,      Float.valueOf(0F));
+		primitiveMap.put(Double.TYPE,     Double.valueOf(0D));
+		primitiveMap.put(boolean[].class, Boolean.FALSE);
+		primitiveMap.put(byte[].class,    Byte.valueOf((byte) 0));
+		primitiveMap.put(char[].class,    Character.valueOf('\u0000'));
+		primitiveMap.put(short[].class,   Short.valueOf((short) 0));
+		primitiveMap.put(int[].class,     Integer.valueOf(0));
+		primitiveMap.put(long[].class,    Long.valueOf(0L));
+		primitiveMap.put(float[].class,   Float.valueOf(0F));
+		primitiveMap.put(double[].class,  Double.valueOf(0D));
+
 		PRIMITIVE_DEFAULTS = Collections.unmodifiableMap(primitiveMap);
 
 		final Map<String, Boolean> booleanMap = new HashMap<String, Boolean>();
@@ -104,33 +113,33 @@ public class SimpleCsvValueConverter implements CsvValueConverter {
 			}
 			return null;
 		}
-		if (type.equals(String.class)) {
+		if (type.equals(String.class) || type.equals(String[].class)) {
 			return str;
 		}
 
-		if (type.equals(Boolean.TYPE) || type.equals(Boolean.class)) {
+		if (type.equals(Boolean.TYPE) || type.equals(Boolean.class) || type.equals(boolean[].class) || type.equals(Boolean[].class)) {
 			for (final Map.Entry<String, Boolean> entry : BOOLEAN_DEFAULTS.entrySet()) {
 				if (entry.getKey().equalsIgnoreCase(str)) {
 					return entry.getValue();
 				}
 			}
-		} else if (type.equals(Byte.TYPE) || type.equals(Byte.class)) {
+		} else if (type.equals(Byte.TYPE) || type.equals(Byte.class) || type.equals(byte[].class) || type.equals(Byte[].class)) {
 			return Byte.valueOf(str);
-//		} else if (type.equals(Character.TYPE) || type.equals(Character.class)) {
+//		} else if (type.equals(Character.TYPE) || type.equals(Character.class) || type.equals(char[].class) || type.equals(Character[].class)) {
 //			return Character.valueOf(str);
-		} else if (type.equals(Short.TYPE) || type.equals(Short.class)) {
+		} else if (type.equals(Short.TYPE) || type.equals(Short.class) || type.equals(short[].class) || type.equals(Short[].class)) {
 			return Short.valueOf(str);
-		} else if (type.equals(Integer.TYPE) || type.equals(Integer.class)) {
+		} else if (type.equals(Integer.TYPE) || type.equals(Integer.class) || type.equals(int[].class) || type.equals(Integer[].class)) {
 			return Integer.valueOf(str);
-		} else if (type.equals(Long.TYPE) || type.equals(Long.class)) {
+		} else if (type.equals(Long.TYPE) || type.equals(Long.class) || type.equals(long[].class) || type.equals(Long[].class)) {
 			return Long.valueOf(str);
-		} else if (type.equals(Float.TYPE) || type.equals(Float.class)) {
+		} else if (type.equals(Float.TYPE) || type.equals(Float.class) || type.equals(float[].class) || type.equals(Float[].class)) {
 			return Float.valueOf(str);
-		} else if (type.equals(Double.TYPE) || type.equals(Double.class)) {
+		} else if (type.equals(Double.TYPE) || type.equals(Double.class) || type.equals(double[].class) || type.equals(Double[].class)) {
 			return Double.valueOf(str);
-		} else if (type.equals(BigInteger.class)) {
+		} else if (type.equals(BigInteger.class) || type.equals(BigInteger[].class)) {
 			return new BigInteger(str);
-		} else if (type.equals(Number.class) || type.equals(BigDecimal.class)) {
+		} else if (type.equals(Number.class) || type.equals(BigDecimal.class) || type.equals(Number[].class) || type.equals(BigDecimal[].class)) {
 			return new BigDecimal(str);
 		} else if (dateFormat != null && Date.class.isAssignableFrom(type)) {
 			try {
