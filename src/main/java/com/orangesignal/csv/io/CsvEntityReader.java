@@ -252,16 +252,14 @@ public class CsvEntityReader<T> implements Closeable {
 								sb.append(s);
 							}
 						}
-						if (f.getType().isArray()) {
-							final Object component = template.stringToObject(f, sb.toString());
-							if (o == null && component != null) {
-								o = Array.newInstance(f.getType().getComponentType(), columns.value().length);
-							}
-							if (o != null) {
-								Array.set(o, arrayIndex, component);
-							}
-							arrayIndex++;
+						final Object component = template.stringToObject(f, sb.toString());
+						if (o == null && component != null) {
+							o = Array.newInstance(f.getType().getComponentType(), columns.value().length);
 						}
+						if (o != null) {
+							Array.set(o, arrayIndex, component);
+						}
+						arrayIndex++;
 					}
 				} else {
 					final StringBuilder sb = new StringBuilder();

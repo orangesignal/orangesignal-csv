@@ -267,7 +267,8 @@ public abstract class AbstractCsvBeanTemplate<T, O extends AbstractCsvBeanTempla
 				throw new IllegalArgumentException(String.format("Unable to parse the %s: %s", field.getName(), value), e);
 			}
 		}
-		return valueConverter.convert(value, field.getType());
+		final Class<?> type = field.getType();
+		return valueConverter.convert(value, type.isArray() ? type.getComponentType() : type);
 	}
 
 	/**
