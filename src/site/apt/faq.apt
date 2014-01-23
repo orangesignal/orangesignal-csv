@@ -130,5 +130,5 @@ public class ExampleTests {
 
 *{CSV / JPA 変換・その他}
 
-  {CSV / XML 変換} や {CSV / XML 変換} と同様です。\
+  {CSV / XML 変換} や {CSV / JSON 変換} と同様です。\
   {{{http://docs.spring.io/spring/docs/current/spring-framework-reference/htmlsingle/}Spring Framework Reference Documentation}} をご覧ください。
