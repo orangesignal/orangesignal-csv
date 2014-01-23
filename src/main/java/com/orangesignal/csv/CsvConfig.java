@@ -30,27 +30,27 @@ public class CsvConfig implements Serializable, Cloneable {
 	private static final long serialVersionUID = -7531286991159010295L;
 
 	/**
-	 * デフォルトの区切り文字です。
+	 * デフォルトの区切り文字 ({@value}) です。
 	 */
 	public static final char DEFAULT_SEPARATOR = ',';
 
 	/**
-	 * デフォルトの囲み文字です。
+	 * デフォルトの囲み文字 ({@value}) です。
 	 */
 	public static final char DEFAULT_QUOTE = '"';
 
 	/**
-	 * デフォルトのエスケープ文字です。
+	 * デフォルトのエスケープ文字 ({@value}) です。
 	 */
 	public static final char DEFAULT_ESCAPE = '\\';
 
 	/**
-	 * デフォルトの先頭から読飛ばす論理行数です。
+	 * デフォルトの先頭から読飛ばす論理行数 ({@value}) です。
 	 */
 	public static final int DEFAULT_SKIP_LINES = 0;
 
 	/**
-	 * デフォルトの囲み文字出力方法の種類です。
+	 * デフォルトの囲み文字出力方法の種類 ({@link QuotePolicy#ALL}) です。
 	 * 
 	 * @since 1.1
 	 */
