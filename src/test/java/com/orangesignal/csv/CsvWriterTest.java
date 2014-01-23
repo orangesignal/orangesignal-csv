@@ -22,6 +22,7 @@ import static org.junit.Assert.assertThat;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.Arrays;
+import java.util.List;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -203,6 +204,29 @@ public class CsvWriterTest {
 		}
 	}
 */
+
+	@Test
+	public void testWriteValuesCsvValueException() throws IOException {
+		final CsvConfig cfg = new CsvConfig();
+		cfg.setVariableColumns(false);
+
+		final CsvWriter writer = new CsvWriter(new StringWriter(), cfg);
+		try {
+			// Act
+			writer.writeValues(Arrays.asList(new String[]{ "a", "bb", "c" }));
+			writer.writeValues(Arrays.asList(new String[]{ "x", "y" }));
+			writer.flush();
+		} catch (final CsvValueException e) {
+			// Assert
+			assertThat(e.getMessage(), is("Invalid column count."));
+			final List<String> tokens = e.getValues();
+			assertThat(tokens.size(), is(2));
+			assertThat(tokens.get(0), is("x"));
+			assertThat(tokens.get(1), is("y"));
+		} finally {
+			writer.close();
+		}
+	}
 
 	@Test
 	public void testClosed() throws IOException {
