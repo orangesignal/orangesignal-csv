@@ -13,6 +13,10 @@ OrangeSignal CSV とは
   OrangeSignal CSV は CSV 入出力操作を簡易化させる高機能で便利な Java プラットフォーム向けの CSV ライブラリを提供します。\
   OrangeSignal CSV はパワフルであらゆるシチュエーションにマッチ可能な OSS (オープンソース・ソフトウェア) の CSV ライブラリです。
 
+*システム要件
+
+  * JDK 6 以降または JRE 6 以降
+
 *機能・特徴
 
   * <<区切り文字、囲み文字、エスケープ文字など CSV 形式を詳細に設定可能>> (CsvConfig)
@@ -40,6 +44,8 @@ OrangeSignal CSV とは
 
     * 行のスキップ
 
+    * 可変項目数の可否 / 項目数チェック (Version 2.1 以上)
+
     * データ出力時の改行文字列
 
    ※ 一部の項目は入力時のみ、または出力時のみ有効となるものがあります。
@@ -56,6 +62,8 @@ OrangeSignal CSV とは
    ※ Windows / MAC / Linux の改行文字をサポートしています。\
    ※ RFC-4180 形式の CSV 入出力もサポートしています。\
    ※ BOM (Byte Order Mark) 付き UTF-8 エンコーディングでの入出力もサポートしています。
+
+   また、POJO や Map で CSV を行単位にやり取りできる各種 Reader / Writer も提供しています。(Version 2.1 以上)
 
   * <<カスタマイズ可能な多様なデータハンドラを提供>> (CsvHandler)
 
@@ -124,23 +132,10 @@ OrangeSignal CSV とは
 
   * <<DI/AOP コンテナフレームワーク不要>>
 
-   Spring Framework や Seasar2 などの DI/AOP コンテナフレームワークが不要なので、\
+   {{{http://projects.spring.io/spring-framework/}Spring Framework}} や {{{http://s2container.seasar.org/2.4/ja/}Seasar2}} などの DI/AOP コンテナフレームワークが不要なので、\
    依存関係を気にせずに現行システムやアプリケーションへの適用が可能です。
-
-*システム要件
-
-  * JDK 6 以降または JRE 6 以降
 
 ライセンス
 
-  OrangeSignal CSV は、{{{./license.html}Apache ライセンス Version 2.0}} に従って提供しておりますので、無料で自由にご利用いただけます。 
+  OrangeSignal CSV は、{{{license.html}Apache ライセンス Version 2.0}} に従って提供しておりますので、無料で自由にご利用いただけます。 
 
-ダウンロード
-
-  OrangeSignal CSV は、OrangeSignal の{{{https://github.com/orangesignal/orangesignal-csv/releases}ダウンロードページ}}からダウンロードできます。
-
-使い方
-
-  * OrangeSignal CSV の使い方については、{{{./userguide.html}こちら}}をご覧ください。
-
-  * 他の Java CSV ライブラリから OrangeSignal CSV へ移行する場合は、{{{./migration.html}マイグレーション}} もご覧ください。

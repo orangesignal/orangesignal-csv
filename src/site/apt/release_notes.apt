@@ -1,0 +1,54 @@
+ -----
+リリースノート
+ -----
+ Koji Sugisawa
+ -----
+ 2014/01/23
+ -----
+
+~~ http://maven.apache.org/doxia/references/apt-format.html
+
+リリースノート
+
+
+
+* 2.1.0 (予定)
+
+  本リリースは、ユーザーフィードバックの機能追加が主なマイナーリリースです。
+
+** 新機能
+
+   * {{{https://github.com/orangesignal/orangesignal-csv/issues/13}#13}} 項目数チェック機能
+
+   * {{{https://github.com/orangesignal/orangesignal-csv/issues/12}#12}} CsvColumns + 配列型サポート
+
+** 不具合対応
+
+   * いくつかの Javadoc 記載間違いを修正しました。
+
+** 全般
+
+   * サイトテーマおよび構成を変更しました。
+
+
+
+* 2.0.0 (2012-01-21)
+
+  本リリースは、ユーザーフィードバックの機能追加 / 変更が主なメジャーリリースです。
+
+** 新機能
+
+   * {{{http://search.maven.org/#search%7Cga%7C1%7Corangesignal-csv}Maven Central}} での提供
+
+   * POJO と CSV を行単位でやり取りできる各種 Reader および Writer を com.orangesignal.csv.io パッケージへ追加しました。
+
+** 全般
+
+   * パッケージ名を com.orangesignal.csv へ変更しました。
+
+   * Java7 スタイルの Javadoc へ変更しました。
+
+   * 実装が曖昧な POJO 変換系機能を com.orangesignal.csv.bean パッケージとして抽出しました。
+
+   * {{{http://homepage1.nifty.com/dangan/Content/Program/Java/jLHA/LhaLibrary.html}jLHA (LHA library for Java)}} を com.orangesignal.jlha パッケージとして内包するようにしました。
+ 
