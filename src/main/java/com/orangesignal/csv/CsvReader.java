@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 the original author or authors.
+ * Copyright 2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -108,6 +108,11 @@ public class CsvReader implements Closeable {
 	 * BOM (Byte Order Mark) を除去するかどうかを保持します。
 	 */
 	private final boolean utf8bom;
+
+	/**
+	 * 項目数チェックの為に直前の行の項目数を保持します。
+	 */
+	private int countNumberOfColumns = -1;
 
 	/**
 	 * 復帰文字です。
@@ -285,10 +290,10 @@ public class CsvReader implements Closeable {
 	}
 
 	/**
-	 * <p>論理行を読込み CSV トークンの値をリストして返します。</p>
+	 * <p>論理行を読込み区切り文字形式データトークンの値をリストして返します。</p>
 	 * このメソッドは利便性のために提供しています。
 	 *
-	 * @return CSV トークンの値をリスト。ストリームの終わりに達している場合は {@code null}
+	 * @return 区切り文字形式データトークンの値をリスト。ストリームの終わりに達している場合は {@code null}
 	 * @throws IOException 入出力エラーが発生した場合
 	 */
 	public List<String> readValues() throws IOException {
@@ -304,9 +309,9 @@ public class CsvReader implements Closeable {
 	}
 
 	/**
-	 * 論理行を読込み CSV トークンをリストして返します。
+	 * 論理行を読込み区切り文字形式データトークンをリストして返します。
 	 *
-	 * @return CSV トークンのリスト。ストリームの終わりに達している場合は {@code null}
+	 * @return 区切り文字形式データトークンのリスト。ストリームの終わりに達している場合は {@code null}
 	 * @throws IOException 入出力エラーが発生した場合
 	 */
 	public List<CsvToken> readTokens() throws IOException {
@@ -384,6 +389,12 @@ public class CsvReader implements Closeable {
 
 		if (cfg.isIgnoreEmptyLines() && (line.isEmpty() || isWhitespaces(line)) && results.size() == 1) {
 			return null;
+		}
+		if (!cfg.isVariableColumns()) {
+			if (countNumberOfColumns >= 0 && countNumberOfColumns != results.size()) {
+				throw new CsvTokenException(String.format("Invalid column count in CSV input on line %d.", startLineNumber), results);
+			}
+			countNumberOfColumns = results.size();
 		}
 
 		return results;
@@ -585,23 +596,6 @@ public class CsvReader implements Closeable {
 	}
 
 	// ------------------------------------------------------------------------
-
-/*
-	public void reset() throws IOException {
-		synchronized (in) {
-			ensureOpen();
-			in.reset();
-			line = null;
-			nextChar = -1;
-			pos = 0;
-			skiped = false;
-			startTokenLineNumber = endTokenLineNumber = startLineNumber = endLineNumber = lineNumber = 0;
-			endOfFile = false;
-			endOfLine = false;
-			cr = false;
-		}
-	}
-*/
 
 	@Override
 	public void close() throws IOException {

@@ -48,6 +48,11 @@ public class CsvWriter implements Closeable, Flushable {
 	 */
 	private boolean utf8bom;
 
+	/**
+	 * 項目数チェックの為に直前の行の項目数を保持します。
+	 */
+	private int countNumberOfColumns = -1;
+
 	private static final int DEFAULT_CHAR_BUFFER_SIZE = 8192;
 
 	// ------------------------------------------------------------------------
@@ -197,6 +202,12 @@ public class CsvWriter implements Closeable, Flushable {
 			if (values != null || !cfg.isIgnoreEmptyLines()) {
 				buf.append(cfg.getLineSeparator());
 				out.write(buf.toString());
+			}
+			if (!cfg.isVariableColumns() && values != null) {
+				if (countNumberOfColumns >= 0 && countNumberOfColumns != values.size()) {
+					throw new CsvValueException(String.format("Invalid column count."), values);
+				}
+				countNumberOfColumns = values.size();
 			}
 		}
 	}
