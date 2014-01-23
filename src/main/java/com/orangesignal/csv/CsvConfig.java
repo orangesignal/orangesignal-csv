@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 the original author or authors.
+ * Copyright 2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ import java.util.regex.Pattern;
  */
 public class CsvConfig implements Serializable, Cloneable {
 
-	private static final long serialVersionUID = -505939515009014346L;
+	private static final long serialVersionUID = -7531286991159010295L;
 
 	/**
 	 * デフォルトの区切り文字です。
@@ -132,6 +132,13 @@ public class CsvConfig implements Serializable, Cloneable {
 	 * UTF-8 エンコーディングでの出力時に BOM (Byte Order Mark) を付与するかどうかを保持します。
 	 */
 	private boolean utf8bomPolicy;
+
+	/**
+	 * 可変項目数を許可するかどうかを保持します。
+	 * 
+	 * @since 2.1
+	 */
+	private boolean variableColumns = true;
 
 	/**
 	 * データ出力時の改行文字列を保持します。
@@ -463,6 +470,22 @@ public class CsvConfig implements Serializable, Cloneable {
 	 * @since 1.2.9
 	 */
 	public void setUtf8bomPolicy(final boolean utf8bomPolicy) { this.utf8bomPolicy = utf8bomPolicy; }
+
+	/**
+	 * 可変項目数を許可するかどうかを返します。
+	 * 
+	 * @return 可変項目数を許可するかどうか
+	 * @since 2.1
+	 */
+	public boolean isVariableColumns() { return variableColumns; }
+
+	/**
+	 * 可変項目数を許可するかどうかを設定します。
+	 * 
+	 * @param checkColumnsCount 可変項目数を許可するかどうか
+	 * @since 2.1
+	 */
+	public void setVariableColumns(boolean checkColumnsCount) { this.variableColumns = checkColumnsCount; }
 
 	/**
 	 * @since 1.1
