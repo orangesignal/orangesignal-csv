@@ -33,7 +33,7 @@ public class CsvTokenException extends IOException {
 	/**
 	 * 区切り文字形式データトークンのリストを保持します。
 	 */
-	private List<CsvToken> tokens;
+	private final List<CsvToken> tokens;
 
 	/**
 	 * 指定された詳細メッセージと区切り文字形式データトークンのリストを持つ {@link CsvTokenException} を構築します。

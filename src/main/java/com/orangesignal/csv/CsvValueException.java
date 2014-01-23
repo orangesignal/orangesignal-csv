@@ -33,7 +33,7 @@ public class CsvValueException extends IOException {
 	/**
 	 * 区切り文字形式データトークンの値リストを保持します。
 	 */
-	private List<String> values;
+	private final List<String> values;
 
 	/**
 	 * 指定された詳細メッセージと区切り文字形式データトークンの値リストを持つ {@link CsvValueException} を構築します。
