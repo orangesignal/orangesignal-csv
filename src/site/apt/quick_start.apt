@@ -1,0 +1,77 @@
+ -----
+Quick start
+ -----
+ Koji Sugisawa
+ -----
+ 2014/01/23
+ -----
+
+~~ http://maven.apache.org/doxia/references/apt-format.html
+
+クイック スタート
+
+ pom.xml ファイルへ OrangeSignal CSV の依存設定を追加します。
+
++-----------------------------------------------------------------------------+
+<dependency>
+  <groupId>com.orangesignal</groupId>
+  <artifactId>orangesignal-csv</artifactId>
+  <version>2.1.0-SNAPSHOT</version>
+</dependency>
++-----------------------------------------------------------------------------+
+
+ CSV とマッピングしたい POJO クラスへ @CsvEntity アノテーションと @CsvColumn アノテーションを付けます。\
+ @CsvEntity や @CsvColumn などの詳しい説明は、{{{./apidocs/com/orangesignal/csv/annotation/package-summary.html}com.orangesignal.csv.annotation パッケージ}} をご覧ください。
+
++-----------------------------------------------------------------------------+
+@CsvEntity
+public class Customer {
+
+    @CsvColumn(name = "氏名")
+    public String name;
+
+    @CsvColumn(name = "年齢")
+    public Integer age;
+
+}
++-----------------------------------------------------------------------------+
+
+ もし CSV にヘッダーがない場合は、@CsvEntity でヘッダーを処理しない指定をし、\
+ @CsvColumn で項目名ではなく項目位置でマッピングの指定をします。
+
++-----------------------------------------------------------------------------+
+@CsvEntity(header = false)
+public class Customer {
+
+    @CsvColumn(position = 0)
+    public String name;
+
+    @CsvColumn(position = 1)
+    public Integer age;
+
+}
++-----------------------------------------------------------------------------+
+
+ CSV を POJO へ変換します。
+
++-----------------------------------------------------------------------------+
+# 一括で読込む場合 (お勧め)
+List<Customer> list =
+    new CsvEntityManager()
+        .load(Customer.class)
+        .from(reader);
+
+# 行毎に読込む場合
+CsvEntityReader r = new CsvEntityReader.newInstance(new CsvReader(reader), Customer.class);
+try {
+    Customer customer = null;
+    while ((customer = r.read()) != null) {
+        // TODO: ここに処理を記述します。
+    }
+} finally {
+    r.close();
+}
++-----------------------------------------------------------------------------+
+
+ 非常に簡単に始めることができます。\
+ 各機能やオプションの詳細について、{{{./userguide.html}User guide}} や {{{./faq.html}FAQ}} などもご覧ください。
