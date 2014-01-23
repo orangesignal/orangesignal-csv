@@ -3,7 +3,7 @@
  -----
  Koji Sugisawa
  -----
- 2014/01/19
+ 2014/01/23
  -----
 
 ~~ http://maven.apache.org/doxia/references/apt-format.html
@@ -16,7 +16,7 @@
 *はじめの一歩
 
  以下は、文字列配列のリストで CSV ファイルへアクセスするもっとも簡単なコード例です。\
- 文字列配列のリストでアクセスするにはハンドラとして StringArrayListHandler を使用します。
+ 文字列配列のリストでアクセスするにはハンドラとして {{StringArrayListHandler}} を使用します。
 
 +-----------------------------------------------------------------------------+
 // 入力
@@ -27,7 +27,7 @@ Csv.save(list, new File("example.csv"), new CsvConfig(), new StringArrayListHand
 +-----------------------------------------------------------------------------+
 
  次は POJO オブジェクトで CSV へアクセスする場合のコード例です。\
- POJO オブジェクトでの CSV アクセスは、Csv ユーティリティでもできますが CsvManager を使用する方が簡単です。
+ POJO オブジェクトでの CSV アクセスは、{{Csv}} ユーティリティでもできますが {{CsvManager}} を使用する方が簡単です。
 
 +-----------------------------------------------------------------------------+
 CsvManager csvManager = CsvManagerFactory.newCsvManager();	// CsvManager を取得します。
@@ -39,9 +39,9 @@ List<Customer> customers = csvManager.load(Customer.class).from(new File("custom
 csvManager.save(customers, Customer.class).to(new File("customers.csv"));
 +-----------------------------------------------------------------------------+
 
- 次節以降では Csv 統合アクセスユーティリティや CsvManager 統合アクセスインターフェースを使用する上で、必要不可欠な CSV 形式情報 (CsvConfig) やデータアクセスハンドラ (CsvHandler) などについて説明していきます。
+ 次節以降では {{Csv}} 統合アクセスユーティリティや {{CsvManager}} 統合アクセスインターフェースを使用する上で、必要不可欠な CSV 形式情報 ({{CsvConfig}}) やデータアクセスハンドラ ({{CsvHandler}}) などについて説明していきます。
 
-*CsvConfig
+*{{{./apidocs/com/orangesignal/csv/CsvConfig.html}CsvConfig}}
 
  CsvConfig は、区切り文字や囲み文字など CSV 形式に関する設定情報を管理します。
 
@@ -62,7 +62,7 @@ CsvConfig cfg = new CsvConfig('\t');
 +-----------------------------------------------------------------------------+
 CsvConfig cfg = new CsvConfig();
 cfg.setQuoteDisabled(false);                         // デフォルトでは無効となっている囲み文字を有効にします。
-cfg.setEscapeDisabled(false);                        // デフォルトでは無効となっているエスケープ文字を有効にします。
+cfg.setEscapeDisabled(false);                        // デフォルトでは無効となっている(囲み文字中に囲み文字を使う場合の)エスケープ文字を有効にします。
 cfg.setBreakString("\n");                            // 項目値中の改行を \n で置換えます。
 cfg.setNullString("NULL");                           // null 値扱いする文字列を指定します。
 cfg.setIgnoreLeadingWhitespaces(true);               // 項目値前のホワイトスペースを除去します。
@@ -71,17 +71,21 @@ cfg.setIgnoreEmptyLines(true);                       // 空行を無視するよ
 cfg.setIgnoreLinePatterns(Pattern.compile("^#.*$")); // 正規表現による無視する行パターンを設定します。(この例では # で始まる行)
 cfg.setSkipLines(1);                                 // 最初の1行目をスキップして読込みます。
 
+cfg.setLineSeparator("\n");                          // データ出力時の改行文字列をプラットフォームに依存させず明示的に指定します。
+cfg.setUtf8bomPolicy(true);                          // UTF-8 エンコーディングでの出力時に BOM (Byte Order Mark) を付与します。
+cfg.setVariableColumns(false);                       // デフォルトでは有効となっている可変項目数を無効化して項目数チェックを行うようにします。(Version 2.1 以上)
+
 // Csv 統合アクセスユーティリティでの使用例
 List<String[]> list = Csv.load(new File("example.csv"), cfg, new StringArrayListHandler());
 // CsvManager 統合アクセスインターフェースでの使用例
 List<Customer> customers = CsvManagerFactory.newCsvManager().config(cfg).load(Customer.class).from(new File("customers.csv"));
 +-----------------------------------------------------------------------------+
 
-*CsvHandler
+*{{{./apidocs/com/orangesignal/csv/CsvHandler.html}CsvHandler}}
 
  CsvHandler は CSV データへのアクセスとオブジェクト変換を実質的に管理するデータアクセスハンドラです。
 
-**StringArrayListHandler
+**{{{./apidocs/com/orangesignal/csv/handlers/StringArrayListHandler.html}StringArrayListHandler}}
 
  StringArrayListHandler は、文字列配列のリストで CSV データへのアクセスを可能とするハンドラです。
 
@@ -93,7 +97,7 @@ List<String[]> list = Csv.load(file, cfg, new StringArrayListHandler());
 Csv.save(list, file, cfg, new StringArrayListHandler());
 +-----------------------------------------------------------------------------+
 
-**ResultSetHandler
+**{{{./apidocs/com/orangesignal/csv/handlers/ResultSetHandler.html}ResultSetHandler}}
 
  ResultSetHandler は、データベースの結果セットで CSV データへのアクセスを可能とするハンドラです。
 
@@ -105,7 +109,7 @@ ResultSet rs = Csv.load(file, cfg, new ResultSetHandler());
 Csv.save(rs, file, cfg, new ResultSetHandler());
 +-----------------------------------------------------------------------------+
 
-**ColumnNameMapListHandler
+**{{{./apidocs/com/orangesignal/csv/handlers/ColumnNameMapListHandler.html}ColumnNameMapListHandler}}
 
  ColumnNameMapListHandler は、CSV ヘッダ行の項目名と CSV データの項目値とのマップオブジェクトのリストで CSV データへのアクセスを可能とするハンドラです。
 
@@ -117,7 +121,7 @@ List<Map<String, String>> list = Csv.load(file, cfg, new ColumnNameMapListHandle
 Csv.save(list, file, cfg, new ColumnNameMapListHandler());
 +-----------------------------------------------------------------------------+
 
-**ColumnPositionMapListHandler
+**{{{./apidocs/com/orangesignal/csv/handlers/ColumnPositionMapListHandler.html}ColumnPositionMapListHandler}}
 
  ColumnPositionMapListHandler は、CSV ヘッダ行の項目位置と CSV データの項目値とのマップオブジェクトのリストで CSV データへのアクセスを可能とするハンドラです。
 
@@ -129,7 +133,7 @@ List<Map<Integer, String>> list = Csv.load(file, cfg, new ColumnPositionMapListH
 Csv.save(list, file, cfg, new ColumnPositionMapListHandler());
 +-----------------------------------------------------------------------------+
 
-**BeanListHandler
+**{{{./apidocs/com/orangesignal/csv/handlers/BeanListHandler.html}BeanListHandler}}
 
  BeanListHandler は、POJO オブジェクトのリストで CSV データへのアクセスを可能とするハンドラです。\
  このハンドラは CSV ヘッダ行の項目名と POJO オブジェクトのフィールド名を対応付けて処理します。
@@ -152,7 +156,7 @@ List<Customer> customers = Csv.load(file, cfg, new BeanListHandler<Customer>(Cus
 Csv.save(customers, file, cfg, new BeanListHandler<Customer>(Customer.class).includes("age", "sex"));
 +-----------------------------------------------------------------------------+
 
-**ColumnNameMappingBeanListHandler
+**{{{./apidocs/com/orangesignal/csv/handlers/ColumnNameMappingBeanListHandler.html}ColumnNameMappingBeanListHandler}}
 
  ColumnNameMappingBeanListHandler は、BeanListHandler と同じく POJO オブジェクトのリストで CSV データへのアクセスを可能とするハンドラです。
  このハンドラは CSV ヘッダ行の項目名と POJO オブジェクトのフィールド名の対応付け情報をもとに処理します。
@@ -183,7 +187,7 @@ Csv.save(customers, file, cfg,
     );
 +-----------------------------------------------------------------------------+
 
-**ColumnPositionMappingBeanListHandler
+**{{{./apidocs/com/orangesignal/csv/handlers/ColumnPositionMappingBeanListHandler.html}ColumnPositionMappingBeanListHandler}}
 
  ColumnPositionMappingBeanListHandler は、BeanListHandler と同じく POJO オブジェクトのリストで CSV データへのアクセスを可能とするハンドラです。
  このハンドラは CSV ヘッダ行の項目位置と POJO オブジェクトのフィールド名の対応付け情報をもとに処理します。
@@ -214,7 +218,7 @@ Csv.save(customers, file, cfg,
     );
 +-----------------------------------------------------------------------------+
 
-**CsvEntityListHandler
+**{{{./apidocs/com/orangesignal/csv/handlers/CsvEntityListHandler.html}CsvEntityListHandler}}
 
  CsvEntityListHandler は、CSV 用のアノテーション CsvEntity で注釈付けされた POJO オブジェクトのリストで CSV データへのアクセスを可能とするハンドラです。
  このハンドラは CSV ヘッダ行の項目と POJO オブジェクトの CsvColumn アノテーションで指定された項目の対応付け情報をもとに処理します。
@@ -227,29 +231,29 @@ List<Customer> customers = Csv.load(file, cfg, new CsvEntityListHandler<Customer
 Csv.save(customers, file, cfg, new CsvEntityListHandler<Customer>(Customer.class));
 +-----------------------------------------------------------------------------+
 
-*CsvFilter
+*{{{./apidocs/com/orangesignal/csv/filters/package-summary.html}CsvFilter}}
 
  CsvFilter は、条件と一致する CSV データや POJO オブジェクトのみをロードまたはセーブさせるためのデータフィルタです。\
- データフィルタには CSV の行データを対象とするものと POJO オブジェクトを対象にするものの二系統があり、CsvHandler や CsvManager で使用します。(※ ResultSetHandler を除く)
+ データフィルタには CSV の行データを対象とするものと POJO オブジェクトを対象にするものの二系統があり、{{CsvHandler}} や {{CsvManager}} で使用します。(※ {{ResultSetHandler}} を除く)
 
-  * CSV 行データを対象するデータフィルタ - CsvValueFilter / CsvNamedValueFilter
+  * CSV 行データを対象するデータフィルタ - {{CsvValueFilter}} / {{CsvNamedValueFilter}}
 
-  * POJO オブジェクトを対象とするデータフィルタ - BeanFilter
+  * POJO オブジェクトを対象とするデータフィルタ - {{BeanFilter}}
 
- ※ CsvManager や一部の CsvHandler は両系統のデータフィルタを同時に使用することが可能です。
+ ※ {{CsvManager}} や一部の {{CsvHandler}} は両系統のデータフィルタを同時に使用することが可能です。
 
-**CsvValueFilter
+**{{{./apidocs/com/orangesignal/csv/filters/CsvValueFilter.html}CsvValueFilter}}
 
  CSV の項目位置で条件を指定するデータフィルタです。\
- 以下の CsvHandler と CsvManager で使用できます。
+ 以下の {{CsvHandler}} と {{CsvManager}} で使用できます。
 
-  * StringArrayListHandler
+  * {{StringArrayListHandler}}
 
-  * ColumnPositionMapListHandler
+  * {{ColumnPositionMapListHandler}}
 
-  * ColumnPositionMappingBeanListHandler
+  * {{ColumnPositionMappingBeanListHandler}}
 
-  * CsvColumnPositionMappingBeanManager
+  * {{{./apidocs/com/orangesignal/csv/manager/CsvColumnPositionMappingBeanManager.html}CsvColumnPositionMappingBeanManager}}
 
  ※ このデータフィルタは CSV の生値である文字列を使用して指定された判定基準値と比較します。
 
@@ -289,24 +293,24 @@ new CsvColumnPositionMappingBeanManager()
         .from(reader);
 +-----------------------------------------------------------------------------+
 
-**CsvNamedValueFilter
+**{{{./apidocs/com/orangesignal/csv/filters/CsvNamedValueFilter.html}CsvNamedValueFilter}}
 
  CSV の項目位置または項目名で条件を指定するデータフィルタです。\
- 以下の CsvHandler と CsvManager で使用できます。
+ 以下の {{CsvHandler}} と {{CsvManager}} で使用できます。
 
-  * ColumnNameMapListHandler
+  * {{ColumnNameMapListHandler}}
 
-  * BeanListHandler
+  * {{BeanListHandler}}
 
-  * ColumnNameMappingBeanListHandler
+  * {{ColumnNameMappingBeanListHandler}}
 
-  * CsvEntityListHandler
+  * {{CsvEntityListHandler}}
 
-  * CsvBeanManager
+  * {{{./apidocs/com/orangesignal/csv/manager/CsvBeanManager.html}CsvBeanManager}}
 
-  * CsvColumnNameMappingBeanManager
+  * {{{./apidocs/com/orangesignal/csv/manager/CsvColumnNameMappingBeanManager.html}CsvColumnNameMappingBeanManager}}
 
-  * CsvEntityManager
+  * {{{./apidocs/com/orangesignal/csv/manager/CsvEntityManager.html}CsvEntityManager}}
 
  ※ このデータフィルタは CSV の生値である文字列を使用して指定された判定基準値と比較します。
 
@@ -346,26 +350,26 @@ new CsvColumnNameMappingBeanManager()
         .from(reader);
 +-----------------------------------------------------------------------------+
 
-**BeanFilter
+**{{{./apidocs/com/orangesignal/csv/filters/BeanFilter.html}BeanFilter}}
 
  POJO オブジェクトのフィールド名で条件を指定するデータフィルタです。\
- 以下の CsvHandler と CsvManager で使用できます。
+ 以下の {{CsvHandler}} と {{CsvManager}} で使用できます。
 
-  * BeanListHandler
+  * {{BeanListHandler}}
 
-  * ColumnNameMappingBeanListHandler
+  * {{ColumnNameMappingBeanListHandler}}
 
-  * ColumnPositionMappingBeanListHandler
+  * {{ColumnPositionMappingBeanListHandler}}
 
-  * CsvEntityListHandler
+  * {{CsvEntityListHandler}}
 
-  * CsvBeanManager
+  * {{{./apidocs/com/orangesignal/csv/manager/CsvBeanManager.html}CsvBeanManager}}
 
-  * CsvColumnNameMappingBeanManager
+  * {{{./apidocs/com/orangesignal/csv/manager/CsvColumnNameMappingBeanManager.html}CsvColumnNameMappingBeanManager}}
 
-  * CsvColumnPositionMappingBeanManager
+  * {{{./apidocs/com/orangesignal/csv/manager/CsvColumnPositionMappingBeanManager.html}CsvColumnPositionMappingBeanManager}}
 
-  * CsvEntityManager
+  * {{{./apidocs/com/orangesignal/csv/manager/CsvEntityManager.html}CsvEntityManager}}
 
  ※ このデータフィルタは POJO オブジェクトのフィールド値を使用して指定された判定基準値と比較します。
 
@@ -407,9 +411,9 @@ new CsvEntityManager()
         .from(reader);
 +-----------------------------------------------------------------------------+
 
-*Csv
+*{{{./apidocs/com/orangesignal/csv/Csv.html}Csv}}
 
- Csv ユーティリテイは、前節で説明した CsvConfig や CsvHandler を使用してファイルやストリームなどのリソースと CSV データアクセスを行う統合アクセスユーティリティです。
+ Csv ユーティリテイは、前節で説明した {{CsvConfig}} や {{CsvHandler}} を使用してファイルやストリームなどのリソースと CSV データアクセスを行う統合アクセスユーティリティです。
  サポートされるリソースはファイルやストリーム、文字ストリーム (Reader / Writer) だけでなく ZIP や LHA などの圧縮形式のデータもサポートします。
 
  以下は、文字列配列のリストで ZIP 圧縮形式で圧縮された CSV ファイルへアクセスする場合のコード例です。
@@ -446,7 +450,7 @@ try {
 }
 +-----------------------------------------------------------------------------+
 
-*CsvManager
+*{{{./apidocs/com/orangesignal/csv/manager/CsvManager.html}CsvManager}}
 
  CsvManager は POJO オブジェクトのリストで CSV データへのアクセスを簡単にするための統合アクセスインターフェースです。
 
@@ -475,7 +479,7 @@ new CsvBeanManager().save(customers, Customer.class).to(new File("customers.csv"
 
  この節では、使用するケースの少ない CSV に対するローレベルアクセス機能について説明を記載します。
 
-*CsvReader
+*{{{./apidocs/com/orangesignal/csv/CsvReader.html}CsvReader}}
 
  CsvReader は文字入力ストリーム (java.io.Reader) から行データを読取って、CSV トークンのリストとして返す CSV 文字入力ストリームです。
  CsvReader は CsvConfig で指定された CSV 形式情報をもとに物理行・論理行を適切に処理します。
@@ -520,7 +524,7 @@ try {
 }
 +-----------------------------------------------------------------------------+
 
-*CsvWriter
+*{{{./apidocs/com/orangesignal/csv/CsvWriter.html}CsvWriter}}
 
  CsvWriter は文字出力ストリーム (java.io.Writer) へ CSV トークンを行データとして書込む CSV 文字出力ストリームです。
  CsvWriter は CsvConfig で指定された CSV 形式情報をもとに CSV 形式を適切に処理します。
