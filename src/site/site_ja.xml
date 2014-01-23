@@ -40,6 +40,7 @@
 			<item name="ダウンロード"      href="dependency-info.html" />
 			<item name="クイックスタート"  href="quick_start.html" />
 			<item name="ユーザーガイド"    href="userguide.html" />
+			<item name="入出力機能比較表"  href="io_tables.html" />
 			<item name="マイグレーション"  href="migration.html" />
 			<item name="FAQ"               href="faq.html" />
 			<item name="Javadoc"           href="apidocs/index.html" />
