@@ -314,6 +314,17 @@ public final class CsvConfigTest {
 	}
 
 	@Test
+	public void testIsVariableColumns() {
+		assertThat(new CsvConfig().isVariableColumns(), is(true));
+	}
+	@Test
+	public void testSetVariableColumns() {
+		final CsvConfig cfg = new CsvConfig();
+		cfg.setVariableColumns(false);
+		assertThat(cfg.isVariableColumns(), is(false));
+	}
+
+	@Test
 	public void testClone() {
 		final CsvConfig cfg = new CsvConfig('\t', '^', '|').clone();
 		assertThat(cfg.getSeparator(), is('\t'));
