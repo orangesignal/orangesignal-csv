@@ -124,11 +124,6 @@ POM 設定 (Apache Maven 2 / 3 使用時)
 </dependency>
 
 // OrangeSignal CSV
-<repository>
-	<id>orangesignal</id>
-	<url>http://orangesignal.sourceforge.jp/maven2</url>
-</repository>
-
 <dependency>
 	<groupId>com.orangesignal</groupId>
 	<artifactId>orangesignal-csv</artifactId>
