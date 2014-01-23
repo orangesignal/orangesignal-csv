@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2013 the original author or authors.
+ * Copyright 2009-2014 the original author or authors.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -558,6 +558,60 @@ public final class CsvReaderTest {
 			assertThat(line.size(), is(2));
 			assertThat(line.get(0), is("佐藤"));
 			assertThat(line.get(1), is("鈴木"));
+		} finally {
+			reader.close();
+		}
+	}
+
+	@Test
+	public void testReadTokensCsvTokenException() throws IOException {
+		final CsvConfig cfg = new CsvConfig();
+		cfg.setVariableColumns(false);
+
+		final CsvReader reader = new CsvReader(new StringReader("a,b,c\r\nx,y"), cfg);
+		try {
+			final List<CsvToken> line1 = reader.readTokens();
+			assertThat(line1.size(), is(3));
+			assertThat(line1.get(0).getValue(), is("a"));
+			assertThat(line1.get(1).getValue(), is("b"));
+			assertThat(line1.get(2).getValue(), is("c"));
+
+			// Act
+			reader.readTokens();
+		} catch (final CsvTokenException e) {
+			// Assert
+			assertThat(e.getMessage(), is("Invalid column count in CSV input on line 2."));
+			final List<CsvToken> tokens = e.getTokens();
+			assertThat(tokens.size(), is(2));
+			assertThat(tokens.get(0).getValue(), is("x"));
+			assertThat(tokens.get(1).getValue(), is("y"));
+		} finally {
+			reader.close();
+		}
+	}
+
+	@Test
+	public void testReadValuesCsvTokenException() throws IOException {
+		final CsvConfig cfg = new CsvConfig();
+		cfg.setVariableColumns(false);
+
+		final CsvReader reader = new CsvReader(new StringReader("a,b,c\r\nx,y"), cfg);
+		try {
+			final List<String> line1 = reader.readValues();
+			assertThat(line1.size(), is(3));
+			assertThat(line1.get(0), is("a"));
+			assertThat(line1.get(1), is("b"));
+			assertThat(line1.get(2), is("c"));
+
+			// Act
+			reader.readValues();
+		} catch (final CsvTokenException e) {
+			// Assert
+			assertThat(e.getMessage(), is("Invalid column count in CSV input on line 2."));
+			final List<CsvToken> tokens = e.getTokens();
+			assertThat(tokens.size(), is(2));
+			assertThat(tokens.get(0).getValue(), is("x"));
+			assertThat(tokens.get(1).getValue(), is("y"));
 		} finally {
 			reader.close();
 		}
