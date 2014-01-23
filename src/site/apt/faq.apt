@@ -105,7 +105,7 @@ public class ExampleTests {
         final Validator validator = validatorFactory.getValidator();
 
         // CSV を読込んで検証処理を行います。
-        final List<Customer> list = new CsvEntityManager().load(Customer.class).from(args[0]);
+        final List<Customer> list = new CsvEntityManager().load(Customer.class).from(new File("customer.csv"));
         for (final Customer customer : list) {
             final Set<ConstraintViolation<Customer>> violations = validator.validate(customer);
             // TODO: ここに処理を記述します。
