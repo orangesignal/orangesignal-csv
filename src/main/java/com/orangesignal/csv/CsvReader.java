@@ -294,6 +294,7 @@ public class CsvReader implements Closeable {
 	 * このメソッドは利便性のために提供しています。
 	 *
 	 * @return 区切り文字形式データトークンの値をリスト。ストリームの終わりに達している場合は {@code null}
+	 * @throws CsvTokenException 可変項目数が禁止されている場合に項目数が一致しない場合
 	 * @throws IOException 入出力エラーが発生した場合
 	 */
 	public List<String> readValues() throws IOException {
@@ -312,6 +313,7 @@ public class CsvReader implements Closeable {
 	 * 論理行を読込み区切り文字形式データトークンをリストして返します。
 	 *
 	 * @return 区切り文字形式データトークンのリスト。ストリームの終わりに達している場合は {@code null}
+	 * @throws CsvTokenException 可変項目数が禁止されている場合に項目数が一致しない場合
 	 * @throws IOException 入出力エラーが発生した場合
 	 */
 	public List<CsvToken> readTokens() throws IOException {
@@ -337,6 +339,7 @@ public class CsvReader implements Closeable {
 	 * 論理行を読込み、行カウンタを処理して CSV トークンのリストを返します。
 	 *
 	 * @return CSV トークンのリスト
+	 * @throws CsvTokenException 可変項目数が禁止されている場合に項目数が一致しない場合
 	 * @throws IOException 入出力エラーが発生した場合
 	 */
 	private List<CsvToken> readCsvTokens() throws IOException {

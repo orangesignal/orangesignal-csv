@@ -135,6 +135,7 @@ public class CsvWriter implements Closeable, Flushable {
 	 * 指定された CSV トークンの値リストを書き込みます。
 	 *
 	 * @param values 書き込む CSV トークンの値リスト
+	 * @throws CsvValueException 可変項目数が禁止されている場合に項目数が一致しない場合
 	 * @throws IOException 入出力エラーが発生した場合
 	 */
 	public void writeValues(final List<String> values) throws IOException {
@@ -216,6 +217,7 @@ public class CsvWriter implements Closeable, Flushable {
 	 * 指定された CSV トークンのリストを書き込みます。
 	 * 
 	 * @param tokens 書き込む CSV トークンのリスト
+	 * @throws CsvValueException 可変項目数が禁止されている場合に項目数が一致しない場合
 	 * @throws IOException 入出力エラーが発生した場合
 	 */
 	public void writeTokens(final List<CsvToken> tokens) throws IOException {
