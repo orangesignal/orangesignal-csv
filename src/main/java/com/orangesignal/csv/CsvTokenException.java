@@ -17,7 +17,6 @@
 package com.orangesignal.csv;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -38,12 +37,12 @@ public class CsvTokenException extends IOException {
 	/**
 	 * 指定された詳細メッセージと区切り文字形式データトークンのリストを持つ {@link CsvTokenException} を構築します。
 	 * 
-	 * @param message　詳細メッセージ
+	 * @param message 詳細メッセージ
 	 * @param tokens 区切り文字形式データトークンの値リスト
 	 */
 	public CsvTokenException(final String message, final List<CsvToken> tokens) {
 		super(message);
-		this.tokens = Collections.unmodifiableList(tokens);
+		this.tokens = tokens;
 	}
 
 	/**
