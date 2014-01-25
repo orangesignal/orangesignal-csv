@@ -47,7 +47,8 @@ List<String[]> list = Csv.load(new File("example.csv"), "Windows-31J", new CsvCo
 
 *{どの CsvManager や CsvHandler、Reader / Writer を使えば良いですか？}
 
- 迷ったらまずは CsvEntityManager から使い始めてみて下さい。
+ 迷ったらまずは {{{./apidocs/com/orangesignal/csv/manager/CsvEntityManager.html}CsvEntityManager}} から使い始めてみて下さい。\
+ また {{{./io_tables.html}方式比較表}} も参考にしてみて下さい。
 
 *{ヘッダーを出力したくない}
 
@@ -55,8 +56,9 @@ List<String[]> list = Csv.load(new File("example.csv"), "Windows-31J", new CsvCo
 
 *{項目数チェックをしたい}
 
- CsvConfig で setVariableColumns(false) を指定して下さい。\
- 項目数が不正な場合に CsvReader や CsvWriter から例外がスローされるようになります。
+ {{{./apidocs/com/orangesignal/csv/CsvConfig.html}CsvConfig}} で {{{./apidocs/com/orangesignal/csv/CsvConfig.html#setVariableColumns(boolean)}setVariableColumns(false)}} を指定して下さい。\
+ 項目数が不正な場合に CsvReader や CsvWriter から例外がスローされるようになります。\
+ ※{{{./apidocs/com/orangesignal/csv/CsvConfig.html#setVariableColumns(boolean)}setVariableColumns}} は、バージョン 2.1 以上で使用可能です。
 
 
 +-----------------------------------------------------------------------------+
@@ -118,7 +120,7 @@ public class ExampleTests {
 
  以下の二段階の手順で変換して下さい。(XML から CSV への変換の場合は逆の手順となります)
 
- * CsvEntityManager など OrangeSignal CSV の機能で CSV から POJO へ変換します。
+ * {{{./apidocs/com/orangesignal/csv/manager/CsvEntityManager.html}CsvEntityManager}} など OrangeSignal CSV の機能で CSV から POJO へ変換します。
 
  * JAXB などの O/X マッパーにて POJO から XML へ変換します。\
  O/X マッパーの詳細や選定などについては、{{{http://docs.spring.io/spring/docs/current/spring-framework-reference/htmlsingle/#oxm}Spring Framework - Marshalling XML using O/X Mappers}} をご覧ください。

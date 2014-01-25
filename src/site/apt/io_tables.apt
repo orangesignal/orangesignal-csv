@@ -1,5 +1,5 @@
  -----
- CSV 入出力クラス比較表
+ CSV アクセスクラス比較表
  -----
  Koji Sugisawa
  -----
@@ -8,121 +8,131 @@
 
 ~~ http://maven.apache.org/doxia/references/apt-format.html
 
-CSV 入出力クラスの種類
+CSV アクセスクラスの主な種類と用途について
+
+  ※記載順が上の物程ローレベルアクセス向けとなります。
 
 *------------*----------------------------------------*
 || 種類      || 主な使い方・用途                      |
 *------------+----------------------------------------+
-| Reader     | 行レベルの入力                         |
+| {{Reader}}     | 行レベルの入力                         |
 *------------*----------------------------------------:
-| Writer     | 行レベルの出力                         |
+| {{Writer}}     | 行レベルの出力                         |
 *------------*----------------------------------------:
-| CsvHandler | Csv ユーティリティを使用した一括入出力 |
+| {{CsvHandler}} | {{{./apidocs/com/orangesignal/csv/Csv.html}Csv}} ユーティリティを使用した一括入出力 |
 *------------*----------------------------------------:
-| CsvManager | POJO ベースの一括入出力                |
+| {{CsvManager}} | POJO なリストでの一括入出力                |
 *------------*----------------------------------------:
 
-CSV 入出力クラス一覧表
+CSV アクセス方式選定表
 
-*データ型 (Type) 別の CSV 入出力クラス マトリックス表
+*--------------------------------------------------------*---------------------------------------*----------------------------:
+|                                                        | データを行単位に処理したい            | データを一括して処理したい |
+*--------------------------------------------------------*---------------------------------------*----------------------------:
+| POJO アクセス                       | POJO アクセス可能な {{Reader}} / {{Writer}}   | {{CsvManager}}                 |
+*--------------------------------------------------------*---------------------------------------*----------------------------:
+| 非 POJO アクセス (e.g. Map, String) | POJO アクセスではない {{Reader}} / {{Writer}} | {{{./apidocs/com/orangesignal/csv/Csv.html}Csv}} + {{CsvHandler}}           |
+*--------------------------------------------------------*---------------------------------------*----------------------------:
 
-  ※記載順が上位のクラス程ローレベルアクセス向けとなります。\
-  ※「複雑な対応付け」とは配列型への対応付けや、日付項目および時刻項目とフィールドとの対応付けなど\
-  項目とフィールドの関係が、1:N となるような対応付けのことを指します。
+データ型別の CSV アクセスクラス マトリックス表
+
+  ※記載順が上の物程ローレベルアクセス向けとなります。\
+  ※「Advanced column mapping」とは配列型へのマッピングや、日付項目および時刻項目とフィールドとのマッピングなど\
+  項目とフィールドの関係が、1:N となるようなマッピングのことを指します。
 
 *------------------------*------------------------------------*------------------------------------*--------------------------------------*-------------------------------------*------------------------*------------------------------------------------*-----------------:
-|| Type                  || Reader                            || Writer                            || CsvHandler                          || CsvManager                         || 項目の対応付け方法    || 対応付け項目の選択・指定                      || 複雑な対応付け |
+|| Basic type            || Reader                            || Writer                            || CsvHandler                          || CsvManager                         || Column mapping        || Column selection                              || Advanced column mapping |
 *------------------------*------------------------------------*------------------------------------*--------------------------------------*-------------------------------------*------------------------*------------------------------------------------*-----------------:
-| List\<String\>         | CsvReader                          | CsvWriter                          | StringArrayListHandler               | x                                   | 項目の並び順           | x                                              | x               |
+| List\<String\>         | {{{./apidocs/com/orangesignal/csv/CsvReader.html}CsvReader}}                                                      | {{{./apidocs/com/orangesignal/csv/CsvWriter.html}CsvWriter}}                                                      | {{{./apidocs/com/orangesignal/csv/handlers/StringArrayListHandler.html}StringArrayListHandler}}                             | x                                                                                                                        | 項目の並び順           | x                                              | x               |
 *------------------------*------------------------------------*------------------------------------*--------------------------------------*-------------------------------------*------------------------*------------------------------------------------*-----------------:
-| ResultSet              |                                    |                                    | ResultSetHandler                     | x                                   | 項目の並び順と項目名   | x                                            | x               |
+| ResultSet              |                                                                                                                   |                                                                                                                   | {{{./apidocs/com/orangesignal/csv/handlers/ResultSetHandler.html}ResultSetHandler}}                                         | x                                                                                                                        | 項目の並び順と項目名   | x                                            | x               |
 *------------------------*------------------------------------*------------------------------------*--------------------------------------*-------------------------------------*------------------------*------------------------------------------------*-----------------:
-| Map\<Integer, String\> | CsvColumnPositionMapReader         | CsvColumnPositionMapWriter         | ColumnPositionMapListHandler         | x                                   | 項目の並び順           | x                                              | x               |
+| Map\<Integer, String\> | {{{./apidocs/com/orangesignal/csv/io/CsvColumnPositionMapReader.html}CsvColumnPositionMapReader}}                 | {{{./apidocs/com/orangesignal/csv/io/CsvColumnPositionMapWriter.html}CsvColumnPositionMapWriter}}                 | {{{./apidocs/com/orangesignal/csv/handlers/ColumnPositionMapListHandler.html}ColumnPositionMapListHandler}}                 | x                                                                                                                        | 項目の並び順           | x                                              | x               |
 *------------------------*------------------------------------*------------------------------------*--------------------------------------*-------------------------------------*------------------------*------------------------------------------------*-----------------:
-| Map\<String, String\>  | CsvColumnNameMapReader             | CsvColumnNameMapWriter             | ColumnNameMapListHandler             | x                                   | 項目名                 | x                                              | x               |
+| Map\<String, String\>  | {{{./apidocs/com/orangesignal/csv/io/CsvColumnNameMapReader.html}CsvColumnNameMapReader}}                         | {{{./apidocs/com/orangesignal/csv/io/CsvColumnNameMapWriter.html}CsvColumnNameMapWriter}}                         | {{{./apidocs/com/orangesignal/csv/handlers/ColumnNameMapListHandler.html}ColumnNameMapListHandler}}                         | x                                                                                                                        | 項目名                 | x                                              | x               |
 *------------------------*------------------------------------*------------------------------------*--------------------------------------*-------------------------------------*------------------------*------------------------------------------------*-----------------:
-| POJO                   | CsvBeanReader                      | CsvBeanWriter                      | BeanListHandler                      | CsvBeanManager                      | フィールド名           | CsvBeanTemplate.includes\                      | x               |
-|                        |                                    |                                    |                                      |                                     |                        | CsvBeanTemplate.excludes                       |                 |
+| POJO                   | {{{./apidocs/com/orangesignal/csv/io/CsvBeanReader.html}CsvBeanReader}}                                           | {{{./apidocs/com/orangesignal/csv/io/CsvBeanWriter.html}CsvBeanWriter}}                                           | {{{./apidocs/com/orangesignal/csv/handlers/BeanListHandler.html}BeanListHandler}}                                           | {{{./apidocs/com/orangesignal/csv/manager/CsvBeanManager.html}CsvBeanManager}}                                           | フィールド名           | {{{./apidocs/com/orangesignal/csv/bean/CsvBeanTemplate.html}CsvBeanTemplate.includes}}\                      | x               |
+|                        |                                                                                                                   |                                                                                                                   |                                                                                                                             |                                                                                                                          |                        | {{{./apidocs/com/orangesignal/csv/bean/CsvBeanTemplate.html}CsvBeanTemplate.excludes}}                       |                 |
 *------------------------*------------------------------------*------------------------------------*--------------------------------------*-------------------------------------*------------------------*------------------------------------------------*-----------------:
-| POJO                   | CsvColumnPositionMappingBeanReader | CsvColumnPositionMappingBeanWriter | ColumnPositionMappingBeanListHandler | CsvColumnPositionMappingBeanManager | 項目位置とフィールド名 | CsvColumnPositionMappingBeanTemplate.column    | x               |
+| POJO                   | {{{./apidocs/com/orangesignal/csv/io/CsvColumnPositionMappingBeanReader.html}CsvColumnPositionMappingBeanReader}} | {{{./apidocs/com/orangesignal/csv/io/CsvColumnPositionMappingBeanWriter.html}CsvColumnPositionMappingBeanWriter}} | {{{./apidocs/com/orangesignal/csv/handlers/ColumnPositionMappingBeanListHandler.html}ColumnPositionMappingBeanListHandler}} | {{{./apidocs/com/orangesignal/csv/manager/CsvColumnPositionMappingBeanManager.html}CsvColumnPositionMappingBeanManager}} | 項目位置とフィールド名 | {{{./apidocs/com/orangesignal/csv/bean/CsvColumnPositionMappingBeanTemplate.html}CsvColumnPositionMappingBeanTemplate.column}}    | x               |
 *------------------------*------------------------------------*------------------------------------*--------------------------------------*-------------------------------------*------------------------*------------------------------------------------*-----------------:
-| POJO                   | CsvColumnNameMappingBeanReader     | CsvColumnNameMappingBeanWriter     | ColumnNameMappingBeanListHandler     | CsvColumnNameMappingBeanManager     | 項目名とフィールド名   | CsvColumnNameMappingBeanTemplate.columnMapping | x               |
+| POJO                   | {{{./apidocs/com/orangesignal/csv/io/CsvColumnNameMappingBeanReader.html}CsvColumnNameMappingBeanReader}}         | {{{./apidocs/com/orangesignal/csv/io/CsvColumnNameMappingBeanWriter.html}CsvColumnNameMappingBeanWriter}}         | {{{./apidocs/com/orangesignal/csv/handlers/ColumnNameMappingBeanListHandler.html}ColumnNameMappingBeanListHandler}}         | {{{./apidocs/com/orangesignal/csv/manager/CsvColumnNameMappingBeanManager.html}CsvColumnNameMappingBeanManager}}         | 項目名とフィールド名   | {{{./apidocs/com/orangesignal/csv/bean/CsvColumnNameMappingBeanTemplate.html}CsvColumnNameMappingBeanTemplate.columnMapping}} | x               |
 *------------------------*------------------------------------*------------------------------------*--------------------------------------*-------------------------------------*------------------------*------------------------------------------------*-----------------:
-| POJO                   | CsvEntityReader                    | CsvEntityWriter                    | CsvEntityListHandler                 | CsvEntityManager                    | Annotation             | @CsvColumn                                     | @CsvColumns     |
+| POJO                   | {{{./apidocs/com/orangesignal/csv/io/CsvEntityReader.html}CsvEntityReader}}                                       | {{{./apidocs/com/orangesignal/csv/io/CsvEntityWriter.html}CsvEntityWriter}}                                       | {{{./apidocs/com/orangesignal/csv/handlers/CsvEntityListHandler.html}CsvEntityListHandler}}                                 | {{{./apidocs/com/orangesignal/csv/manager/CsvEntityManager.html}CsvEntityManager}}                                       | {{{./apidocs/com/orangesignal/csv/annotation/package-summary.html}Annotation}}             | {{{./apidocs/com/orangesignal/csv/annotation/CsvColumn.html}@CsvColumn}}                                     | {{{./apidocs/com/orangesignal/csv/annotation/CsvColumns.html}@CsvColumns}}     |
 *------------------------*------------------------------------*------------------------------------*--------------------------------------*-------------------------------------*------------------------*------------------------------------------------*-----------------:
 
-*Reader
+*{Reader}
 
 *--------------------------------------*------------------------*---------------------*---------*--------*--------:
 || Class                               || Type                  || Filter             || Offset || Limit || Sort  |
 *--------------------------------------*------------------------*---------------------*---------*--------*--------:
-| CsvReader                            | List\<String\>         | x                   | x       | x      | x      |
+| {{{./apidocs/com/orangesignal/csv/CsvReader.html}CsvReader}}                            | List\<String\>         | x                   | x       | x      | x      |
 *--------------------------------------*------------------------*---------------------*---------*--------*--------:
-| CsvColumnPositionMapReader           | Map\<Integer, String\> | CsvValueFilter      | x       | x      | x      |
+| {{{./apidocs/com/orangesignal/csv/io/CsvColumnPositionMapReader.html}CsvColumnPositionMapReader}}           | Map\<Integer, String\> | {{{./apidocs/com/orangesignal/csv/filters/CsvValueFilter.html}CsvValueFilter}}      | x       | x      | x      |
 *--------------------------------------*------------------------*---------------------*---------*--------*--------:
-| CsvColumnNameMapReader               | Map\<String, String\>  | CsvNamedValueFilter | x       | x      | x      |
+| {{{./apidocs/com/orangesignal/csv/io/CsvColumnNameMapReader.html}CsvColumnNameMapReader}}               | Map\<String, String\>  | {{{./apidocs/com/orangesignal/csv/filters/CsvNamedValueFilter.html}CsvNamedValueFilter}} | x       | x      | x      |
 *--------------------------------------*------------------------*---------------------*---------*--------*--------:
-| CsvBeanReader                        | POJO                   | CsvNamedValueFilter | x       | x      | x      |
+| {{{./apidocs/com/orangesignal/csv/io/CsvBeanReader.html}CsvBeanReader}}                        | POJO                   | {{{./apidocs/com/orangesignal/csv/filters/CsvNamedValueFilter.html}CsvNamedValueFilter}} | x       | x      | x      |
 *--------------------------------------*------------------------*---------------------*---------*--------*--------:
-| CsvColumnPositionMappingBeanReader   | POJO                   | CsvValueFilter      | x       | x      | x      |
+| {{{./apidocs/com/orangesignal/csv/io/CsvColumnPositionMappingBeanReader.html}CsvColumnPositionMappingBeanReader}}   | POJO                   | {{{./apidocs/com/orangesignal/csv/filters/CsvValueFilter.html}CsvValueFilter}}      | x       | x      | x      |
 *--------------------------------------*------------------------*---------------------*---------*--------*--------:
-| CsvColumnNameMappingBeanReader       | POJO                   | CsvNamedValueFilter | x       | x      | x      |
+| {{{./apidocs/com/orangesignal/csv/io/CsvColumnNameMappingBeanReader.html}CsvColumnNameMappingBeanReader}}       | POJO                   | {{{./apidocs/com/orangesignal/csv/filters/CsvNamedValueFilter.html}CsvNamedValueFilter}} | x       | x      | x      |
 *--------------------------------------*------------------------*---------------------*---------*--------*--------:
-| CsvEntityReader                      | POJO                   | CsvNamedValueFilter | x       | x      | x      |
+| {{{./apidocs/com/orangesignal/csv/io/CsvEntityReader.html}CsvEntityReader}}                      | POJO                   | {{{./apidocs/com/orangesignal/csv/filters/CsvNamedValueFilter.html}CsvNamedValueFilter}} | x       | x      | x      |
 *--------------------------------------*------------------------*---------------------*---------*--------*--------:
 
-*Writer
+*{Writer}
 
 *--------------------------------------*------------------------*---------------------*---------*--------*--------:
 || Class                               || Type                  || Filter             || Offset || Limit || Sort  |
 *--------------------------------------*------------------------*---------------------*---------*--------*--------:
-| CsvWriter                            | List\<String\>         | x                   | x       | x      | x      |
+| {{{./apidocs/com/orangesignal/csv/CsvWriter.html}CsvWriter}}                            | List\<String\>         | x                   | x       | x      | x      |
 *--------------------------------------*------------------------*---------------------*---------*--------*--------:
-| CsvColumnPositionMapWriter           | Map\<Integer, String\> | CsvValueFilter      | x       | x      | x      |
+| {{{./apidocs/com/orangesignal/csv/io/CsvColumnPositionMapWriter.html}CsvColumnPositionMapWriter}}           | Map\<Integer, String\> | {{{./apidocs/com/orangesignal/csv/filters/CsvValueFilter.html}CsvValueFilter}}      | x       | x      | x      |
 *--------------------------------------*------------------------*---------------------*---------*--------*--------:
-| CsvColumnNameMapWriter               | Map\<String, String\>  | CsvNamedValueFilter | x       | x      | x      |
+| {{{./apidocs/com/orangesignal/csv/io/CsvColumnNameMapWriter.html}CsvColumnNameMapWriter}}               | Map\<String, String\>  | {{{./apidocs/com/orangesignal/csv/filters/CsvNamedValueFilter.html}CsvNamedValueFilter}} | x       | x      | x      |
 *--------------------------------------*------------------------*---------------------*---------*--------*--------:
-| CsvBeanWriter                        | POJO                   | CsvNamedValueFilter | x       | x      | x      |
+| {{{./apidocs/com/orangesignal/csv/io/CsvBeanWriter.html}CsvBeanWriter}}                        | POJO                   | {{{./apidocs/com/orangesignal/csv/filters/CsvNamedValueFilter.html}CsvNamedValueFilter}} | x       | x      | x      |
 *--------------------------------------*------------------------*---------------------*---------*--------*--------:
-| CsvColumnPositionMappingBeanWriter   | POJO                   | CsvValueFilter      | x       | x      | x      |
+| {{{./apidocs/com/orangesignal/csv/io/CsvColumnPositionMappingBeanWriter.html}CsvColumnPositionMappingBeanWriter}}   | POJO                   | {{{./apidocs/com/orangesignal/csv/filters/CsvValueFilter.html}CsvValueFilter}}      | x       | x      | x      |
 *--------------------------------------*------------------------*---------------------*---------*--------*--------:
-| CsvColumnNameMappingBeanWriter       | POJO                   | CsvNamedValueFilter | x       | x      | x      |
+| {{{./apidocs/com/orangesignal/csv/io/CsvColumnNameMappingBeanWriter.html}CsvColumnNameMappingBeanWriter}}       | POJO                   | {{{./apidocs/com/orangesignal/csv/filters/CsvNamedValueFilter.html}CsvNamedValueFilter}} | x       | x      | x      |
 *--------------------------------------*------------------------*---------------------*---------*--------*--------:
-| CsvEntityWriter                      | POJO                   | CsvNamedValueFilter | x       | x      | x      |
+| {{{./apidocs/com/orangesignal/csv/io/CsvEntityWriter.html}CsvEntityWriter}}                      | POJO                   | {{{./apidocs/com/orangesignal/csv/filters/CsvNamedValueFilter.html}CsvNamedValueFilter}} | x       | x      | x      |
 *--------------------------------------*------------------------*---------------------*---------*--------*--------:
 
-*CsvHandler
+*{CsvHandler}
 
 *--------------------------------------*--------------------------------*---------------------------------*---------*--------*--------:
 || Class                               || Type                          || Filter                         || Offset || Limit || Sort  |
 *--------------------------------------*--------------------------------*---------------------------------*---------*--------*--------:
-| StringArrayListHandler               | List\<String[]\>               | CsvValueFilter                  | o       | o      | x      |
+| {{{./apidocs/com/orangesignal/csv/handlers/StringArrayListHandler.html}StringArrayListHandler}}                             | List\<String[]\>               | {{{./apidocs/com/orangesignal/csv/filters/CsvValueFilter.html}CsvValueFilter}}                  | o       | o      | x      |
 *--------------------------------------*--------------------------------*---------------------------------*---------*--------*--------:
-| ResultSetHandler                     | ResultSet                      | x                               | x       | x      | x      |
+| {{{./apidocs/com/orangesignal/csv/handlers/ResultSetHandler.html}ResultSetHandler}}                                         | ResultSet                      | x                               | x       | x      | x      |
 *--------------------------------------*--------------------------------*---------------------------------*---------*--------*--------:
-| ColumnPositionMapListHandler         | List\<Map\<Integer, String\>\> | CsvValueFilter                  | o       | o      | x      |
+| {{{./apidocs/com/orangesignal/csv/handlers/ColumnPositionMapListHandler.html}ColumnPositionMapListHandler}}                 | List\<Map\<Integer, String\>\> | {{{./apidocs/com/orangesignal/csv/filters/CsvValueFilter.html}CsvValueFilter}}                  | o       | o      | x      |
 *--------------------------------------*--------------------------------*---------------------------------*---------*--------*--------:
-| ColumnNameMapListHandler             | List\<Map\<String, String\>\>  | CsvNamedValueFilter             | o       | o      | x      |
+| {{{./apidocs/com/orangesignal/csv/handlers/ColumnNameMapListHandler.html}ColumnNameMapListHandler}}                         | List\<Map\<String, String\>\>  | {{{./apidocs/com/orangesignal/csv/filters/CsvNamedValueFilter.html}CsvNamedValueFilter}}             | o       | o      | x      |
 *--------------------------------------*--------------------------------*---------------------------------*---------*--------*--------:
-| BeanListHandler                      | List\<\POJO\>                  | CsvNamedValueFilter, BeanFilter | o       | o      | o      |
+| {{{./apidocs/com/orangesignal/csv/handlers/BeanListHandler.html}BeanListHandler}}                                           | List\<\POJO\>                  | {{{./apidocs/com/orangesignal/csv/filters/CsvNamedValueFilter.html}CsvNamedValueFilter}}, {{{./apidocs/com/orangesignal/csv/filters/BeanFilter.html}BeanFilter}} | o       | o      | o      |
 *--------------------------------------*--------------------------------*---------------------------------*---------*--------*--------:
-| ColumnPositionMappingBeanListHandler | List\<\POJO\>                  | CsvValueFilter, BeanFilter      | o       | o      | o      |
+| {{{./apidocs/com/orangesignal/csv/handlers/ColumnPositionMappingBeanListHandler.html}ColumnPositionMappingBeanListHandler}} | List\<\POJO\>                  | {{{./apidocs/com/orangesignal/csv/filters/CsvValueFilter.html}CsvValueFilter}}, {{{./apidocs/com/orangesignal/csv/filters/BeanFilter.html}BeanFilter}}      | o       | o      | o      |
 *--------------------------------------*--------------------------------*---------------------------------*---------*--------*--------:
-| ColumnNameMappingBeanListHandler     | List\<\POJO\>                  | CsvNamedValueFilter, BeanFilter | o       | o      | o      |
+| {{{./apidocs/com/orangesignal/csv/handlers/ColumnNameMappingBeanListHandler.html}ColumnNameMappingBeanListHandler}}         | List\<\POJO\>                  | {{{./apidocs/com/orangesignal/csv/filters/CsvNamedValueFilter.html}CsvNamedValueFilter}}, {{{./apidocs/com/orangesignal/csv/filters/BeanFilter.html}BeanFilter}} | o       | o      | o      |
 *--------------------------------------*--------------------------------*---------------------------------*---------*--------*--------:
-| CsvEntityListHandler                 | List\<\POJO\>                  | CsvNamedValueFilter, BeanFilter | o       | o      | o      |
+| {{{./apidocs/com/orangesignal/csv/handlers/CsvEntityListHandler.html}CsvEntityListHandler}}                                 | List\<\POJO\>                  | {{{./apidocs/com/orangesignal/csv/filters/CsvNamedValueFilter.html}CsvNamedValueFilter}}, {{{./apidocs/com/orangesignal/csv/filters/BeanFilter.html}BeanFilter}} | o       | o      | o      |
 *--------------------------------------*--------------------------------*---------------------------------*---------*--------*--------:
 
-*CsvManager
+*{CsvManager}
 
 *-------------------------------------*---------------*---------------------------------*---------*--------*--------:
 || Class                              || Type         || Filter                         || Offset || Limit || Sort  |
 *-------------------------------------*---------------*---------------------------------*---------*--------*--------:
-| CsvBeanManager                      | List\<\POJO\> | CsvNamedValueFilter, BeanFilter | o       | o      | o      |
+| {{{./apidocs/com/orangesignal/csv/manager/CsvBeanManager.html}CsvBeanManager}}                      | List\<\POJO\> | {{{./apidocs/com/orangesignal/csv/filters/CsvNamedValueFilter.html}CsvNamedValueFilter}}, {{{./apidocs/com/orangesignal/csv/filters/BeanFilter.html}BeanFilter}} | o       | o      | o      |
 *-------------------------------------*---------------*---------------------------------*---------*--------*--------:
-| CsvColumnPositionMappingBeanManager | List\<\POJO\> | CsvValueFilter, BeanFilter      | o       | o      | o      |
+| {{{./apidocs/com/orangesignal/csv/manager/CsvColumnPositionMappingBeanManager.html}CsvColumnPositionMappingBeanManager}} | List\<\POJO\> | {{{./apidocs/com/orangesignal/csv/filters/CsvValueFilter.html}CsvValueFilter}}, {{{./apidocs/com/orangesignal/csv/filters/BeanFilter.html}BeanFilter}}      | o       | o      | o      |
 *-------------------------------------*---------------*---------------------------------*---------*--------*--------:
-| CsvColumnNameMappingBeanManager     | List\<\POJO\> | CsvNamedValueFilter, BeanFilter | o       | o      | o      |
+| {{{./apidocs/com/orangesignal/csv/manager/CsvColumnNameMappingBeanManager.html}CsvColumnNameMappingBeanManager}}     | List\<\POJO\> | {{{./apidocs/com/orangesignal/csv/filters/CsvNamedValueFilter.html}CsvNamedValueFilter}}, {{{./apidocs/com/orangesignal/csv/filters/BeanFilter.html}BeanFilter}} | o       | o      | o      |
 *-------------------------------------*---------------*---------------------------------*---------*--------*--------:
-| CsvEntityManager                    | List\<\POJO\> | CsvNamedValueFilter, BeanFilter | o       | o      | o      |
+| {{{./apidocs/com/orangesignal/csv/manager/CsvEntityManager.html}CsvEntityManager}}                    | List\<\POJO\> | {{{./apidocs/com/orangesignal/csv/filters/CsvNamedValueFilter.html}CsvNamedValueFilter}}, {{{./apidocs/com/orangesignal/csv/filters/BeanFilter.html}BeanFilter}} | o       | o      | o      |
 *-------------------------------------*---------------*---------------------------------*---------*--------*--------:
