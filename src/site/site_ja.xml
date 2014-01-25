@@ -42,6 +42,7 @@
 			<item name="ユーザーガイド"    href="userguide.html" />
 			<item name="マイグレーション"  href="migration.html" />
 			<item name="方式比較表"        href="io_tables.html" />
+			<item name="機能比較表"        href="csv_library_feature_matrix.html" />
 			<item name="FAQ"               href="faq.html" />
 			<item name="Javadoc"           href="apidocs/index.html" />
 		</menu>
