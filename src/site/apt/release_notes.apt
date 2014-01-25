@@ -40,15 +40,15 @@
 
    * {{{http://search.maven.org/#search%7Cga%7C1%7Corangesignal-csv}Maven Central}} での提供
 
-   * POJO と CSV を行単位でやり取りできる各種 Reader および Writer を com.orangesignal.csv.io パッケージへ追加しました。
+   * POJO と CSV を行単位でやり取りできる各種 Reader および Writer を {{{./apidocs/com/orangesignal/csv/io/package-summary.html}com.orangesignal.csv.io}} パッケージへ追加しました。
 
 ** 全般
 
    * パッケージ名を com.orangesignal.csv へ変更しました。
 
-   * Java7 スタイルの Javadoc へ変更しました。
+   * Java7 スタイルの {{{./apidocs/index.html}Javadoc}} へ変更しました。
 
-   * 実装が曖昧な POJO 変換系機能を com.orangesignal.csv.bean パッケージとして抽出しました。
+   * 実装が曖昧な POJO 変換系機能を {{{./apidocs/com/orangesignal/csv/bean/package-summary.html}com.orangesignal.csv.bean}} パッケージとして抽出しました。
 
    * {{{http://homepage1.nifty.com/dangan/Content/Program/Java/jLHA/LhaLibrary.html}jLHA (LHA library for Java)}} を com.orangesignal.jlha パッケージとして内包するようにしました。
  
