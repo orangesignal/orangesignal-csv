@@ -63,7 +63,7 @@ OrangeSignal CSV とは
    ※ RFC-4180 形式の CSV 入出力もサポートしています。\
    ※ BOM (Byte Order Mark) 付き UTF-8 エンコーディングでの入出力もサポートしています。
 
-   また、POJO や Map で CSV を行単位にやり取りできる各種 Reader / Writer も提供しています。(Version 2.1 以上)
+   また、POJO や Map で CSV を行単位にやり取りできる各種 Reader / Writer も提供しています。
 
   * <<カスタマイズ可能な多様なデータハンドラを提供>> (CsvHandler)
 
