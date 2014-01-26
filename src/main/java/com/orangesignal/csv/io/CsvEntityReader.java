@@ -237,34 +237,27 @@ public class CsvEntityReader<T> implements Closeable {
 
 	private T convert(final List<String> values) throws IOException {
 		final T entity = template.createBean();
-		for (final Field f : fields) {
-			Object o = null;
-			final CsvColumns columns = f.getAnnotation(CsvColumns.class);
+		for (final Field field : fields) {
+			Object object = null;
+			final CsvColumns columns = field.getAnnotation(CsvColumns.class);
 			if (columns != null) {
-				if (f.getType().isArray()) {
+				if (field.getType().isArray()) {
+					object = Array.newInstance(field.getType().getComponentType(), columns.value().length);
 					int arrayIndex = 0;
 					for (final CsvColumn column : columns.value()) {
-						final StringBuilder sb = new StringBuilder();
-						final int pos = getPosition(column, f, columnNames);
+						final String value;
+						final int pos = getPosition(column, field, columnNames);
 						if (pos != -1) {
-							final String s = values.get(pos);
-							if (s != null) {
-								sb.append(s);
-							}
+							value = values.get(pos);
+						} else {
+							value = null;
 						}
-						final Object component = template.stringToObject(f, sb.toString());
-						if (o == null && component != null) {
-							o = Array.newInstance(f.getType().getComponentType(), columns.value().length);
-						}
-						if (o != null) {
-							Array.set(o, arrayIndex, component);
-						}
-						arrayIndex++;
+						Array.set(object, arrayIndex++, template.stringToObject(field, value));
 					}
 				} else {
 					final StringBuilder sb = new StringBuilder();
 					for (final CsvColumn column : columns.value()) {
-						final int pos = getPosition(column, f, columnNames);
+						final int pos = getPosition(column, field, columnNames);
 						if (pos != -1) {
 							final String s = values.get(pos);
 							if (s != null) {
@@ -272,18 +265,18 @@ public class CsvEntityReader<T> implements Closeable {
 							}
 						}
 					}
-					o = template.stringToObject(f, sb.toString());
+					object = template.stringToObject(field, sb.toString());
 				}
 			}
-			final CsvColumn column = f.getAnnotation(CsvColumn.class);
+			final CsvColumn column = field.getAnnotation(CsvColumn.class);
 			if (column != null) {
-				final int pos = getPosition(column, f, columnNames);
+				final int pos = getPosition(column, field, columnNames);
 				if (pos != -1) {
-					o = template.stringToObject(f, values.get(pos));
+					object = template.stringToObject(field, values.get(pos));
 				}
 			}
-			if (o != null) {
-				setFieldValue(entity, f, o);
+			if (object != null) {
+				setFieldValue(entity, field, object);
 			}
 		}
 		return entity;

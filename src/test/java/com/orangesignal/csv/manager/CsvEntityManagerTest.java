@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 the original author or authors.
+ * Copyright 2009-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 package com.orangesignal.csv.manager;
 
 import static org.hamcrest.core.Is.is;
+import static org.hamcrest.core.IsNull.nullValue;
 import static org.junit.Assert.assertThat;
 
 import java.io.Reader;
@@ -149,7 +150,7 @@ public class CsvEntityManagerTest {
 		final List<StringArrayEntity> list = new ArrayList<StringArrayEntity>();
 
 		final StringArrayEntity o1 = new StringArrayEntity();
-		o1.array = new String[]{ "あ", "い", "う" };
+		o1.array = new String[]{ "あ", null, "う" };
 		o1.str = "えお";
 		list.add(o1);
 
@@ -158,10 +159,20 @@ public class CsvEntityManagerTest {
 		o2.str = "エオ";
 		list.add(o2);
 
+		final StringArrayEntity o3 = new StringArrayEntity();
+		o3.array = new String[]{ null, null, null };
+		o3.str = null;
+		list.add(o3);
+
+		final StringArrayEntity o4 = new StringArrayEntity();
+		o4.array = null;
+		o4.str = "null";
+		list.add(o4);
+
 		final StringWriter sw = new StringWriter();
 		try {
 			new CsvEntityManager(cfg).save(list, StringArrayEntity.class).to(sw);
-			assertThat(sw.getBuffer().toString(), is("あ,い,う,えお\r\nア,イ,ウ,エオ\r\n"));
+			assertThat(sw.getBuffer().toString(), is("あ,NULL,う,えお\r\nア,イ,ウ,エオ\r\nNULL,NULL,NULL,NULL\r\nNULL,NULL,NULL,null\r\n"));
 		} finally {
 			sw.close();
 		}
@@ -169,16 +180,16 @@ public class CsvEntityManagerTest {
 
 	@Test
 	public void testStringArrayLoad() throws Exception {
-		final Reader reader = new StringReader("あ,い,う,えお\r\nア,イ,ウ,エオ\r\n");
+		final Reader reader = new StringReader("あ,NULL,う,えお\r\nア,イ,ウ,エオ\r\nNULL,NULL,NULL,NULL\r\nNULL,NULL,NULL,null\r\n");
 		try {
 			final List<StringArrayEntity> list = new CsvEntityManager(cfg).load(StringArrayEntity.class).from(reader);
 
-			assertThat(list.size(), is(2));
+			assertThat(list.size(), is(4));
 
 			final StringArrayEntity o1 = list.get(0);
 			assertThat(o1.array.length, is(3));
 			assertThat(o1.array[0], is("あ"));
-			assertThat(o1.array[1], is("い"));
+			assertThat(o1.array[1], nullValue());
 			assertThat(o1.array[2], is("う"));
 			assertThat(o1.str, is("えお"));
 
@@ -188,6 +199,20 @@ public class CsvEntityManagerTest {
 			assertThat(o2.array[1], is("イ"));
 			assertThat(o2.array[2], is("ウ"));
 			assertThat(o2.str, is("エオ"));
+
+			final StringArrayEntity o3 = list.get(2);
+			assertThat(o3.array.length, is(3));
+			assertThat(o3.array[0], nullValue());
+			assertThat(o3.array[1], nullValue());
+			assertThat(o3.array[2], nullValue());
+			assertThat(o3.str, nullValue());
+
+			final StringArrayEntity o4 = list.get(3);
+			assertThat(o4.array.length, is(3));
+			assertThat(o4.array[0], nullValue());
+			assertThat(o4.array[1], nullValue());
+			assertThat(o4.array[2], nullValue());
+			assertThat(o4.str, is("null"));
 		} finally {
 			reader.close();
 		}
@@ -198,7 +223,7 @@ public class CsvEntityManagerTest {
 		final List<IntegerArrayEntity> list = new ArrayList<IntegerArrayEntity>();
 
 		final IntegerArrayEntity o1 = new IntegerArrayEntity();
-		o1.array = new Integer[]{ 1, 2, 3 };
+		o1.array = new Integer[]{ 1, null, 3 };
 		o1.str = "えお";
 		list.add(o1);
 
@@ -210,7 +235,7 @@ public class CsvEntityManagerTest {
 		final StringWriter sw = new StringWriter();
 		try {
 			new CsvEntityManager(cfg).save(list, IntegerArrayEntity.class).to(sw);
-			assertThat(sw.getBuffer().toString(), is("1,2,3,えお\r\n4,5,6,エオ\r\n"));
+			assertThat(sw.getBuffer().toString(), is("1,NULL,3,えお\r\n4,5,6,エオ\r\n"));
 		} finally {
 			sw.close();
 		}
@@ -218,7 +243,7 @@ public class CsvEntityManagerTest {
 
 	@Test
 	public void testIntegerArrayLoad() throws Exception {
-		final Reader reader = new StringReader("1,2,3,えお\r\n4,5,6,エオ\r\n");
+		final Reader reader = new StringReader("1,NULL,3,えお\r\n4,5,6,エオ\r\n");
 		try {
 			final List<IntegerArrayEntity> list = new CsvEntityManager(cfg).load(IntegerArrayEntity.class).from(reader);
 
@@ -227,7 +252,7 @@ public class CsvEntityManagerTest {
 			final IntegerArrayEntity o1 = list.get(0);
 			assertThat(o1.array.length, is(3));
 			assertThat(o1.array[0], is(1));
-			assertThat(o1.array[1], is(2));
+			assertThat(o1.array[1], nullValue());
 			assertThat(o1.array[2], is(3));
 			assertThat(o1.str, is("えお"));
 
