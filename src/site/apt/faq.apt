@@ -14,7 +14,7 @@ FAQ
 
  [[2]] {{どの CsvManager や CsvHandler、Reader / Writer を使えば良いですか？}}
 
- [[3]] {{ヘッダーを出力したくない}}
+ [[3]] {{ヘッダー出力を抑制したい}}
 
  [[4]] {{項目数チェックをしたい}}
 
@@ -50,9 +50,9 @@ List<String[]> list = Csv.load(new File("example.csv"), "Windows-31J", new CsvCo
  迷ったらまずは {{{./apidocs/com/orangesignal/csv/manager/CsvEntityManager.html}CsvEntityManager}} から使い始めてみて下さい。\
  また {{{./io_tables.html}方式比較表}} も参考にしてみて下さい。
 
-*{ヘッダーを出力したくない}
+*{ヘッダー出力を抑制したい}
 
-
+ {{{./apidocs/com/orangesignal/csv/annotation/CsvEntity.html}@CsvEntity}} で「header = false」とすることで、対応する {{{./apidocs/com/orangesignal/csv/io/CsvEntityWriter.html}CsvEntityWriter}} や {{{./apidocs/com/orangesignal/csv/manager/CsvEntityManager.html}CsvEntityManager}} 使用時に、ヘッダーの出力をしないようにできます。
 
 *{項目数チェックをしたい}
 
