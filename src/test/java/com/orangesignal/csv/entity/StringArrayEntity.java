@@ -26,11 +26,11 @@ import com.orangesignal.csv.annotation.CsvEntity;
 @CsvEntity(header = false)
 public class StringArrayEntity {
 
-	@CsvColumns(value = {
-			@CsvColumn(position = 0),
-			@CsvColumn(position = 1),
-			@CsvColumn(position = 2)
-		})
+	@CsvColumns({
+		@CsvColumn(position = 0),
+		@CsvColumn(position = 1),
+		@CsvColumn(position = 2)
+	})
 	public String[] array;
 
 	@CsvColumn(position = 3)
