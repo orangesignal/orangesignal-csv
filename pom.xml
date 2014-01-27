@@ -55,8 +55,8 @@
 		<url>https://github.com/orangesignal/orangesignal-csv</url>
 		<connection>scm:git:git://github.com/orangesignal/orangesignal-csv.git</connection>
 		<developerConnection>scm:git:git@github.com:orangesignal/orangesignal-csv.git</developerConnection>
-	  <tag>HEAD</tag>
-  </scm>
+		<tag>HEAD</tag>
+	</scm>
 
 	<distributionManagement>
 		<snapshotRepository>
