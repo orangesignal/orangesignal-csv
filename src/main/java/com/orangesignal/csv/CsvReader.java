@@ -220,6 +220,8 @@ public class CsvReader implements Closeable {
 
 	private static final int BOM = 0xFEFF;
 
+	private final StringBuilder cacheLineBuffer = new StringBuilder();
+
 	/**
 	 * 物理行を読込んで行バッファへセットします。
 	 *
@@ -228,7 +230,7 @@ public class CsvReader implements Closeable {
 	 */
 	private String cacheLine() throws IOException {
 		// 行バッファを構築します。
-		final StringBuilder buf = new StringBuilder();
+		cacheLineBuffer.setLength(0);
 		int c;
 		if (nextChar != -1) {
 			c = nextChar;
@@ -243,26 +245,26 @@ public class CsvReader implements Closeable {
 
 		int i = -1;	// CR または LF の出現位置
 		while (c != -1) {
-			buf.append((char) c);
+			cacheLineBuffer.append((char) c);
 			if (c == CR) {
-				i = buf.length();
+				i = cacheLineBuffer.length();
 				nextChar = in.read();
 				if (nextChar == LF) {
-					buf.append((char) nextChar);
+					cacheLineBuffer.append((char) nextChar);
 					nextChar = -1;
 				}
 				break;
 			} else if (c == LF) {
-				i = buf.length();
+				i = cacheLineBuffer.length();
 				break;
 			}
 			c = in.read();
 		}
-		line = buf.toString();
+		line = cacheLineBuffer.toString();
 		pos = 0;
 
 		if (i != -1) {
-			return buf.substring(0, i - 1);
+			return cacheLineBuffer.substring(0, i - 1);
 		}
 		return line;
 	}
@@ -403,6 +405,12 @@ public class CsvReader implements Closeable {
 		return results;
 	}
 
+	private final StringBuilder readCsvTokenBuffer = new StringBuilder();
+	private boolean inQuote = false;	// 囲み項目を処理中であるかどうか
+	private boolean enclosed = false;	// 囲み項目の可能性を示唆します。
+	private boolean escaped = false;	// 直前の文字がエスケープ文字かどうか(囲み文字の中)
+	private boolean _escaped = false;	// 直前の文字がエスケープ文字かどうか(囲み文字の外)
+
 	/**
 	 * CSV トークンを読込みます。
 	 *
@@ -410,12 +418,12 @@ public class CsvReader implements Closeable {
 	 * @throws IOException 入出力エラーが発生した場合
 	 */
 	private CsvToken readCsvToken() throws IOException {
-		final StringBuilder buf = new StringBuilder();
+		readCsvTokenBuffer.setLength(0);
 		// 囲み文字設定が有効な場合
-		boolean inQuote = false;	// 囲み項目を処理中であるかどうか
-		boolean enclosed = false;	// 囲み項目の可能性を示唆します。
-		boolean escaped = false;	// 直前の文字がエスケープ文字かどうか(囲み文字の中)
-		boolean _escaped = false;	// 直前の文字がエスケープ文字かどうか(囲み文字の外)
+		inQuote = false;
+		enclosed = false;
+		escaped = false;
+		_escaped = false;
 
 		endTokenLineNumber = startTokenLineNumber;
 
@@ -426,12 +434,12 @@ public class CsvReader implements Closeable {
 				escaped = false;
 				if (c == LF) {
 					if (inQuote) {
-						buf.append((char) c);
+						readCsvTokenBuffer.append((char) c);
 					}
 					continue;
 				}
 			} else if (_escaped && c == cfg.getSeparator()) {
-				buf.append((char) c);
+				readCsvTokenBuffer.append((char) c);
 				_escaped = false;
 				continue;
 			}
@@ -461,7 +469,7 @@ public class CsvReader implements Closeable {
 					break;
 				// 囲み文字
 				} else if (!cfg.isQuoteDisabled() && !enclosed && c == cfg.getQuote()) {
-					if (isWhitespaces(buf)) {
+					if (isWhitespaces(readCsvTokenBuffer)) {
 						inQuote = true;
 					}
 				// エスケープ文字
@@ -486,13 +494,13 @@ public class CsvReader implements Closeable {
 							break;
 						} else if (c == cfg.getEscape()) {
 							escaped = false;
-							buf.append((char) c);
+							readCsvTokenBuffer.append((char) c);
 							continue;
 						}
 					// 直前の文字がない場合や直前の文字がエスケープ文字ではない場合に、現在の文字がエスケープ文字(囲み文字と同一)の場合
 					} else if (c == cfg.getEscape()) {
 						escaped = true;
-						buf.append((char) c);
+						readCsvTokenBuffer.append((char) c);
 						continue;
 					}
 				}
@@ -522,14 +530,14 @@ public class CsvReader implements Closeable {
 				}
 			}
 
-			buf.append((char) c);
+			readCsvTokenBuffer.append((char) c);
 		}
 
 		if (escaped) {
 			enclosed = true;
 		}
 
-		String value = buf.toString();
+		String value = readCsvTokenBuffer.toString();
 
 		// 囲み項目かどうかの判定
 		if (enclosed) {
