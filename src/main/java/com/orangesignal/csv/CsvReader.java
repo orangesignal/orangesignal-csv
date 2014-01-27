@@ -126,6 +126,9 @@ public class CsvReader implements Closeable {
 
 	private static final int DEFAULT_CHAR_BUFFER_SIZE = 8192;
 
+	private static final int INITIAL_READ_SIZE = 128;
+	private final StringBuilder buf = new StringBuilder(INITIAL_READ_SIZE);
+
 	// ------------------------------------------------------------------------
 	// コンストラクタ
 
@@ -228,7 +231,7 @@ public class CsvReader implements Closeable {
 	 */
 	private String cacheLine() throws IOException {
 		// 行バッファを構築します。
-		final StringBuilder buf = new StringBuilder();
+		buf.setLength(0);
 		int c;
 		if (nextChar != -1) {
 			c = nextChar;
@@ -335,6 +338,8 @@ public class CsvReader implements Closeable {
 		}
 	}
 
+	private int csvTokenArraySize = 0;
+
 	/**
 	 * 論理行を読込み、行カウンタを処理して CSV トークンのリストを返します。
 	 *
@@ -343,7 +348,7 @@ public class CsvReader implements Closeable {
 	 * @throws IOException 入出力エラーが発生した場合
 	 */
 	private List<CsvToken> readCsvTokens() throws IOException {
-		final List<CsvToken> results = new ArrayList<CsvToken>();
+		final List<CsvToken> results = new ArrayList<CsvToken>(csvTokenArraySize);
 		endTokenLineNumber++;
 		startLineNumber = endTokenLineNumber;
 		endOfLine = false;
@@ -393,11 +398,14 @@ public class CsvReader implements Closeable {
 		if (cfg.isIgnoreEmptyLines() && (line.isEmpty() || isWhitespaces(line)) && results.size() == 1) {
 			return null;
 		}
+
+		csvTokenArraySize = results.size();
+
 		if (!cfg.isVariableColumns()) {
-			if (countNumberOfColumns >= 0 && countNumberOfColumns != results.size()) {
+			if (countNumberOfColumns >= 0 && countNumberOfColumns != csvTokenArraySize) {
 				throw new CsvTokenException(String.format("Invalid column count in CSV input on line %d.", startLineNumber), results);
 			}
-			countNumberOfColumns = results.size();
+			countNumberOfColumns = csvTokenArraySize;
 		}
 
 		return results;
@@ -410,7 +418,7 @@ public class CsvReader implements Closeable {
 	 * @throws IOException 入出力エラーが発生した場合
 	 */
 	private CsvToken readCsvToken() throws IOException {
-		final StringBuilder buf = new StringBuilder();
+		buf.setLength(0);
 		// 囲み文字設定が有効な場合
 		boolean inQuote = false;	// 囲み項目を処理中であるかどうか
 		boolean enclosed = false;	// 囲み項目の可能性を示唆します。
