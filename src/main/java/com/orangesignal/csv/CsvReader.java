@@ -338,7 +338,8 @@ public class CsvReader implements Closeable {
 		}
 	}
 
-	private int csvTokenArraySize = 0;
+	private int csvTokenArraySize;
+	private boolean ignoreLine;
 
 	/**
 	 * 論理行を読込み、行カウンタを処理して CSV トークンのリストを返します。
@@ -358,11 +359,11 @@ public class CsvReader implements Closeable {
 
 				// 空行を無視する場合の処理を行います。
 				if (cfg.isIgnoreEmptyLines()) {
-					boolean ignore = true;
-					while (ignore && line.length() > 0) {
-						ignore = false;
+					ignoreLine = true;
+					while (ignoreLine && line.length() > 0) {
+						ignoreLine = false;
 						if (isWhitespaces(_line)) {
-							ignore = true;
+							ignoreLine = true;
 							endTokenLineNumber++;
 							startLineNumber = endTokenLineNumber;
 							lineNumber++;
@@ -373,12 +374,12 @@ public class CsvReader implements Closeable {
 
 				// 無視する行パターンを処理します。
 				if (cfg.getIgnoreLinePatterns() != null) {
-					boolean ignore = true;
-					while (ignore && line.length() > 0) {
-						ignore = false;
+					ignoreLine = true;
+					while (ignoreLine && line.length() > 0) {
+						ignoreLine = false;
 						for (final Pattern p : cfg.getIgnoreLinePatterns()) {
 							if (p != null && p.matcher(_line).matches()) {
-								ignore = true;
+								ignoreLine = true;
 								endTokenLineNumber++;
 								startLineNumber = endTokenLineNumber;
 								lineNumber++;
