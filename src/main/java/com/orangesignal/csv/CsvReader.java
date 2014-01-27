@@ -126,9 +126,6 @@ public class CsvReader implements Closeable {
 
 	private static final int DEFAULT_CHAR_BUFFER_SIZE = 8192;
 
-	private static final int INITIAL_READ_SIZE = 128;
-	private final StringBuilder buf = new StringBuilder(INITIAL_READ_SIZE);
-
 	// ------------------------------------------------------------------------
 	// コンストラクタ
 
@@ -231,7 +228,7 @@ public class CsvReader implements Closeable {
 	 */
 	private String cacheLine() throws IOException {
 		// 行バッファを構築します。
-		buf.setLength(0);
+		final StringBuilder buf = new StringBuilder();
 		int c;
 		if (nextChar != -1) {
 			c = nextChar;
@@ -338,9 +335,6 @@ public class CsvReader implements Closeable {
 		}
 	}
 
-	private int csvTokenArraySize;
-	private boolean ignoreLine;
-
 	/**
 	 * 論理行を読込み、行カウンタを処理して CSV トークンのリストを返します。
 	 *
@@ -349,7 +343,7 @@ public class CsvReader implements Closeable {
 	 * @throws IOException 入出力エラーが発生した場合
 	 */
 	private List<CsvToken> readCsvTokens() throws IOException {
-		final List<CsvToken> results = new ArrayList<CsvToken>(csvTokenArraySize);
+		final List<CsvToken> results = new ArrayList<CsvToken>();
 		endTokenLineNumber++;
 		startLineNumber = endTokenLineNumber;
 		endOfLine = false;
@@ -359,11 +353,11 @@ public class CsvReader implements Closeable {
 
 				// 空行を無視する場合の処理を行います。
 				if (cfg.isIgnoreEmptyLines()) {
-					ignoreLine = true;
-					while (ignoreLine && line.length() > 0) {
-						ignoreLine = false;
+					boolean ignore = true;
+					while (ignore && line.length() > 0) {
+						ignore = false;
 						if (isWhitespaces(_line)) {
-							ignoreLine = true;
+							ignore = true;
 							endTokenLineNumber++;
 							startLineNumber = endTokenLineNumber;
 							lineNumber++;
@@ -374,12 +368,12 @@ public class CsvReader implements Closeable {
 
 				// 無視する行パターンを処理します。
 				if (cfg.getIgnoreLinePatterns() != null) {
-					ignoreLine = true;
-					while (ignoreLine && line.length() > 0) {
-						ignoreLine = false;
+					boolean ignore = true;
+					while (ignore && line.length() > 0) {
+						ignore = false;
 						for (final Pattern p : cfg.getIgnoreLinePatterns()) {
 							if (p != null && p.matcher(_line).matches()) {
-								ignoreLine = true;
+								ignore = true;
 								endTokenLineNumber++;
 								startLineNumber = endTokenLineNumber;
 								lineNumber++;
@@ -399,23 +393,15 @@ public class CsvReader implements Closeable {
 		if (cfg.isIgnoreEmptyLines() && (line.isEmpty() || isWhitespaces(line)) && results.size() == 1) {
 			return null;
 		}
-
-		csvTokenArraySize = results.size();
-
 		if (!cfg.isVariableColumns()) {
-			if (countNumberOfColumns >= 0 && countNumberOfColumns != csvTokenArraySize) {
+			if (countNumberOfColumns >= 0 && countNumberOfColumns != results.size()) {
 				throw new CsvTokenException(String.format("Invalid column count in CSV input on line %d.", startLineNumber), results);
 			}
-			countNumberOfColumns = csvTokenArraySize;
+			countNumberOfColumns = results.size();
 		}
 
 		return results;
 	}
-
-	private boolean inQuote = false;	// 囲み項目を処理中であるかどうか
-	private boolean enclosed = false;	// 囲み項目の可能性を示唆します。
-	private boolean escaped = false;	// 直前の文字がエスケープ文字かどうか(囲み文字の中)
-	private boolean _escaped = false;	// 直前の文字がエスケープ文字かどうか(囲み文字の外)
 
 	/**
 	 * CSV トークンを読込みます。
@@ -424,12 +410,12 @@ public class CsvReader implements Closeable {
 	 * @throws IOException 入出力エラーが発生した場合
 	 */
 	private CsvToken readCsvToken() throws IOException {
-		buf.setLength(0);
+		final StringBuilder buf = new StringBuilder();
 		// 囲み文字設定が有効な場合
-		inQuote = false;
-		enclosed = false;
-		escaped = false;
-		_escaped = false;
+		boolean inQuote = false;	// 囲み項目を処理中であるかどうか
+		boolean enclosed = false;	// 囲み項目の可能性を示唆します。
+		boolean escaped = false;	// 直前の文字がエスケープ文字かどうか(囲み文字の中)
+		boolean _escaped = false;	// 直前の文字がエスケープ文字かどうか(囲み文字の外)
 
 		endTokenLineNumber = startTokenLineNumber;
 
