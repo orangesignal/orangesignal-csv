@@ -1,0 +1,10 @@
+language: java
+
+jdk:
+  - openjdk6
+
+branches:
+  only:
+    - master
+
+script: "mvn clean test install"
