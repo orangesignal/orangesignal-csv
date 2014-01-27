@@ -87,11 +87,6 @@ public class CsvReaderBenchmarks extends AbstractBenchmark {
 
 	@Test
 	public void testSuperCSV() throws IOException {
-		final CsvConfig cfg = new CsvConfig(CsvConfig.DEFAULT_SEPARATOR);
-		cfg.setQuoteDisabled(false);
-		cfg.setIgnoreEmptyLines(true);
-		cfg.setLineSeparator(Constants.CRLF);
-
 		final LhaFile lhaFile = new LhaFile(new File("src/test/resources/", "ken_all.lzh"));
 		try {
 			final LhaHeader[] entries = lhaFile.getEntries();
