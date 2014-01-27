@@ -411,6 +411,11 @@ public class CsvReader implements Closeable {
 		return results;
 	}
 
+	private boolean inQuote = false;	// 囲み項目を処理中であるかどうか
+	private boolean enclosed = false;	// 囲み項目の可能性を示唆します。
+	private boolean escaped = false;	// 直前の文字がエスケープ文字かどうか(囲み文字の中)
+	private boolean _escaped = false;	// 直前の文字がエスケープ文字かどうか(囲み文字の外)
+
 	/**
 	 * CSV トークンを読込みます。
 	 *
@@ -420,10 +425,10 @@ public class CsvReader implements Closeable {
 	private CsvToken readCsvToken() throws IOException {
 		buf.setLength(0);
 		// 囲み文字設定が有効な場合
-		boolean inQuote = false;	// 囲み項目を処理中であるかどうか
-		boolean enclosed = false;	// 囲み項目の可能性を示唆します。
-		boolean escaped = false;	// 直前の文字がエスケープ文字かどうか(囲み文字の中)
-		boolean _escaped = false;	// 直前の文字がエスケープ文字かどうか(囲み文字の外)
+		inQuote = false;
+		enclosed = false;
+		escaped = false;
+		_escaped = false;
 
 		endTokenLineNumber = startTokenLineNumber;
 
