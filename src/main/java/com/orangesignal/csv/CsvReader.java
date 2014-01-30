@@ -47,7 +47,7 @@ public class CsvReader implements Closeable {
 	/**
 	 * 終端文字を含む行バッファを保持します。
 	 */
-	private String line;
+	private final StringBuilder line = new StringBuilder();
 
 	/**
 	 * 次行の先頭文字を保持します。
@@ -123,6 +123,11 @@ public class CsvReader implements Closeable {
 	 * 改行文字です。
 	 */
 	private static final char LF = '\n';
+
+	/**
+	 * BOM (Byte Order Mark)
+	 */
+	private static final int BOM = 0xFEFF;
 
 	private static final int DEFAULT_CHAR_BUFFER_SIZE = 8192;
 
@@ -218,19 +223,15 @@ public class CsvReader implements Closeable {
 		}
 	}
 
-	private static final int BOM = 0xFEFF;
-
-	private final StringBuilder cacheLineBuffer = new StringBuilder();
-
 	/**
 	 * 物理行を読込んで行バッファへセットします。
 	 *
 	 * @return 行の終端文字を含まない行文字列
 	 * @throws IOException 入出力例外が発生した場合
 	 */
-	private String cacheLine() throws IOException {
+	private int cacheLine() throws IOException {
 		// 行バッファを構築します。
-		cacheLineBuffer.setLength(0);
+		line.setLength(0);
 		int c;
 		if (nextChar != -1) {
 			c = nextChar;
@@ -238,35 +239,31 @@ public class CsvReader implements Closeable {
 		} else {
 			c = in.read();
 			// BOM (Byte Order Mark) を除去する場合は BOM を読み飛ばします。
-			if (lineNumber == 0 && line == null && utf8bom && c == BOM) {
+			if (lineNumber == 0 /* && line == null */ && utf8bom && c == BOM) {
 				c = in.read();
 			}
 		}
 
-		int i = -1;	// CR または LF の出現位置
+		int result = -1;	// CR または LF の出現位置
 		while (c != -1) {
-			cacheLineBuffer.append((char) c);
+			line.append((char) c);
 			if (c == CR) {
-				i = cacheLineBuffer.length();
+				result = line.length();
 				nextChar = in.read();
 				if (nextChar == LF) {
-					cacheLineBuffer.append((char) nextChar);
+					line.append((char) nextChar);
 					nextChar = -1;
 				}
 				break;
 			} else if (c == LF) {
-				i = cacheLineBuffer.length();
+				result = line.length();
 				break;
 			}
 			c = in.read();
 		}
-		line = cacheLineBuffer.toString();
 		pos = 0;
 
-		if (i != -1) {
-			return cacheLineBuffer.substring(0, i - 1);
-		}
-		return line;
+		return result;
 	}
 
 	/**
@@ -281,7 +278,7 @@ public class CsvReader implements Closeable {
 			if (endOfFile) {
 				return -1;
 			}
-			if (line == null || line.length() <= pos) {
+			if (line.length() == 0 || line.length() <= pos) {
 				cacheLine();
 			}
 			if (line.length() == 0) {
@@ -330,7 +327,7 @@ public class CsvReader implements Closeable {
 					endTokenLineNumber++;
 					lineNumber++;
 				}
-				line = null;
+				line.setLength(0);
 				skiped = true;
 			}
 			return readCsvTokens();
@@ -350,20 +347,20 @@ public class CsvReader implements Closeable {
 		startLineNumber = endTokenLineNumber;
 		endOfLine = false;
 		do {
-			if (line == null || line.length() <= pos) {
-				String _line = cacheLine();
+			if (line.length() == 0 || line.length() <= pos) {
+				int breakLine = cacheLine();
 
 				// 空行を無視する場合の処理を行います。
 				if (cfg.isIgnoreEmptyLines()) {
 					boolean ignore = true;
 					while (ignore && line.length() > 0) {
 						ignore = false;
-						if (isWhitespaces(_line)) {
+						if (isWhitespaces(breakLine == -1 ? line : line.substring(0, breakLine - 1))) {
 							ignore = true;
 							endTokenLineNumber++;
 							startLineNumber = endTokenLineNumber;
 							lineNumber++;
-							_line = cacheLine();
+							breakLine = cacheLine();
 						}
 					}
 				}
@@ -374,12 +371,12 @@ public class CsvReader implements Closeable {
 					while (ignore && line.length() > 0) {
 						ignore = false;
 						for (final Pattern p : cfg.getIgnoreLinePatterns()) {
-							if (p != null && p.matcher(_line).matches()) {
+							if (p != null && p.matcher(breakLine == -1 ? line : line.substring(0, breakLine - 1)).matches()) {
 								ignore = true;
 								endTokenLineNumber++;
 								startLineNumber = endTokenLineNumber;
 								lineNumber++;
-								_line = cacheLine();
+								breakLine = cacheLine();
 								break;
 							}
 						}
@@ -392,7 +389,7 @@ public class CsvReader implements Closeable {
 		endLineNumber = endTokenLineNumber;
 		lineNumber++;
 
-		if (cfg.isIgnoreEmptyLines() && (line.isEmpty() || isWhitespaces(line)) && results.size() == 1) {
+		if (cfg.isIgnoreEmptyLines() && (line.length() == 0 || isWhitespaces(line)) && results.size() == 1) {
 			return null;
 		}
 		if (!cfg.isVariableColumns()) {
@@ -614,7 +611,7 @@ public class CsvReader implements Closeable {
 			in.close();
 			in = null;
 			cfg = null;
-			line = null;
+			line.setLength(0);
 		}
 	}
 
