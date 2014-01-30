@@ -402,7 +402,7 @@ public class CsvReader implements Closeable {
 		return results;
 	}
 
-	private final StringBuilder readCsvTokenBuffer = new StringBuilder();
+	private final StringBuilder buf = new StringBuilder();
 	private boolean inQuote = false;	// 囲み項目を処理中であるかどうか
 	private boolean enclosed = false;	// 囲み項目の可能性を示唆します。
 	private boolean escaped = false;	// 直前の文字がエスケープ文字かどうか(囲み文字の中)
@@ -415,7 +415,7 @@ public class CsvReader implements Closeable {
 	 * @throws IOException 入出力エラーが発生した場合
 	 */
 	private CsvToken readCsvToken() throws IOException {
-		readCsvTokenBuffer.setLength(0);
+		buf.setLength(0);
 		// 囲み文字設定が有効な場合
 		inQuote = false;
 		enclosed = false;
@@ -431,12 +431,12 @@ public class CsvReader implements Closeable {
 				escaped = false;
 				if (c == LF) {
 					if (inQuote) {
-						readCsvTokenBuffer.append((char) c);
+						buf.append((char) c);
 					}
 					continue;
 				}
 			} else if (_escaped && c == cfg.getSeparator()) {
-				readCsvTokenBuffer.append((char) c);
+				buf.append((char) c);
 				_escaped = false;
 				continue;
 			}
@@ -466,7 +466,7 @@ public class CsvReader implements Closeable {
 					break;
 				// 囲み文字
 				} else if (!cfg.isQuoteDisabled() && !enclosed && c == cfg.getQuote()) {
-					if (isWhitespaces(readCsvTokenBuffer)) {
+					if (isWhitespaces(buf)) {
 						inQuote = true;
 					}
 				// エスケープ文字
@@ -491,13 +491,13 @@ public class CsvReader implements Closeable {
 							break;
 						} else if (c == cfg.getEscape()) {
 							escaped = false;
-							readCsvTokenBuffer.append((char) c);
+							buf.append((char) c);
 							continue;
 						}
 					// 直前の文字がない場合や直前の文字がエスケープ文字ではない場合に、現在の文字がエスケープ文字(囲み文字と同一)の場合
 					} else if (c == cfg.getEscape()) {
 						escaped = true;
-						readCsvTokenBuffer.append((char) c);
+						buf.append((char) c);
 						continue;
 					}
 				}
@@ -527,14 +527,14 @@ public class CsvReader implements Closeable {
 				}
 			}
 
-			readCsvTokenBuffer.append((char) c);
+			buf.append((char) c);
 		}
 
 		if (escaped) {
 			enclosed = true;
 		}
 
-		String value = readCsvTokenBuffer.toString();
+		String value = buf.toString();
 
 		// 囲み項目かどうかの判定
 		if (enclosed) {
