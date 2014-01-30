@@ -334,6 +334,8 @@ public class CsvReader implements Closeable {
 		}
 	}
 
+	private int arraySize = 3;
+
 	/**
 	 * 論理行を読込み、行カウンタを処理して CSV トークンのリストを返します。
 	 *
@@ -342,7 +344,7 @@ public class CsvReader implements Closeable {
 	 * @throws IOException 入出力エラーが発生した場合
 	 */
 	private List<CsvToken> readCsvTokens() throws IOException {
-		final List<CsvToken> results = new ArrayList<CsvToken>();
+		final List<CsvToken> results = new ArrayList<CsvToken>(arraySize);
 		endTokenLineNumber++;
 		startLineNumber = endTokenLineNumber;
 		endOfLine = false;
@@ -389,14 +391,16 @@ public class CsvReader implements Closeable {
 		endLineNumber = endTokenLineNumber;
 		lineNumber++;
 
-		if (cfg.isIgnoreEmptyLines() && (line.length() == 0 || isWhitespaces(line)) && results.size() == 1) {
+		arraySize = results.size();
+
+		if (cfg.isIgnoreEmptyLines() && (line.length() == 0 || isWhitespaces(line)) && arraySize == 1) {
 			return null;
 		}
 		if (!cfg.isVariableColumns()) {
-			if (countNumberOfColumns >= 0 && countNumberOfColumns != results.size()) {
+			if (countNumberOfColumns >= 0 && countNumberOfColumns != arraySize) {
 				throw new CsvTokenException(String.format("Invalid column count in CSV input on line %d.", startLineNumber), results);
 			}
-			countNumberOfColumns = results.size();
+			countNumberOfColumns = arraySize;
 		}
 
 		return results;
