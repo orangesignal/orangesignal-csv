@@ -46,6 +46,13 @@ public class CsvColumnNameMappingBeanWriter<T> implements Closeable, Flushable {
 	private final CsvColumnNameMappingBeanTemplate<T> template;
 
 	/**
+	 * 区切り文字形式データの列見出し (ヘッダ) 行を出力するかどうかを保持します。
+	 * 
+	 * @since 2.1
+	 */
+	private final boolean header;
+
+	/**
 	 * 項目名のリストを保持します。
 	 */
 	private List<String> columnNames;
@@ -76,12 +83,42 @@ public class CsvColumnNameMappingBeanWriter<T> implements Closeable, Flushable {
 	 * このメソッドは利便性のために提供しています。
 	 * 
 	 * @param writer 区切り文字形式出力ストリーム
+	 * @param type Java プログラム要素の型
+	 * @param header 区切り文字形式データの列見出し (ヘッダ) 行を出力するかどうか
+	 * @return 新しい {@link CsvColumnNameMappingBeanWriter} のインスタンス
+	 * @throws IllegalArgumentException {@code writer} または {@code type} が {@code null} の場合。
+	 * @since 2.1
+	 */
+	public static <T> CsvColumnNameMappingBeanWriter<T> newInstance(final CsvWriter writer, final Class<T> type, final boolean header) {
+		return new CsvColumnNameMappingBeanWriter<T>(writer, type, header);
+	}
+
+	/**
+	 * 新しい {@link CsvColumnNameMappingBeanWriter} のインスタンスを返します。
+	 * このメソッドは利便性のために提供しています。
+	 * 
+	 * @param writer 区切り文字形式出力ストリーム
 	 * @param template Java プログラム要素操作の簡素化ヘルパー
 	 * @return 新しい {@link CsvColumnNameMappingBeanWriter} のインスタンス
 	 * @throws IllegalArgumentException {@code writer} または {@code template} が {@code null} の場合。
 	 */
 	public static <T> CsvColumnNameMappingBeanWriter<T> newInstance(final CsvWriter writer, final CsvColumnNameMappingBeanTemplate<T> template) {
 		return new CsvColumnNameMappingBeanWriter<T>(writer, template);
+	}
+
+	/**
+	 * 新しい {@link CsvColumnNameMappingBeanWriter} のインスタンスを返します。
+	 * このメソッドは利便性のために提供しています。
+	 * 
+	 * @param writer 区切り文字形式出力ストリーム
+	 * @param template Java プログラム要素操作の簡素化ヘルパー
+	 * @param header 区切り文字形式データの列見出し (ヘッダ) 行を出力するかどうか
+	 * @return 新しい {@link CsvColumnNameMappingBeanWriter} のインスタンス
+	 * @throws IllegalArgumentException {@code writer} または {@code template} が {@code null} の場合。
+	 * @since 2.1
+	 */
+	public static <T> CsvColumnNameMappingBeanWriter<T> newInstance(final CsvWriter writer, final CsvColumnNameMappingBeanTemplate<T> template, final boolean header) {
+		return new CsvColumnNameMappingBeanWriter<T>(writer, template, header);
 	}
 
 	// ------------------------------------------------------------------------
@@ -95,7 +132,20 @@ public class CsvColumnNameMappingBeanWriter<T> implements Closeable, Flushable {
 	 * @throws IllegalArgumentException {@code writer} または {@code type} が {@code null} の場合。
 	 */
 	public CsvColumnNameMappingBeanWriter(final CsvWriter writer, final Class<T> type) {
-		this(writer, new CsvColumnNameMappingBeanTemplate<T>(type));
+		this(writer, new CsvColumnNameMappingBeanTemplate<T>(type), true);
+	}
+
+	/**
+	 * 指定された区切り文字形式出力ストリームと Java プログラム要素の型を使用して、このクラスを構築するコンストラクタです。
+	 * 
+	 * @param writer 区切り文字形式出力ストリーム
+	 * @param type Java プログラム要素の型
+	 * @param header 区切り文字形式データの列見出し (ヘッダ) 行を出力するかどうか
+	 * @throws IllegalArgumentException {@code writer} または {@code type} が {@code null} の場合。
+	 * @since 2.1
+	 */
+	public CsvColumnNameMappingBeanWriter(final CsvWriter writer, final Class<T> type, final boolean header) {
+		this(writer, new CsvColumnNameMappingBeanTemplate<T>(type), header);
 	}
 
 	/**
@@ -106,14 +156,28 @@ public class CsvColumnNameMappingBeanWriter<T> implements Closeable, Flushable {
 	 * @throws IllegalArgumentException {@code writer} または {@code template} が {@code null} の場合。
 	 */
 	public CsvColumnNameMappingBeanWriter(final CsvWriter writer, final CsvColumnNameMappingBeanTemplate<T> template) {
+		this(writer, template, true);
+	}
+
+	/**
+	 * 指定された区切り文字形式出力ストリームと Java プログラム要素操作の簡素化ヘルパーを使用して、このクラスを構築するコンストラクタです。
+	 * 
+	 * @param writer 区切り文字形式出力ストリーム
+	 * @param template Java プログラム要素操作の簡素化ヘルパー
+	 * @param header 区切り文字形式データの列見出し (ヘッダ) 行を出力するかどうか
+	 * @throws IllegalArgumentException {@code writer} または {@code template} が {@code null} の場合。
+	 * @since 2.1
+	 */
+	public CsvColumnNameMappingBeanWriter(final CsvWriter writer, final CsvColumnNameMappingBeanTemplate<T> template, final boolean header) {
 		if (writer == null) {
 			throw new IllegalArgumentException("CsvWriter must not be null");
 		}
 		if (template == null) {
 			throw new IllegalArgumentException("CsvColumnNameMappingBeanTemplate must not be null");
 		}
-		this.writer = writer;
+		this.writer   = writer;
 		this.template = template;
+		this.header   = header;
 	}
 
 	// ------------------------------------------------------------------------
@@ -130,10 +194,12 @@ public class CsvColumnNameMappingBeanWriter<T> implements Closeable, Flushable {
 
 	private void ensureHeader() throws IOException {
 		synchronized (this) {
-			if (this.columnNames == null) {
+			if (columnNames == null) {
 				template.setupColumnMappingIfNeed();
 				final List<String> names = template.createColumnNames();
-				writer.writeValues(names);
+				if (header) {
+					writer.writeValues(names);
+				}
 				columnNames = names;
 				columnCount = names.size();
 			}

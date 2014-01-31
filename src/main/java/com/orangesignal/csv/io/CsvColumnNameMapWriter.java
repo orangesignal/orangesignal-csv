@@ -47,6 +47,13 @@ public class CsvColumnNameMapWriter implements Closeable, Flushable {
 	private List<String> columnNames;
 
 	/**
+	 * 区切り文字形式データの列見出し (ヘッダ) 行を出力するかどうかを保持します。
+	 * 
+	 * @since 2.1
+	 */
+	private final boolean header;
+
+	/**
 	 * 項目名の数を保存します。
 	 */
 	private int columnCount = -1;
@@ -66,7 +73,19 @@ public class CsvColumnNameMapWriter implements Closeable, Flushable {
 	 * @throws IllegalArgumentException {@code writer} が {@code null} の場合。
 	 */
 	public CsvColumnNameMapWriter(final CsvWriter writer) {
-		this(writer, null);
+		this(writer, null, true);
+	}
+
+	/**
+	 * 指定された区切り文字形式出力ストリームを使用して、このクラスを構築するコンストラクタです。
+	 * 
+	 * @param writer 区切り文字形式出力ストリーム
+	 * @param header 区切り文字形式データの列見出し (ヘッダ) 行を出力するかどうか
+	 * @throws IllegalArgumentException {@code writer} が {@code null} の場合。
+	 * @since 2.1
+	 */
+	public CsvColumnNameMapWriter(final CsvWriter writer, final boolean header) {
+		this(writer, null, header);
 	}
 
 	/**
@@ -77,6 +96,19 @@ public class CsvColumnNameMapWriter implements Closeable, Flushable {
 	 * @throws IllegalArgumentException {@code writer} が {@code null} の場合。
 	 */
 	public CsvColumnNameMapWriter(final CsvWriter writer, final List<String> columnNames) {
+		this(writer, columnNames, true);
+	}
+
+	/**
+	 * 指定された区切り文字形式出力ストリームと項目名のリストを使用して、このクラスを構築するコンストラクタです。
+	 * 
+	 * @param writer 区切り文字形式出力ストリーム
+	 * @param columnNames 項目名のリスト
+	 * @param header 区切り文字形式データの列見出し (ヘッダ) 行を出力するかどうか
+	 * @throws IllegalArgumentException {@code writer} が {@code null} の場合。
+	 * @since 2.1
+	 */
+	public CsvColumnNameMapWriter(final CsvWriter writer, final List<String> columnNames, final boolean header) {
 		if (writer == null) {
 			throw new IllegalArgumentException("CsvWriter must not be null");
 		}
@@ -85,6 +117,7 @@ public class CsvColumnNameMapWriter implements Closeable, Flushable {
 		if (columnNames != null) {
 			this.columnNames = Collections.unmodifiableList(columnNames);
 		}
+		this.header = header;
 	}
 
 	// ------------------------------------------------------------------------
@@ -108,8 +141,10 @@ public class CsvColumnNameMapWriter implements Closeable, Flushable {
 			throw new IOException("No header is available");
 		}
 		if (columnCount == -1) {
-			// ヘッダ部を処理します。
-			writer.writeValues(columnNames);
+			if (header) {
+				// ヘッダ部を処理します。
+				writer.writeValues(columnNames);
+			}
 			columnCount = columnNames.size();
 		}
 	}

@@ -48,6 +48,13 @@ public class CsvColumnPositionMappingBeanWriter<T> implements Closeable, Flushab
 	private final CsvColumnPositionMappingBeanTemplate<T> template;
 
 	/**
+	 * 区切り文字形式データの列見出し (ヘッダ) 行を出力するかどうかを保持します。
+	 * 
+	 * @since 2.1
+	 */
+	private final boolean header;
+
+	/**
 	 * 項目名のリストを保持します。
 	 */
 	private List<String> columnNames;
@@ -56,11 +63,6 @@ public class CsvColumnPositionMappingBeanWriter<T> implements Closeable, Flushab
 	 * 項目名の数を保存します。
 	 */
 	private int columnCount = -1;
-
-	/**
-	 * ヘッダを使用するかどうかを保持します。
-	 */
-	private boolean useHeader = true;
 
 	// ------------------------------------------------------------------------
 	// 利便性のための静的メソッド
@@ -83,12 +85,42 @@ public class CsvColumnPositionMappingBeanWriter<T> implements Closeable, Flushab
 	 * このメソッドは利便性のために提供しています。
 	 * 
 	 * @param writer 区切り文字形式出力ストリーム
+	 * @param type Java プログラム要素の型
+	 * @param header 区切り文字形式データの列見出し (ヘッダ) 行を出力するかどうか
+	 * @return 新しい {@link CsvColumnPositionMappingBeanWriter} のインスタンス
+	 * @throws IllegalArgumentException {@code writer} または {@code type} が {@code null} の場合。
+	 * @since 2.1
+	 */
+	public static <T> CsvColumnPositionMappingBeanWriter<T> newInstance(final CsvWriter writer, final Class<T> type, final boolean header) {
+		return new CsvColumnPositionMappingBeanWriter<T>(writer, type, header);
+	}
+
+	/**
+	 * 新しい {@link CsvColumnPositionMappingBeanWriter} のインスタンスを返します。
+	 * このメソッドは利便性のために提供しています。
+	 * 
+	 * @param writer 区切り文字形式出力ストリーム
 	 * @param template Java プログラム要素操作の簡素化ヘルパー
 	 * @return 新しい {@link CsvColumnPositionMappingBeanWriter} のインスタンス
 	 * @throws IllegalArgumentException {@code writer} または {@code template} が {@code null} の場合。
 	 */
 	public static <T> CsvColumnPositionMappingBeanWriter<T> newInstance(final CsvWriter writer, final CsvColumnPositionMappingBeanTemplate<T> template) {
 		return new CsvColumnPositionMappingBeanWriter<T>(writer, template);
+	}
+
+	/**
+	 * 新しい {@link CsvColumnPositionMappingBeanWriter} のインスタンスを返します。
+	 * このメソッドは利便性のために提供しています。
+	 * 
+	 * @param writer 区切り文字形式出力ストリーム
+	 * @param template Java プログラム要素操作の簡素化ヘルパー
+	 * @param header 区切り文字形式データの列見出し (ヘッダ) 行を出力するかどうか
+	 * @return 新しい {@link CsvColumnPositionMappingBeanWriter} のインスタンス
+	 * @throws IllegalArgumentException {@code writer} または {@code template} が {@code null} の場合。
+	 * @since 2.1
+	 */
+	public static <T> CsvColumnPositionMappingBeanWriter<T> newInstance(final CsvWriter writer, final CsvColumnPositionMappingBeanTemplate<T> template, final boolean header) {
+		return new CsvColumnPositionMappingBeanWriter<T>(writer, template, header);
 	}
 
 	// ------------------------------------------------------------------------
@@ -102,7 +134,20 @@ public class CsvColumnPositionMappingBeanWriter<T> implements Closeable, Flushab
 	 * @throws IllegalArgumentException {@code writer} または {@code type} が {@code null} の場合。
 	 */
 	public CsvColumnPositionMappingBeanWriter(final CsvWriter writer, final Class<T> type) {
-		this(writer, new CsvColumnPositionMappingBeanTemplate<T>(type));
+		this(writer, new CsvColumnPositionMappingBeanTemplate<T>(type), true);
+	}
+
+	/**
+	 * 指定された区切り文字形式出力ストリームと Java プログラム要素の型を使用して、このクラスを構築するコンストラクタです。
+	 * 
+	 * @param writer 区切り文字形式出力ストリーム
+	 * @param type Java プログラム要素の型
+	 * @param header 区切り文字形式データの列見出し (ヘッダ) 行を出力するかどうか
+	 * @throws IllegalArgumentException {@code writer} または {@code type} が {@code null} の場合。
+	 * @since 2.1
+	 */
+	public CsvColumnPositionMappingBeanWriter(final CsvWriter writer, final Class<T> type, final boolean header) {
+		this(writer, new CsvColumnPositionMappingBeanTemplate<T>(type), header);
 	}
 
 	/**
@@ -113,14 +158,28 @@ public class CsvColumnPositionMappingBeanWriter<T> implements Closeable, Flushab
 	 * @throws IllegalArgumentException {@code writer} または {@code template} が {@code null} の場合。
 	 */
 	public CsvColumnPositionMappingBeanWriter(final CsvWriter writer, final CsvColumnPositionMappingBeanTemplate<T> template) {
+		this(writer, template, true);
+	}
+
+	/**
+	 * 指定された区切り文字形式出力ストリームと Java プログラム要素操作の簡素化ヘルパーを使用して、このクラスを構築するコンストラクタです。
+	 * 
+	 * @param writer 区切り文字形式出力ストリーム
+	 * @param template Java プログラム要素操作の簡素化ヘルパー
+	 * @param header 区切り文字形式データの列見出し (ヘッダ) 行を出力するかどうか
+	 * @throws IllegalArgumentException {@code writer} または {@code template} が {@code null} の場合。
+	 * @since 2.1
+	 */
+	public CsvColumnPositionMappingBeanWriter(final CsvWriter writer, final CsvColumnPositionMappingBeanTemplate<T> template, final boolean header) {
 		if (writer == null) {
 			throw new IllegalArgumentException("CsvWriter must not be null");
 		}
 		if (template == null) {
 			throw new IllegalArgumentException("CsvColumnPositionMappingBeanTemplate must not be null");
 		}
-		this.writer = writer;
+		this.writer   = writer;
 		this.template = template;
+		this.header   = header;
 	}
 
 	// ------------------------------------------------------------------------
@@ -148,7 +207,7 @@ public class CsvColumnPositionMappingBeanWriter<T> implements Closeable, Flushab
 
 				// ヘッダ部を処理します。
 				final List<String> names = Collections.unmodifiableList(template.createColumnNames());
-				if (useHeader) {
+				if (header) {
 					writer.writeValues(names);
 				}
 				columnNames = names;
