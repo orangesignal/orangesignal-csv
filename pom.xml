@@ -183,8 +183,10 @@
 					<source>1.6</source>
 					<target>1.6</target>
 					<!-- see http://maven.apache.org/plugins/maven-compiler-plugin/examples/compile-using-different-jdk.html -->
+<!-- 
 					<fork>true</fork>
 					<executable>${JAVA_1_6_HOME}/bin/javac</executable>
+ -->
 				</configuration>
 			</plugin>
 			<plugin>
