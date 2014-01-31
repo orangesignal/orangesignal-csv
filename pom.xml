@@ -51,6 +51,11 @@
 		<url>https://github.com/orangesignal/orangesignal-csv/issues</url>
 	</issueManagement>
 
+	<ciManagement>
+		<system>Travis CI</system>
+		<url>https://travis-ci.org/orangesignal/orangesignal-csv</url>
+	</ciManagement>
+
 	<scm>
 		<url>https://github.com/orangesignal/orangesignal-csv</url>
 		<connection>scm:git:git://github.com/orangesignal/orangesignal-csv.git</connection>
@@ -182,11 +187,6 @@
 				<configuration>
 					<source>1.6</source>
 					<target>1.6</target>
-					<!-- see http://maven.apache.org/plugins/maven-compiler-plugin/examples/compile-using-different-jdk.html -->
-<!-- 
-					<fork>true</fork>
-					<executable>${JAVA_1_6_HOME}/bin/javac</executable>
- -->
 				</configuration>
 			</plugin>
 			<plugin>
@@ -397,6 +397,24 @@
 								</goals>
 							</execution>
 						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>local</id>		    
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-compiler-plugin</artifactId>
+						<configuration>
+							<source>1.6</source>
+							<target>1.6</target>
+							<!-- see http://maven.apache.org/plugins/maven-compiler-plugin/examples/compile-using-different-jdk.html -->
+							<fork>true</fork>
+							<executable>${JAVA_1_6_HOME}/bin/javac</executable>
+						</configuration>
 					</plugin>
 				</plugins>
 			</build>
