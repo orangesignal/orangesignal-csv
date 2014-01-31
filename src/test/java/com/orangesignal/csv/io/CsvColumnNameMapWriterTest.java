@@ -141,6 +141,41 @@ public class CsvColumnNameMapWriterTest {
 	// パブリック メソッド
 
 	@Test
+	public void testWriteNoHeader() throws IOException {
+		final StringWriter sw = new StringWriter();
+		final CsvColumnNameMapWriter writer = new CsvColumnNameMapWriter(new CsvWriter(sw, cfg), false);
+		try {
+			final Map<String, String> m1 = new LinkedHashMap<String, String>(4);
+			m1.put("symbol", "AAAA");
+			m1.put("name", "aaa");
+			m1.put("price", "10000");
+			m1.put("volume", "10");
+
+			writer.writeHeader(m1);
+			writer.flush();
+			assertThat(sw.getBuffer().toString(), is(""));
+
+			final boolean r1 = writer.write(m1);
+			assertTrue(r1);
+			writer.flush();
+			assertThat(sw.getBuffer().toString(), is("AAAA,aaa,10000,10\r\n"));
+
+			final Map<String, String> m2 = new LinkedHashMap<String, String>(4);
+			m2.put("symbol", "BBBB");
+			m2.put("name", "bbb");
+			m2.put("price", null);
+			m2.put("volume", "0");
+			final boolean r2 = writer.write(m2);
+			assertTrue(r2);
+			writer.flush();
+			assertThat(sw.getBuffer().toString(), is("AAAA,aaa,10000,10\r\nBBBB,bbb,NULL,0\r\n"));
+		} finally {
+			writer.close();
+		}
+		assertThat(sw.getBuffer().toString(), is("AAAA,aaa,10000,10\r\nBBBB,bbb,NULL,0\r\n"));
+	}
+
+	@Test
 	public void testWriteHeader() throws IOException {
 		final StringWriter sw = new StringWriter();
 		final CsvColumnNameMapWriter writer = new CsvColumnNameMapWriter(new CsvWriter(sw, cfg));

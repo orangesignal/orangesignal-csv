@@ -256,6 +256,36 @@ public class CsvBeanWriterTest {
 	// パブリック メソッド
 
 	@Test
+	public void testWriteNoHeader() throws IOException {
+		final StringWriter sw = new StringWriter();
+		final CsvBeanWriter<SampleBean> writer = CsvBeanWriter.newInstance(
+				new CsvWriter(sw, cfg),
+				SampleBean.class,
+				false
+			);
+		try {
+			writer.writeHeader();
+			writer.flush();
+			assertThat(sw.getBuffer().toString(), is(""));
+
+			writer.write(new SampleBean("AAAA", "aaa", 10000, 10, null));
+			writer.flush();
+			assertThat(sw.getBuffer().toString(), is("AAAA,aaa,10000,10,NULL\r\n"));
+
+			writer.writeHeader();
+			writer.flush();
+			assertThat(sw.getBuffer().toString(), is("AAAA,aaa,10000,10,NULL\r\n"));
+
+			writer.write(new SampleBean("BBBB", "bbb", null, 0, null));
+			writer.flush();
+			assertThat(sw.getBuffer().toString(), is("AAAA,aaa,10000,10,NULL\r\nBBBB,bbb,NULL,0,NULL\r\n"));
+		} finally {
+			writer.close();
+		}
+		assertThat(sw.getBuffer().toString(), is("AAAA,aaa,10000,10,NULL\r\nBBBB,bbb,NULL,0,NULL\r\n"));
+	}
+
+	@Test
 	public void testWriteHeader() throws IOException {
 		final StringWriter sw = new StringWriter();
 		final CsvBeanWriter<SampleBean> writer = CsvBeanWriter.newInstance(
