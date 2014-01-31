@@ -324,6 +324,16 @@ public class CsvColumnNameMappingBeanWriterTest {
 				SampleBean.class
 			);
 		try {
+			final DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+			format.setTimeZone(TimeZone.getTimeZone("Asia/Tokyo"));
+
+			writer.getTemplate()
+				.column("symbol", "symbol")
+				.column("name", "name")
+				.column("price", "price")
+				.column("volume", "volume")
+				.column("date", "date", format);
+
 			final DateFormat df = new SimpleDateFormat("yyyy/MM/dd");
 			df.setTimeZone(TimeZone.getTimeZone("Asia/Tokyo"));
 
@@ -332,7 +342,7 @@ public class CsvColumnNameMappingBeanWriterTest {
 		} finally {
 			writer.close();
 		}
-		assertThat(sw.getBuffer().toString(), is("symbol,name,price,volume,date\r\nAAAA,aaa,10000,10,Wed Oct 28 00:00:00 JST 2009\r\nBBBB,bbb,NULL,0,NULL\r\n"));
+		assertThat(sw.getBuffer().toString(), is("symbol,name,price,volume,date\r\nAAAA,aaa,10000,10,2009-10-28\r\nBBBB,bbb,NULL,0,NULL\r\n"));
 	}
 
 	@Test

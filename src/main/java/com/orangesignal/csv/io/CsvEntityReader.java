@@ -282,4 +282,17 @@ public class CsvEntityReader<T> implements Closeable {
 		return entity;
 	}
 
+	// ------------------------------------------------------------------------
+	// getter / setter
+
+	/**
+	 * Java プログラム要素操作の簡素化ヘルパーを返します。
+	 * 
+	 * @return Java プログラム要素操作の簡素化ヘルパー
+	 * @since 2.1
+	 */
+	public CsvEntityTemplate<T> getTemplate() {
+		return template;
+	}
+
 }

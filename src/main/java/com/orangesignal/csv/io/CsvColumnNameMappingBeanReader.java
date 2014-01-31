@@ -262,4 +262,17 @@ public class CsvColumnNameMappingBeanReader<T> implements Closeable {
 		return bean;
 	}
 
+	// ------------------------------------------------------------------------
+	// getter / setter
+
+	/**
+	 * Java プログラム要素操作の簡素化ヘルパーを返します。
+	 * 
+	 * @return Java プログラム要素操作の簡素化ヘルパー
+	 * @since 2.1
+	 */
+	public CsvColumnNameMappingBeanTemplate<T> getTemplate() {
+		return template;
+	}
+
 }
