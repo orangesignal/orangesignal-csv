@@ -1,5 +1,4 @@
-# [OrangeSignal CSV](http://orangesignal.github.io/orangesignal-csv/)
-[![Build Status](https://travis-ci.org/orangesignal/orangesignal-csv.png?branch=master)](https://travis-ci.org/orangesignal/orangesignal-csv)
+# [OrangeSignal CSV](http://orangesignal.github.io/orangesignal-csv/) [![Build Status](https://travis-ci.org/orangesignal/orangesignal-csv.png?branch=master)](https://travis-ci.org/orangesignal/orangesignal-csv)
 
 OrangeSignal CSV is a very flexible csv (comma-separated values) read and write library for Java.  
 
