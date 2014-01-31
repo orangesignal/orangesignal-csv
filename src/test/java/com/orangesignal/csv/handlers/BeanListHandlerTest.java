@@ -283,6 +283,22 @@ public class BeanListHandlerTest {
 	}
 
 	@Test
+	public void testSaveNoHeader() throws IOException {
+		final List<SampleBean> list = new ArrayList<SampleBean>();
+		list.add(new SampleBean("AAAA", "aaa", 10000, 10, null));
+		list.add(new SampleBean("BBBB", "bbb", null, 0, null));
+
+		final StringWriter sw = new StringWriter();
+		final CsvWriter writer = new CsvWriter(sw, cfg);
+		try {
+			new BeanListHandler<SampleBean>(SampleBean.class).header(false).save(list, writer);
+		} finally {
+			writer.close();
+		}
+		assertThat(sw.getBuffer().toString(), is("AAAA,aaa,10000,10,NULL\r\nBBBB,bbb,NULL,0,NULL\r\n"));
+	}
+
+	@Test
 	public void testSave1() throws IOException {
 		final List<SampleBean> list = new ArrayList<SampleBean>();
 		list.add(new SampleBean("AAAA", "aaa", 10000, 10, null));

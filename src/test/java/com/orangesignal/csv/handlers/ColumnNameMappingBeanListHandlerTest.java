@@ -289,6 +289,24 @@ public class ColumnNameMappingBeanListHandlerTest {
 	}
 
 	@Test
+	public void testSaveNoHeader() throws Exception {
+		final DateFormat df = new SimpleDateFormat("yyyy/MM/dd");
+
+		final List<SampleBean> list = new ArrayList<SampleBean>();
+		list.add(new SampleBean("AAAA", "aaa", 10000, 10, df.parse("2009/10/28")));
+		list.add(new SampleBean("BBBB", "bbb", null, 0, null));
+
+		final StringWriter sw = new StringWriter();
+		final CsvWriter writer = new CsvWriter(sw, cfg);
+		try {
+			new ColumnNameMappingBeanListHandler<SampleBean>(SampleBean.class).header(false).save(list, writer);
+		} finally {
+			writer.close();
+		}
+		assertThat(sw.getBuffer().toString(), is("AAAA,aaa,10000,10,Wed Oct 28 00:00:00 JST 2009\r\nBBBB,bbb,NULL,0,NULL\r\n"));
+	}
+
+	@Test
 	public void testSave1() throws Exception {
 		final DateFormat df = new SimpleDateFormat("yyyy/MM/dd");
 

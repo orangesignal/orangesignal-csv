@@ -153,6 +153,32 @@ public class ColumnNameMapListHandlerTest {
 	}
 
 	@Test
+	public void testSaveNoHeader() throws IOException {
+		final List<Map<String, String>> list = new ArrayList<Map<String, String>>(3);
+		final Map<String, String> m1 = new LinkedHashMap<String, String>(4);
+		m1.put("symbol", "AAAA");
+		m1.put("name", "aaa");
+		m1.put("price", "10000");
+		m1.put("volume", "10");
+		list.add(m1);
+		final Map<String, String> m2 = new LinkedHashMap<String, String>(4);
+		m2.put("symbol", "BBBB");
+		m2.put("name", "bbb");
+		m2.put("price", null);
+		m2.put("volume", "0");
+		list.add(m2);
+
+		final StringWriter sw = new StringWriter();
+		final CsvWriter writer = new CsvWriter(sw, cfg);
+		try {
+			new ColumnNameMapListHandler().header(false).save(list, writer);
+		} finally {
+			writer.close();
+		}
+		assertThat(sw.getBuffer().toString(), is("AAAA,aaa,10000,10\r\nBBBB,bbb,NULL,0\r\n"));
+	}
+
+	@Test
 	public void testSave1() throws IOException {
 		final List<Map<String, String>> list = new ArrayList<Map<String, String>>(3);
 		final Map<String, String> m1 = new LinkedHashMap<String, String>(4);

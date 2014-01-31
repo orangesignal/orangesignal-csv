@@ -124,6 +124,34 @@ public class CsvColumnPositionMappingBeanManagerTest {
 	}
 
 	@Test
+	public void testSaveNoHeader() throws Exception {
+		final DateFormat df = new SimpleDateFormat("yyyy/MM/dd");
+
+		final List<SampleBean> list = new ArrayList<SampleBean>();
+		list.add(new SampleBean("GCU09", "COMEX 金 2009年09月限", 1068.70, 10, df.parse("2008/09/06")));
+		list.add(new SampleBean("GCV09", "COMEX 金 2009年10月限", 1078.70, 11, df.parse("2008/10/06")));
+		list.add(new SampleBean("GCX09", "COMEX 金 2009年11月限", 1088.70, 12, df.parse("2008/11/06")));
+
+		final StringWriter sw = new StringWriter();
+		try {
+			new CsvColumnPositionMappingBeanManager(cfg)
+				.save(list, SampleBean.class)
+				.header(false)
+				.column("symbol")
+				.column("price", new DecimalFormat("0.00"))
+				.column("volume")
+				.column("date", new SimpleDateFormat("yyyy/MM/dd"))
+				.filter(new SimpleCsvValueFilter().ne(0, "gcu09", true))
+				.filter(new SimpleBeanFilter().ne("date", df.parse("2008/11/06")))
+				.to(sw);
+
+			assertThat(sw.getBuffer().toString(), is("GCV09,1078.70,11,2008/10/06\r\n"));
+		} finally {
+			sw.close();
+		}
+	}
+
+	@Test
 	public void testSave() throws Exception {
 		final DateFormat df = new SimpleDateFormat("yyyy/MM/dd");
 

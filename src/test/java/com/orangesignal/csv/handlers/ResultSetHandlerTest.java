@@ -89,6 +89,32 @@ public class ResultSetHandlerTest {
 	}
 
 	@Test
+	public void testSaveNoHeader()  throws Exception {
+		final ResultSet rs = new ResultSetHandler().load(
+				new CsvReader(new StringReader(
+					"# text/tab-separated-values   \r\n" +
+					" col1 , \"col2\" , \"col3\" \r\n" +
+					" aaa , \"b\r\nb\\\\b\" , \"c\\\"cc\" \r\n" +
+					" zzz , yyy , NULL \r\n" +
+					"# Copyright 2009 OrangeSignal.   "
+				), cfg)
+			);
+		try {
+			final StringWriter sw = new StringWriter();
+			final CsvWriter writer = new CsvWriter(sw, cfg);
+			try {
+				new ResultSetHandler().header(false).save(rs, writer);
+				writer.flush();
+				assertThat(sw.getBuffer().toString(), is("\"aaa\",\"b\nb\\\\b\",\"c\\\"cc\"\r\n\"zzz\",\"yyy\",NULL\r\n"));
+			} finally {
+				writer.close();
+			}
+		} finally {
+			rs.close();
+		}
+	}
+
+	@Test
 	public void testSave()  throws Exception {
 		final ResultSet rs = new ResultSetHandler().load(
 				new CsvReader(new StringReader(
