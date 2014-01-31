@@ -100,6 +100,18 @@ public class CsvColumnNameMappingBeanSaver<T> extends AbstractCsvSaver<T, Column
 		return this;
 	}
 
+	/**
+	 * 区切り文字形式データの列見出し (ヘッダ) 行を出力するかどうかを設定します。
+	 * 
+	 * @param header 区切り文字形式データの列見出し (ヘッダ) 行を出力するかどうか
+	 * @return このオブジェクトへの参照
+	 * @since 2.1
+	 */
+	public CsvColumnNameMappingBeanSaver<T> header(final boolean header) {
+		handler.header(header);
+		return this;
+	}
+
 	@Override protected ColumnNameMappingBeanListHandler<T> getCsvListHandler() { return handler; }
 
 }

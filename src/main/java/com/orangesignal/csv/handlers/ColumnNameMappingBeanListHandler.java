@@ -38,6 +38,13 @@ import com.orangesignal.csv.io.CsvColumnNameMappingBeanWriter;
  */
 public class ColumnNameMappingBeanListHandler<T> extends AbstractBeanListHandler<T, CsvColumnNameMappingBeanTemplate<T>, ColumnNameMappingBeanListHandler<T>> implements CsvColumnNameMappingBeanOperation<ColumnNameMappingBeanListHandler<T>> {
 
+	/**
+	 * 区切り文字形式データの列見出し (ヘッダ) 行を出力するかどうかを保持します。
+	 * 
+	 * @since 2.1
+	 */
+	private boolean header = true;
+
 	// ------------------------------------------------------------------------
 
 	/**
@@ -77,6 +84,18 @@ public class ColumnNameMappingBeanListHandler<T> extends AbstractBeanListHandler
 	@Override
 	public ColumnNameMappingBeanListHandler<T> filter(final CsvNamedValueFilter filter) {
 		template.filter(filter);
+		return this;
+	}
+
+	/**
+	 * 区切り文字形式データの列見出し (ヘッダ) 行を出力するかどうかを設定します。
+	 * 
+	 * @param header 区切り文字形式データの列見出し (ヘッダ) 行を出力するかどうか
+	 * @return このオブジェクトへの参照
+	 * @since 2.1
+	 */
+	public ColumnNameMappingBeanListHandler<T> header(final boolean header) {
+		this.header = header;
 		return this;
 	}
 
@@ -120,7 +139,7 @@ public class ColumnNameMappingBeanListHandler<T> extends AbstractBeanListHandler
 	@Override
 	public void save(final List<T> list, final CsvWriter writer) throws IOException {
 		@SuppressWarnings("resource")
-		final CsvColumnNameMappingBeanWriter<T> w = new CsvColumnNameMappingBeanWriter<T>(writer, template);
+		final CsvColumnNameMappingBeanWriter<T> w = new CsvColumnNameMappingBeanWriter<T>(writer, template, header);
 
 		// データ部を処理します。
 		for (final T bean : list) {

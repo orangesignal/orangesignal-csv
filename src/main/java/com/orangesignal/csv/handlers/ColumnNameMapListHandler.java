@@ -42,6 +42,13 @@ public class ColumnNameMapListHandler extends AbstractCsvListHandler<Map<String,
 	private List<String> columnNames;
 
 	/**
+	 * 区切り文字形式データの列見出し (ヘッダ) 行を出力するかどうかを保持します。
+	 * 
+	 * @since 2.1
+	 */
+	private boolean header = true;
+
+	/**
 	 * 区切り文字形式データフィルタを保持します。
 	 */
 	private CsvNamedValueFilter valueFilter;
@@ -88,6 +95,18 @@ public class ColumnNameMapListHandler extends AbstractCsvListHandler<Map<String,
 		return this;
 	}
 
+	/**
+	 * 区切り文字形式データの列見出し (ヘッダ) 行を出力するかどうかを設定します。
+	 * 
+	 * @param header 区切り文字形式データの列見出し (ヘッダ) 行を出力するかどうか
+	 * @return このオブジェクトへの参照
+	 * @since 2.1
+	 */
+	public ColumnNameMapListHandler header(final boolean header) {
+		this.header = header;
+		return this;
+	}
+
 	@Override
 	public List<Map<String, String>> load(final CsvReader reader, final boolean ignoreScalar) throws IOException {
 		@SuppressWarnings("resource")
@@ -112,7 +131,7 @@ public class ColumnNameMapListHandler extends AbstractCsvListHandler<Map<String,
 	@Override
 	public void save(final List<Map<String, String>> list, final CsvWriter writer) throws IOException {
 		@SuppressWarnings("resource")
-		final CsvColumnNameMapWriter w = new CsvColumnNameMapWriter(writer, columnNames);
+		final CsvColumnNameMapWriter w = new CsvColumnNameMapWriter(writer, columnNames, header);
 		w.setFilter(valueFilter);
 
 		// データ部を処理します。

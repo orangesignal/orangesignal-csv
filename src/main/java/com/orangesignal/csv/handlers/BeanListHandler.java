@@ -37,6 +37,13 @@ import com.orangesignal.csv.io.CsvBeanWriter;
  */
 public class BeanListHandler<T> extends AbstractBeanListHandler<T, CsvBeanTemplate<T>, BeanListHandler<T>> implements CsvBeanOperation<BeanListHandler<T>> {
 
+	/**
+	 * 区切り文字形式データの列見出し (ヘッダ) 行を出力するかどうかを保持します。
+	 * 
+	 * @since 2.1
+	 */
+	private boolean header = true;
+
 	// ------------------------------------------------------------------------
 
 	/**
@@ -82,6 +89,18 @@ public class BeanListHandler<T> extends AbstractBeanListHandler<T, CsvBeanTempla
 		return this;
 	}
 
+	/**
+	 * 区切り文字形式データの列見出し (ヘッダ) 行を出力するかどうかを設定します。
+	 * 
+	 * @param header 区切り文字形式データの列見出し (ヘッダ) 行を出力するかどうか
+	 * @return このオブジェクトへの参照
+	 * @since 2.1
+	 */
+	public BeanListHandler<T> header(final boolean header) {
+		this.header = header;
+		return this;
+	}
+
 	// ------------------------------------------------------------------------
 
 	@Override
@@ -122,7 +141,7 @@ public class BeanListHandler<T> extends AbstractBeanListHandler<T, CsvBeanTempla
 	@Override
 	public void save(final List<T> list, final CsvWriter writer) throws IOException {
 		@SuppressWarnings("resource")
-		final CsvBeanWriter<T> w = new CsvBeanWriter<T>(writer, template);
+		final CsvBeanWriter<T> w = new CsvBeanWriter<T>(writer, template, header);
 
 		// データ部を処理します。
 		for (final T bean : list) {

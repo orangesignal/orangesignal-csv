@@ -36,9 +36,28 @@ import com.orangesignal.csv.CsvWriter;
 public class ResultSetHandler implements CsvHandler<ResultSet> {
 
 	/**
+	 * 区切り文字形式データの列見出し (ヘッダ) 行を出力するかどうかを保持します。
+	 * 
+	 * @since 2.1
+	 */
+	private boolean header = true;
+
+	/**
 	 * デフォルトコンストラクタです。
 	 */
 	public ResultSetHandler() {}
+
+	/**
+	 * 区切り文字形式データの列見出し (ヘッダ) 行を出力するかどうかを設定します。
+	 * 
+	 * @param header 区切り文字形式データの列見出し (ヘッダ) 行を出力するかどうか
+	 * @return このオブジェクトへの参照
+	 * @since 2.1
+	 */
+	public ResultSetHandler header(final boolean header) {
+		this.header = header;
+		return this;
+	}
 
 	@Override
 	public ResultSet load(final CsvReader reader) throws IOException {
@@ -66,14 +85,16 @@ public class ResultSetHandler implements CsvHandler<ResultSet> {
 		}
 	}
 
-	private static int writeHeader(final ResultSetMetaData meta, final CsvWriter writer) throws IOException {
+	private int writeHeader(final ResultSetMetaData meta, final CsvWriter writer) throws IOException {
 		try {
 			final int count = meta.getColumnCount();
 			final List<String> list = new ArrayList<String>(count);
 			for (int i = 1; i <= count; i++) {
 				list.add(meta.getColumnLabel(i));
 			}
-			writer.writeValues(list);
+			if (header) {
+				writer.writeValues(list);
+			}
 			return count;
 		} catch (SQLException e) {
 			throw new IOException(e.getMessage(), e);

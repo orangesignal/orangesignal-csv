@@ -37,6 +37,13 @@ import com.orangesignal.csv.io.CsvColumnPositionMappingBeanWriter;
  */
 public class ColumnPositionMappingBeanListHandler<T> extends AbstractBeanListHandler<T, CsvColumnPositionMappingBeanTemplate<T>, ColumnPositionMappingBeanListHandler<T>> {
 
+	/**
+	 * 区切り文字形式データの列見出し (ヘッダ) 行を出力するかどうかを保持します。
+	 * 
+	 * @since 2.1
+	 */
+	private boolean header = true;
+
 	// ------------------------------------------------------------------------
 
 	/**
@@ -134,6 +141,18 @@ public class ColumnPositionMappingBeanListHandler<T> extends AbstractBeanListHan
 		return this;
 	}
 
+	/**
+	 * 区切り文字形式データの列見出し (ヘッダ) 行を出力するかどうかを設定します。
+	 * 
+	 * @param header 区切り文字形式データの列見出し (ヘッダ) 行を出力するかどうか
+	 * @return このオブジェクトへの参照
+	 * @since 2.1
+	 */
+	public ColumnPositionMappingBeanListHandler<T> header(final boolean header) {
+		this.header = header;
+		return this;
+	}
+
 	// ------------------------------------------------------------------------
 
 	@Override
@@ -174,7 +193,7 @@ public class ColumnPositionMappingBeanListHandler<T> extends AbstractBeanListHan
 	@Override
 	public void save(final List<T> list, final CsvWriter writer) throws IOException {
 		@SuppressWarnings("resource")
-		final CsvColumnPositionMappingBeanWriter<T> w = new CsvColumnPositionMappingBeanWriter<T>(writer, template);
+		final CsvColumnPositionMappingBeanWriter<T> w = new CsvColumnPositionMappingBeanWriter<T>(writer, template, header);
 
 		// データ部を処理します。
 		for (final T bean : list) {
