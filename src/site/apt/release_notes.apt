@@ -18,15 +18,19 @@
 
 ** 新機能
 
-   * {{{https://github.com/orangesignal/orangesignal-csv/issues/13}#13}} 項目数チェック機能
+   * {{{https://github.com/orangesignal/orangesignal-csv/issues/13}#13}} {{{./apidocs/com/orangesignal/csv/CsvConfig.html}CsvConfig}} へ可変項目数の可否 (項目数チェック) 機能を追加しました。
 
-   * {{{https://github.com/orangesignal/orangesignal-csv/issues/12}#12}} CsvColumns + 配列型サポート
+   * {{{https://github.com/orangesignal/orangesignal-csv/issues/24}#24}} CsvEntityManager 以外の CsvManager や特定用途向けの CsvHandler および CsvWriter へ、列見出し (ヘッダ) 行の出力抑止機能を追加しました。
+
+   * {{{https://github.com/orangesignal/orangesignal-csv/issues/12}#12}} {{{./apidocs/com/orangesignal/csv/annotation/CsvColumn.html}@CsvColumn}} で配列型をサポートするようにしました。
 
 ** 不具合対応
 
    * いくつかの Javadoc 記載間違いを修正しました。
 
 ** 全般
+
+   * {{{./apidocs/com/orangesignal/csv/CsvReader.html}CsvReader}} のパフォーマンス向上
 
    * サイトテーマおよび構成を変更しました。
 
