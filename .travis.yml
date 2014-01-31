@@ -7,4 +7,4 @@ branches:
   only:
     - master
 
-script: "mvn clean install"
+script: "mvn -e clean install"
