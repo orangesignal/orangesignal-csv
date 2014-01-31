@@ -27,6 +27,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TimeZone;
 
 import org.junit.BeforeClass;
 import org.junit.Rule;
@@ -103,6 +104,8 @@ public class CsvEntityManagerTest {
 
 		try {
 			final DateFormat df = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+			df.setTimeZone(TimeZone.getTimeZone("Asia/Tokyo"));
+
 			final List<Price> list = new CsvEntityManager(cfg)
 				.load(Price.class)
 				.filter(new SimpleCsvNamedValueFilter().ne("シンボル", "gcu09", true))
@@ -125,6 +128,7 @@ public class CsvEntityManagerTest {
 	@Test
 	public void testSave() throws Exception {
 		final DateFormat df = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+		df.setTimeZone(TimeZone.getTimeZone("Asia/Tokyo"));
 
 		final List<Price> list = new ArrayList<Price>();
 		list.add(new Price("GCU09", "COMEX 金 2009年09月限", 1068, 10, df.parse("2008/09/06 12:00:00")));

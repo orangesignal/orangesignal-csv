@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.TimeZone;
 
 import org.junit.BeforeClass;
 import org.junit.Rule;
@@ -210,6 +211,7 @@ public class CsvEntityWriterTest {
 			);
 		try {
 			final DateFormat df = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+			df.setTimeZone(TimeZone.getTimeZone("Asia/Tokyo"));
 
 			writer.writeHeader();
 			writer.flush();
@@ -270,6 +272,7 @@ public class CsvEntityWriterTest {
 			);
 		try {
 			final DateFormat df = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+			df.setTimeZone(TimeZone.getTimeZone("Asia/Tokyo"));
 
 			writer.writeHeader();
 			writer.flush();
@@ -313,6 +316,8 @@ public class CsvEntityWriterTest {
 			);
 		try {
 			final DateFormat df = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+			df.setTimeZone(TimeZone.getTimeZone("Asia/Tokyo"));
+
 			writer.write(new Price("AAAA", "aaa", 10000, 10, df.parse("2008/10/28 10:24:00")));
 			writer.write(new Price("BBBB", "bbb", null, 0, null));
 			writer.write(new Price("CCCC", "ccc", 20000, 100, df.parse("2008/10/26 14:20:10")));
@@ -335,6 +340,8 @@ public class CsvEntityWriterTest {
 			);
 		try {
 			final DateFormat df = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+			df.setTimeZone(TimeZone.getTimeZone("Asia/Tokyo"));
+
 			writer.write(new Price("GCU09", "COMEX 金 2009年09月限", 1068, 10, df.parse("2008/09/06 12:00:00")));
 			writer.write(new Price("GCV09", "COMEX 金 2009年10月限", 1078, 11, df.parse("2008/10/06 12:00:00")));
 			writer.write(new Price("GCX09", "COMEX 金 2009年11月限", 1088, 12, df.parse("2008/11/06 12:00:00")));

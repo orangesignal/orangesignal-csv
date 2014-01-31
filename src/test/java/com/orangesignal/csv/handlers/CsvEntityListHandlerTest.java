@@ -27,6 +27,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TimeZone;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -84,7 +85,11 @@ public class CsvEntityListHandlerTest {
 			assertThat(o1.name, is("aaa"));
 			assertThat(o1.price.longValue(), is(10000L));
 			assertThat(o1.volume.longValue(), is(10L));
-			assertThat(new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(o1.date), is("2009/10/28 10:24:00"));
+
+			final SimpleDateFormat df = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+			df.setTimeZone(TimeZone.getTimeZone("Asia/Tokyo"));
+
+			assertThat(df.format(o1.date), is("2009/10/28 10:24:00"));
 			final Price o2 = list.get(1);
 			assertThat(o2.symbol, is("BBBB"));
 			assertThat(o2.name, is("bbb"));
@@ -141,6 +146,7 @@ public class CsvEntityListHandlerTest {
 	@Test
 	public void testLoadFilter() throws Exception {
 		final DateFormat df = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+		df.setTimeZone(TimeZone.getTimeZone("Asia/Tokyo"));
 		final CsvReader reader = new CsvReader(new StringReader(
 				"シンボル,名称,価格,出来高,日付,時刻\r\n" +
 				"GCQ09,COMEX 金 2009年08月限,1\\,058.70,10,2008/08/06,12:00:00\r\n" +
@@ -171,6 +177,7 @@ public class CsvEntityListHandlerTest {
 	@Test
 	public void testSave() throws Exception {
 		final DateFormat df = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+		df.setTimeZone(TimeZone.getTimeZone("Asia/Tokyo"));
 
 		final List<Price> list = new ArrayList<Price>();
 		list.add(new Price("AAAA", "aaa", 10000, 10, df.parse("2008/10/28 10:24:00")));
@@ -190,6 +197,7 @@ public class CsvEntityListHandlerTest {
 	@Test
 	public void testSaveFilter() throws Exception {
 		final DateFormat df = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+		df.setTimeZone(TimeZone.getTimeZone("Asia/Tokyo"));
 
 		final List<Price> list = new ArrayList<Price>();
 		list.add(new Price("GCU09", "COMEX 金 2009年09月限", 1068, 10, df.parse("2008/09/06 12:00:00")));

@@ -31,6 +31,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -291,6 +292,7 @@ public class ColumnNameMappingBeanListHandlerTest {
 	@Test
 	public void testSaveNoHeader() throws Exception {
 		final DateFormat df = new SimpleDateFormat("yyyy/MM/dd");
+		df.setTimeZone(TimeZone.getTimeZone("Asia/Tokyo"));
 
 		final List<SampleBean> list = new ArrayList<SampleBean>();
 		list.add(new SampleBean("AAAA", "aaa", 10000, 10, df.parse("2009/10/28")));
@@ -309,6 +311,7 @@ public class ColumnNameMappingBeanListHandlerTest {
 	@Test
 	public void testSave1() throws Exception {
 		final DateFormat df = new SimpleDateFormat("yyyy/MM/dd");
+		df.setTimeZone(TimeZone.getTimeZone("Asia/Tokyo"));
 
 		final List<SampleBean> list = new ArrayList<SampleBean>();
 		list.add(new SampleBean("AAAA", "aaa", 10000, 10, df.parse("2009/10/28")));

@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.TimeZone;
 
 import org.junit.BeforeClass;
 import org.junit.Rule;
@@ -178,7 +179,10 @@ public class CsvEntityReaderTest {
 			assertThat(o1.name, is("aaa"));
 			assertThat(o1.price.longValue(), is(10000L));
 			assertThat(o1.volume.longValue(), is(10L));
-			assertThat(new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(o1.date), is("2009/10/28 10:24:00"));
+
+			final SimpleDateFormat df = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+			df.setTimeZone(TimeZone.getTimeZone("Asia/Tokyo"));
+			assertThat(df.format(o1.date), is("2009/10/28 10:24:00"));
 
 			final Price o2 = reader.read();
 			assertThat(o2.symbol, is("BBBB"));
@@ -225,6 +229,7 @@ public class CsvEntityReaderTest {
 	@Test
 	public void testFilter() throws Exception {
 		final DateFormat df = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+		df.setTimeZone(TimeZone.getTimeZone("Asia/Tokyo"));
 
 		final CsvEntityReader<Price> reader = CsvEntityReader.newInstance(
 				new CsvReader(new StringReader(

@@ -26,6 +26,7 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.TimeZone;
 
 import org.junit.BeforeClass;
 import org.junit.Rule;
@@ -324,6 +325,8 @@ public class CsvColumnNameMappingBeanWriterTest {
 			);
 		try {
 			final DateFormat df = new SimpleDateFormat("yyyy/MM/dd");
+			df.setTimeZone(TimeZone.getTimeZone("Asia/Tokyo"));
+
 			writer.write(new SampleBean("AAAA", "aaa", 10000, 10, df.parse("2009/10/28")));
 			writer.write(new SampleBean("BBBB", "bbb", null, 0, null));
 		} finally {
