@@ -301,11 +301,21 @@ public class ColumnNameMappingBeanListHandlerTest {
 		final StringWriter sw = new StringWriter();
 		final CsvWriter writer = new CsvWriter(sw, cfg);
 		try {
-			new ColumnNameMappingBeanListHandler<SampleBean>(SampleBean.class).header(false).save(list, writer);
+			final DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+			format.setTimeZone(TimeZone.getTimeZone("Asia/Tokyo"));
+
+			new ColumnNameMappingBeanListHandler<SampleBean>(SampleBean.class)
+				.column("symbol", "symbol")
+				.column("name", "name")
+				.column("price", "price")
+				.column("volume", "volume")
+				.column("date", "date", format)
+				.header(false)
+				.save(list, writer);
 		} finally {
 			writer.close();
 		}
-		assertThat(sw.getBuffer().toString(), is("AAAA,aaa,10000,10,Wed Oct 28 00:00:00 JST 2009\r\nBBBB,bbb,NULL,0,NULL\r\n"));
+		assertThat(sw.getBuffer().toString(), is("AAAA,aaa,10000,10,2009-10-28\r\nBBBB,bbb,NULL,0,NULL\r\n"));
 	}
 
 	@Test
@@ -320,11 +330,20 @@ public class ColumnNameMappingBeanListHandlerTest {
 		final StringWriter sw = new StringWriter();
 		final CsvWriter writer = new CsvWriter(sw, cfg);
 		try {
-			new ColumnNameMappingBeanListHandler<SampleBean>(SampleBean.class).save(list, writer);
+			final DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+			format.setTimeZone(TimeZone.getTimeZone("Asia/Tokyo"));
+
+			new ColumnNameMappingBeanListHandler<SampleBean>(SampleBean.class)
+				.column("symbol", "symbol")
+				.column("name", "name")
+				.column("price", "price")
+				.column("volume", "volume")
+				.column("date", "date", format)
+				.save(list, writer);
 		} finally {
 			writer.close();
 		}
-		assertThat(sw.getBuffer().toString(), is("symbol,name,price,volume,date\r\nAAAA,aaa,10000,10,Wed Oct 28 00:00:00 JST 2009\r\nBBBB,bbb,NULL,0,NULL\r\n"));
+		assertThat(sw.getBuffer().toString(), is("symbol,name,price,volume,date\r\nAAAA,aaa,10000,10,2009-10-28\r\nBBBB,bbb,NULL,0,NULL\r\n"));
 	}
 
 	@Test
