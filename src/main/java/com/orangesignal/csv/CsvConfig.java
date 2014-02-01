@@ -482,10 +482,10 @@ public class CsvConfig implements Serializable, Cloneable {
 	/**
 	 * 可変項目数を許可するかどうかを設定します。
 	 * 
-	 * @param checkColumnsCount 可変項目数を許可するかどうか
+	 * @param variableColumns 可変項目数を許可するかどうか
 	 * @since 2.1
 	 */
-	public void setVariableColumns(boolean checkColumnsCount) { this.variableColumns = checkColumnsCount; }
+	public void setVariableColumns(final boolean variableColumns) { this.variableColumns = variableColumns; }
 
 	/**
 	 * @since 1.1
