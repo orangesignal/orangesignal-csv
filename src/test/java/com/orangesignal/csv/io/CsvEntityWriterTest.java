@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 the original author or authors.
+ * Copyright 2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,6 +34,7 @@ import com.orangesignal.csv.Constants;
 import com.orangesignal.csv.CsvConfig;
 import com.orangesignal.csv.CsvWriter;
 import com.orangesignal.csv.bean.CsvEntityTemplate;
+import com.orangesignal.csv.entity.DefaultValuePrice;
 import com.orangesignal.csv.entity.Price;
 import com.orangesignal.csv.filters.SimpleCsvNamedValueFilter;
 
@@ -325,6 +326,26 @@ public class CsvEntityWriterTest {
 			writer.close();
 		}
 		assertThat(sw.getBuffer().toString(), is("シンボル,名称,価格,出来高,日付,時刻\r\nAAAA,aaa,10\\,000,10,2008/10/28,10:24:00\r\nBBBB,bbb,NULL,0,NULL,NULL\r\nCCCC,ccc,20\\,000,100,2008/10/26,14:20:10\r\n"));
+	}
+
+	@Test
+	public void testDefaultValue() throws Exception {
+		final StringWriter sw = new StringWriter();
+		final CsvEntityWriter<DefaultValuePrice> writer = CsvEntityWriter.newInstance(
+				new CsvWriter(sw, cfg),
+				DefaultValuePrice.class
+			);
+		try {
+			final DateFormat df = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+			df.setTimeZone(TimeZone.getTimeZone("Asia/Tokyo"));
+
+			writer.write(new DefaultValuePrice("AAAA", "aaa", 10000, 10, df.parse("2008/10/28 10:24:00")));
+			writer.write(new DefaultValuePrice(null, null, null, 0, null));
+			writer.write(new DefaultValuePrice("CCCC", "ccc", 20000, 100, df.parse("2008/10/26 14:20:10")));
+		} finally {
+			writer.close();
+		}
+		assertThat(sw.getBuffer().toString(), is("シンボル,名称,価格,出来高,日付,時刻\r\nAAAA,aaa,10\\,000,10,2008/10/28,10:24:00\r\nXXXX,xxx,NULL,0,2014/02/02,12:00:00\r\nCCCC,ccc,20\\,000,100,2008/10/26,14:20:10\r\n"));
 	}
 
 	@Test

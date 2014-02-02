@@ -245,12 +245,15 @@ public class CsvEntityReader<T> implements Closeable {
 					object = Array.newInstance(field.getType().getComponentType(), columns.value().length);
 					int arrayIndex = 0;
 					for (final CsvColumn column : columns.value()) {
-						final String value;
+						String value;
 						final int pos = getPosition(column, field, columnNames);
 						if (pos != -1) {
 							value = values.get(pos);
 						} else {
 							value = null;
+						}
+						if (value == null && !column.defaultValue().isEmpty()) {
+							value = column.defaultValue();
 						}
 						Array.set(object, arrayIndex++, template.stringToObject(field, value));
 					}
@@ -262,6 +265,8 @@ public class CsvEntityReader<T> implements Closeable {
 							final String s = values.get(pos);
 							if (s != null) {
 								sb.append(s);
+							} else if (!column.defaultValue().isEmpty()) {
+								sb.append(column.defaultValue());
 							}
 						}
 					}
@@ -272,7 +277,11 @@ public class CsvEntityReader<T> implements Closeable {
 			if (column != null) {
 				final int pos = getPosition(column, field, columnNames);
 				if (pos != -1) {
-					object = template.stringToObject(field, values.get(pos));
+					String value = values.get(pos);
+					if (value == null && !column.defaultValue().isEmpty()) {
+						value = column.defaultValue();
+					}
+					object = template.stringToObject(field, value);
 				}
 			}
 			if (object != null) {

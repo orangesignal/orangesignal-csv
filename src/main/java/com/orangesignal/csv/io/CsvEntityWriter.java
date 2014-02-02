@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 the original author or authors.
+ * Copyright 2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -140,7 +140,6 @@ public class CsvEntityWriter<T> implements Closeable, Flushable {
 				if (template.getType().getAnnotation(CsvEntity.class).header()) {
 					writer.writeValues(names);
 				}
-
 				template.prepare(names, template.getType().getDeclaredFields());
 				columnNames = Collections.unmodifiableList(names);
 				columnCount = names.size();
@@ -235,6 +234,9 @@ public class CsvEntityWriter<T> implements Closeable, Flushable {
 						arrayIndex++;
 					}
 					values[pos] = template.objectToString(pos, o);
+					if (values[pos] == null && !column.defaultValue().isEmpty()) {
+						values[pos] = column.defaultValue();
+					}
 				}
 			}
 			final CsvColumn column = f.getAnnotation(CsvColumn.class);
@@ -247,6 +249,9 @@ public class CsvEntityWriter<T> implements Closeable, Flushable {
 					throw new IOException(String.format("Invalid CsvColumn field %s", f.getName()));
 				}
 				values[pos] = template.objectToString(pos, getFieldValue(entity, f));
+				if (values[pos] == null && !column.defaultValue().isEmpty()) {
+					values[pos] = column.defaultValue();
+				}
 			}
 		}
 		return Arrays.asList(values);

@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 the original author or authors.
+ * Copyright 2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,6 +35,7 @@ import com.orangesignal.csv.Constants;
 import com.orangesignal.csv.CsvConfig;
 import com.orangesignal.csv.CsvReader;
 import com.orangesignal.csv.bean.CsvEntityTemplate;
+import com.orangesignal.csv.entity.DefaultValuePrice;
 import com.orangesignal.csv.entity.Price;
 import com.orangesignal.csv.entity.Price2;
 import com.orangesignal.csv.filters.SimpleCsvNamedValueFilter;
@@ -166,6 +167,37 @@ public class CsvEntityReaderTest {
 
 	// ------------------------------------------------------------------------
 	// パブリック メソッド
+
+	@Test
+	public void testDefaultValue() throws IOException {
+		final CsvEntityReader<DefaultValuePrice> reader = CsvEntityReader.newInstance(
+				new CsvReader(new StringReader("シンボル,名称,価格,出来高,日付,時刻\r\nAAAA,aaa,10\\,000,10,2009/10/28,10:24:00\r\nNULL,NULL,NULL,0,NULL,NULL"), cfg),
+				DefaultValuePrice.class
+			);
+		try {
+			final DefaultValuePrice o1 = reader.read();
+			assertThat(o1.symbol, is("AAAA"));
+			assertThat(o1.name, is("aaa"));
+			assertThat(o1.price.longValue(), is(10000L));
+			assertThat(o1.volume.longValue(), is(10L));
+
+			final SimpleDateFormat df = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+			df.setTimeZone(TimeZone.getTimeZone("Asia/Tokyo"));
+			assertThat(df.format(o1.date), is("2009/10/28 10:24:00"));
+
+			final DefaultValuePrice o2 = reader.read();
+			assertThat(o2.symbol, is("XXXX"));
+			assertThat(o2.name, is("xxx"));
+			assertNull(o2.price);
+			assertThat(o2.volume.longValue(), is(0L));
+			assertThat(df.format(o2.date), is("2014/02/02 12:00:00"));
+
+			final DefaultValuePrice last = reader.read();
+			assertNull(last);
+		} finally {
+			reader.close();
+		}
+	}
 
 	@Test
 	public void testLoadPrice() throws IOException {
