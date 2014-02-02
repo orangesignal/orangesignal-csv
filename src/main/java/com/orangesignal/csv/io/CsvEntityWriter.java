@@ -219,6 +219,9 @@ public class CsvEntityWriter<T> implements Closeable, Flushable {
 			if (columns != null) {
 				int arrayIndex = 0;
 				for (final CsvColumn column : columns.value()) {
+					if (!column.writable()) {
+						continue;
+					}
 					int pos = column.position();
 					if (pos < 0) {
 						pos = columnNames.indexOf(defaultIfEmpty(column.name(), f.getName()));
@@ -240,7 +243,7 @@ public class CsvEntityWriter<T> implements Closeable, Flushable {
 				}
 			}
 			final CsvColumn column = f.getAnnotation(CsvColumn.class);
-			if (column != null) {
+			if (column != null && column.writable()) {
 				int pos = column.position();
 				if (pos < 0) {
 					pos = columnNames.indexOf(defaultIfEmpty(column.name(), f.getName()));

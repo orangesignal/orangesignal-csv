@@ -113,6 +113,45 @@ public @interface CsvColumn {
 	 * @return この項目のデフォルト値
 	 * @since 2.2
 	 */
+	@Deprecated
 	String defaultValue() default "";
+
+	/**
+	 * 
+	 * @return
+	 * @since 2.2
+	 * @deprecated 意味がない。不要な気がする
+	 */
+	@Deprecated
+	boolean readable() default true;
+
+	/**
+	 * 
+	 * @return
+	 * @since 2.2
+	 */
+	@Deprecated
+	boolean writable() default true;
+
+	/**
+	 * 
+	 * @return
+	 * @since 2.2
+	 * @deprecated defaultValue との関係性は？
+	 */
+	@Deprecated
+	int length() default -1;
+
+	/**
+	 * 
+	 * @return
+	 * @since 2.2
+	 * @deprecated まぎらわしい名前？
+	 */
+	@Deprecated
+	boolean nullable() default true;
+
+	@Deprecated
+	boolean unique() default false;
 
 }

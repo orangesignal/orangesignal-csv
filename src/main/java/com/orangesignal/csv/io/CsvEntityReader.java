@@ -245,6 +245,9 @@ public class CsvEntityReader<T> implements Closeable {
 					object = Array.newInstance(field.getType().getComponentType(), columns.value().length);
 					int arrayIndex = 0;
 					for (final CsvColumn column : columns.value()) {
+						if (!column.readable()) {
+							continue;
+						}
 						String value;
 						final int pos = getPosition(column, field, columnNames);
 						if (pos != -1) {
@@ -260,6 +263,9 @@ public class CsvEntityReader<T> implements Closeable {
 				} else {
 					final StringBuilder sb = new StringBuilder();
 					for (final CsvColumn column : columns.value()) {
+						if (!column.readable()) {
+							continue;
+						}
 						final int pos = getPosition(column, field, columnNames);
 						if (pos != -1) {
 							final String s = values.get(pos);
@@ -274,7 +280,7 @@ public class CsvEntityReader<T> implements Closeable {
 				}
 			}
 			final CsvColumn column = field.getAnnotation(CsvColumn.class);
-			if (column != null) {
+			if (column != null && column.readable()) {
 				final int pos = getPosition(column, field, columnNames);
 				if (pos != -1) {
 					String value = values.get(pos);
