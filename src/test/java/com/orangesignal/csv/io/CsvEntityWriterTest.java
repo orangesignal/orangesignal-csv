@@ -23,6 +23,8 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.TimeZone;
 
 import org.junit.BeforeClass;
@@ -36,6 +38,9 @@ import com.orangesignal.csv.CsvWriter;
 import com.orangesignal.csv.bean.CsvEntityTemplate;
 import com.orangesignal.csv.entity.DefaultValuePrice;
 import com.orangesignal.csv.entity.Price;
+import com.orangesignal.csv.entity.StringArrayEntity;
+import com.orangesignal.csv.entity.WritableEntity;
+import com.orangesignal.csv.entity.WritableNoHeaderEntity;
 import com.orangesignal.csv.filters.SimpleCsvNamedValueFilter;
 
 /**
@@ -346,6 +351,92 @@ public class CsvEntityWriterTest {
 			writer.close();
 		}
 		assertThat(sw.getBuffer().toString(), is("シンボル,名称,価格,出来高,日付,時刻\r\nAAAA,aaa,10\\,000,10,2008/10/28,10:24:00\r\nXXXX,xxx,NULL,0,2014/02/02,12:00:00\r\nCCCC,ccc,20\\,000,100,2008/10/26,14:20:10\r\n"));
+	}
+
+	@Test
+	public void testWritable() throws Exception {
+		final StringWriter sw = new StringWriter();
+		final CsvEntityWriter<WritableEntity> writer = CsvEntityWriter.newInstance(
+				new CsvWriter(sw, cfg),
+				WritableEntity.class
+			);
+		try {
+			writer.writeHeader();
+			writer.flush();
+			assertThat(sw.getBuffer().toString(), is("col2,col3\r\n"));
+
+			final WritableEntity o1 = new WritableEntity();
+			o1.array = new String[]{ "あ", null, "う" };
+			o1.str = "えお";
+			writer.write(o1);
+			writer.flush();
+			assertThat(sw.getBuffer().toString(), is("col2,col3\r\nNULL,う\r\n"));
+
+			final WritableEntity o2 = new WritableEntity();
+			o2.array = new String[]{ "ア", "イ", "ウ" };
+			o2.str = "エオ";
+			writer.write(o2);
+			writer.flush();
+			assertThat(sw.getBuffer().toString(), is("col2,col3\r\nNULL,う\r\nイ,ウ\r\n"));
+
+			final WritableEntity o3 = new WritableEntity();
+			o3.array = new String[]{ null, null, null };
+			o3.str = null;
+			writer.write(o3);
+			writer.flush();
+			assertThat(sw.getBuffer().toString(), is("col2,col3\r\nNULL,う\r\nイ,ウ\r\nNULL,NULL\r\n"));
+
+			final WritableEntity o4 = new WritableEntity();
+			o4.array = null;
+			o4.str = "null";
+			writer.write(o4);
+			writer.flush();
+			assertThat(sw.getBuffer().toString(), is("col2,col3\r\nNULL,う\r\nイ,ウ\r\nNULL,NULL\r\nNULL,NULL\r\n"));
+		} finally {
+			writer.close();
+		}
+		assertThat(sw.getBuffer().toString(), is("col2,col3\r\nNULL,う\r\nイ,ウ\r\nNULL,NULL\r\nNULL,NULL\r\n"));
+	}
+
+	@Test
+	public void testWritableNoHeader() throws Exception {
+		final StringWriter sw = new StringWriter();
+		final CsvEntityWriter<WritableNoHeaderEntity> writer = CsvEntityWriter.newInstance(
+				new CsvWriter(sw, cfg),
+				WritableNoHeaderEntity.class
+			);
+		try {
+			final WritableNoHeaderEntity o1 = new WritableNoHeaderEntity();
+			o1.array = new String[]{ "あ", null, "う" };
+			o1.str = "えお";
+			writer.write(o1);
+			writer.flush();
+			assertThat(sw.getBuffer().toString(), is("NULL,う\r\n"));
+
+			final WritableNoHeaderEntity o2 = new WritableNoHeaderEntity();
+			o2.array = new String[]{ "ア", "イ", "ウ" };
+			o2.str = "エオ";
+			writer.write(o2);
+			writer.flush();
+			assertThat(sw.getBuffer().toString(), is("NULL,う\r\nイ,ウ\r\n"));
+
+			final WritableNoHeaderEntity o3 = new WritableNoHeaderEntity();
+			o3.array = new String[]{ null, null, null };
+			o3.str = null;
+			writer.write(o3);
+			writer.flush();
+			assertThat(sw.getBuffer().toString(), is("NULL,う\r\nイ,ウ\r\nNULL,NULL\r\n"));
+
+			final WritableNoHeaderEntity o4 = new WritableNoHeaderEntity();
+			o4.array = null;
+			o4.str = "null";
+			writer.write(o4);
+			writer.flush();
+			assertThat(sw.getBuffer().toString(), is("NULL,う\r\nイ,ウ\r\nNULL,NULL\r\nNULL,NULL\r\n"));
+		} finally {
+			writer.close();
+		}
+		assertThat(sw.getBuffer().toString(), is("NULL,う\r\nイ,ウ\r\nNULL,NULL\r\nNULL,NULL\r\n"));
 	}
 
 	@Test

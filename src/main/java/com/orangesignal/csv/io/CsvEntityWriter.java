@@ -135,7 +135,7 @@ public class CsvEntityWriter<T> implements Closeable, Flushable {
 	private void ensureHeader() throws IOException {
 		synchronized (this) {
 			if (columnNames == null) {
-				final List<String> names = template.createColumnNames();
+				final List<String> names = template.createWritableColumnNames();
 				// ヘッダ行が有効な場合は項目名の一覧を出力します。
 				if (template.getType().getAnnotation(CsvEntity.class).header()) {
 					writer.writeValues(names);
@@ -220,6 +220,7 @@ public class CsvEntityWriter<T> implements Closeable, Flushable {
 				int arrayIndex = 0;
 				for (final CsvColumn column : columns.value()) {
 					if (!column.writable()) {
+						arrayIndex++;
 						continue;
 					}
 					int pos = column.position();

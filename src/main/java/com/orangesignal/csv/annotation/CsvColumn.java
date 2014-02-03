@@ -113,7 +113,6 @@ public @interface CsvColumn {
 	 * @return この項目のデフォルト値
 	 * @since 2.2
 	 */
-	@Deprecated
 	String defaultValue() default "";
 
 	/**
@@ -126,11 +125,11 @@ public @interface CsvColumn {
 	boolean readable() default true;
 
 	/**
+	 * この項目が出力可能かどうかを返します。
 	 * 
 	 * @return
 	 * @since 2.2
 	 */
-	@Deprecated
 	boolean writable() default true;
 
 	/**

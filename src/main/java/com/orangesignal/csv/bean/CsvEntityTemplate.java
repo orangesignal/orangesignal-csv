@@ -160,6 +160,63 @@ public class CsvEntityTemplate<T> extends AbstractCsvBeanTemplate<T, CsvEntityTe
 		return results;
 	}
 
+	/**
+	 * 出力可能な項目名のリストを作成して返します。
+	 * 
+	 * @return 項目名のリスト
+	 * @since 2.2
+	 */
+	public List<String> createWritableColumnNames() {
+		final SortedMap<Integer, String> positionMap = new TreeMap<Integer, String>();
+		final List<String> adding = new ArrayList<String>();
+
+		for (final Field f : getType().getDeclaredFields()) {
+			final CsvColumns columns = f.getAnnotation(CsvColumns.class);
+			if (columns != null) {
+				for (final CsvColumn column : columns.value()) {
+					if (!column.writable()) {
+						continue;
+					}
+					final int pos = column.position();
+					final String name = defaultIfEmpty(column.name(), f.getName());
+					if (pos >= 0) {
+						if (positionMap.containsKey(pos)) {
+							continue;
+						}
+						positionMap.put(pos, name);
+					} else {
+						adding.add(name);
+					}
+				}
+			}
+			final CsvColumn column = f.getAnnotation(CsvColumn.class);
+			if (column != null && column.writable()) {
+				final int pos = column.position();
+				final String name = defaultIfEmpty(column.name(), f.getName());
+				if (pos >= 0) {
+					if (positionMap.containsKey(pos)) {
+						continue;
+					}
+					positionMap.put(pos, name);
+				} else {
+					adding.add(name);
+				}
+			}
+		}
+
+		final int max = positionMap.size() > 0 ? positionMap.lastKey().intValue() + 1 : 0;
+		final String[] names = new String[max];
+		for (final Map.Entry<Integer, String> entry : positionMap.entrySet()) {
+			names[entry.getKey().intValue()] = entry.getValue();
+		}
+
+		final List<String> results = new ArrayList<String>(Arrays.asList(names));
+		if (adding.size() > 0) {
+			results.addAll(adding);
+		}
+		return results;
+	}
+
 	public void prepare(final List<String> names, final Field[] fields) {
 		super.valueParserMapping(new HashMap<String, Format>(0));
 		super.valueFormatterMapping(new HashMap<Object, Format>(0));
