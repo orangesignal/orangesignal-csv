@@ -127,7 +127,7 @@ public @interface CsvColumn {
 	/**
 	 * この項目が出力可能かどうかを返します。
 	 * 
-	 * @return
+	 * @return この項目が出力可能かどうか
 	 * @since 2.2
 	 */
 	boolean writable() default true;
