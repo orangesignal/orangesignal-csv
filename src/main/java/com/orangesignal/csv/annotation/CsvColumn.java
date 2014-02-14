@@ -150,7 +150,4 @@ public @interface CsvColumn {
 	@Deprecated
 	boolean nullable() default true;
 
-	@Deprecated
-	boolean unique() default false;
-
 }
