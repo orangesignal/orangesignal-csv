@@ -26,6 +26,24 @@ If you are using Maven, simply copy the following dependency into your pom.xml f
 
 ## Examples
 
+CSV entity class
+
+```java
+@CsvEntity
+public class Customer {
+
+    @CsvColumn(name = "name")
+    public String name;
+
+    @CsvColumn(name = "age")
+    public Integer age;
+
+}
+```
+
+example code
+
+
 ```java
 CsvConfig cfg = new CsvConfig(',', '"', '"');
 cfg.setNullString("NULL");
