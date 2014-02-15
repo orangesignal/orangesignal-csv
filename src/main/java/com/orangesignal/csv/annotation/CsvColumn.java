@@ -29,6 +29,8 @@ import java.lang.annotation.Target;
  * &#064;CsvColumn(position = 0)
  * &#064;CsvColumn(name = "価格")
  * &#064;CsvColumn(position = 0, name = "価格")
+ * &#064;CsvColumn(name = "価格", access = CsvColumnAccess.READ)
+ * &#064;CsvColumn(name = "銘柄", required = true, defaultValue = "日経225")
  * 
  * 
  * 書式形式文字列の設定例:
