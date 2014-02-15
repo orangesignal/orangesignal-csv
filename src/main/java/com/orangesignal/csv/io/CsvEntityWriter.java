@@ -207,6 +207,11 @@ public class CsvEntityWriter<T> implements Closeable, Flushable {
 			if (template.isAccept(columnNames, values)) {
 				return false;
 			}
+//			for (final String value : values) {
+//				if (value == null && column.required()) {
+//					throw new CsvValueException(String.format("%s must not be null", field.getName()), values);
+//				}
+//			}
 			writer.writeValues(values);
 			return true;
 		}
@@ -214,24 +219,24 @@ public class CsvEntityWriter<T> implements Closeable, Flushable {
 
 	private List<String> toValues(final T entity) throws IOException {
 		final String[] values = new String[columnCount];
-		for (final Field f : entity.getClass().getDeclaredFields()) {
-			final CsvColumns columns = f.getAnnotation(CsvColumns.class);
+		for (final Field field : entity.getClass().getDeclaredFields()) {
+			final CsvColumns columns = field.getAnnotation(CsvColumns.class);
 			if (columns != null) {
 				int arrayIndex = 0;
 				for (final CsvColumn column : columns.value()) {
-					if (!column.writable()) {
+					if (!column.access().isWriteable()) {
 						arrayIndex++;
 						continue;
 					}
 					int pos = column.position();
 					if (pos < 0) {
-						pos = columnNames.indexOf(defaultIfEmpty(column.name(), f.getName()));
+						pos = columnNames.indexOf(defaultIfEmpty(column.name(), field.getName()));
 					}
 					if (pos == -1) {
-						throw new IOException(String.format("Invalid CsvColumn field %s", f.getName()));
+						throw new IOException(String.format("Invalid CsvColumn field %s", field.getName()));
 					}
-					Object o = getFieldValue(entity, f);
-					if (f.getType().isArray()) {
+					Object o = getFieldValue(entity, field);
+					if (field.getType().isArray()) {
 						if (o != null) {
 							o = Array.get(o, arrayIndex);
 						}
@@ -241,20 +246,26 @@ public class CsvEntityWriter<T> implements Closeable, Flushable {
 					if (values[pos] == null && !column.defaultValue().isEmpty()) {
 						values[pos] = column.defaultValue();
 					}
+					if (values[pos] == null && column.required()) {
+						throw new IOException(String.format("%s must not be null", columnNames.get(pos)));
+					}
 				}
 			}
-			final CsvColumn column = f.getAnnotation(CsvColumn.class);
-			if (column != null && column.writable()) {
+			final CsvColumn column = field.getAnnotation(CsvColumn.class);
+			if (column != null && column.access().isWriteable()) {
 				int pos = column.position();
 				if (pos < 0) {
-					pos = columnNames.indexOf(defaultIfEmpty(column.name(), f.getName()));
+					pos = columnNames.indexOf(defaultIfEmpty(column.name(), field.getName()));
 				}
 				if (pos == -1) {
-					throw new IOException(String.format("Invalid CsvColumn field %s", f.getName()));
+					throw new IOException(String.format("Invalid CsvColumn field %s", field.getName()));
 				}
-				values[pos] = template.objectToString(pos, getFieldValue(entity, f));
+				values[pos] = template.objectToString(pos, getFieldValue(entity, field));
 				if (values[pos] == null && !column.defaultValue().isEmpty()) {
 					values[pos] = column.defaultValue();
+				}
+				if (values[pos] == null && column.required()) {
+					throw new IOException(String.format("%s must not be null", columnNames.get(pos)));
 				}
 			}
 		}

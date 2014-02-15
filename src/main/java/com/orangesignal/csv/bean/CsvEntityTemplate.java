@@ -174,7 +174,7 @@ public class CsvEntityTemplate<T> extends AbstractCsvBeanTemplate<T, CsvEntityTe
 			final CsvColumns columns = f.getAnnotation(CsvColumns.class);
 			if (columns != null) {
 				for (final CsvColumn column : columns.value()) {
-					if (!column.writable()) {
+					if (!column.access().isWriteable()) {
 						continue;
 					}
 					final int pos = column.position();
@@ -190,7 +190,7 @@ public class CsvEntityTemplate<T> extends AbstractCsvBeanTemplate<T, CsvEntityTe
 				}
 			}
 			final CsvColumn column = f.getAnnotation(CsvColumn.class);
-			if (column != null && column.writable()) {
+			if (column != null && column.access().isWriteable()) {
 				final int pos = column.position();
 				final String name = defaultIfEmpty(column.name(), f.getName());
 				if (pos >= 0) {

@@ -108,46 +108,35 @@ public @interface CsvColumn {
 	String currency() default "";
 
 	/**
+	 * この項目のアクセスモードを返します。
+	 * 
+	 * @return この項目へのアクセスモード
+	 * @since 2.2
+	 */
+	CsvColumnAccess access() default CsvColumnAccess.READ_WRITE;
+
+	/**
+	 * 必須項目かどうかを返します。
+	 * 
+	 * @return 必須項目かどうか
+	 * @since 2.2
+	 */
+	boolean required() default false;
+
+	/**
+	 * 判定する正規表現を返します。
+	 * 
+	 * @return 判定する正規表現
+	 * @since 2.2
+	 */
+	String pattern() default "";
+
+	/**
 	 * この項目のデフォルト値を返します。
 	 * 
 	 * @return この項目のデフォルト値
 	 * @since 2.2
 	 */
 	String defaultValue() default "";
-
-	/**
-	 * 
-	 * @return
-	 * @since 2.2
-	 * @deprecated 意味がない。不要な気がする
-	 */
-	@Deprecated
-	boolean readable() default true;
-
-	/**
-	 * この項目が出力可能かどうかを返します。
-	 * 
-	 * @return この項目が出力可能かどうか
-	 * @since 2.2
-	 */
-	boolean writable() default true;
-
-	/**
-	 * 
-	 * @return
-	 * @since 2.2
-	 * @deprecated defaultValue との関係性は？
-	 */
-	@Deprecated
-	int length() default -1;
-
-	/**
-	 * 
-	 * @return
-	 * @since 2.2
-	 * @deprecated まぎらわしい名前？
-	 */
-	@Deprecated
-	boolean nullable() default true;
 
 }

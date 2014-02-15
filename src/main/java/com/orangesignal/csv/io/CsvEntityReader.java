@@ -27,6 +27,7 @@ import java.util.Collections;
 import java.util.List;
 
 import com.orangesignal.csv.CsvReader;
+import com.orangesignal.csv.CsvValueException;
 import com.orangesignal.csv.annotation.CsvColumn;
 import com.orangesignal.csv.annotation.CsvColumns;
 import com.orangesignal.csv.annotation.CsvEntity;
@@ -245,7 +246,7 @@ public class CsvEntityReader<T> implements Closeable {
 					object = Array.newInstance(field.getType().getComponentType(), columns.value().length);
 					int arrayIndex = 0;
 					for (final CsvColumn column : columns.value()) {
-						if (!column.readable()) {
+						if (!column.access().isReadable()) {
 							continue;
 						}
 						String value;
@@ -258,12 +259,15 @@ public class CsvEntityReader<T> implements Closeable {
 						if (value == null && !column.defaultValue().isEmpty()) {
 							value = column.defaultValue();
 						}
+						if (value == null && column.required()) {
+							throw new CsvValueException(String.format("%s must not be null", columnNames.get(pos)), values);
+						}
 						Array.set(object, arrayIndex++, template.stringToObject(field, value));
 					}
 				} else {
 					final StringBuilder sb = new StringBuilder();
 					for (final CsvColumn column : columns.value()) {
-						if (!column.readable()) {
+						if (!column.access().isReadable()) {
 							continue;
 						}
 						final int pos = getPosition(column, field, columnNames);
@@ -273,6 +277,8 @@ public class CsvEntityReader<T> implements Closeable {
 								sb.append(s);
 							} else if (!column.defaultValue().isEmpty()) {
 								sb.append(column.defaultValue());
+							} else if (column.required()) {
+								throw new CsvValueException(String.format("%s must not be null", columnNames.get(pos)), values);
 							}
 						}
 					}
@@ -280,12 +286,15 @@ public class CsvEntityReader<T> implements Closeable {
 				}
 			}
 			final CsvColumn column = field.getAnnotation(CsvColumn.class);
-			if (column != null && column.readable()) {
+			if (column != null && column.access().isReadable()) {
 				final int pos = getPosition(column, field, columnNames);
 				if (pos != -1) {
 					String value = values.get(pos);
 					if (value == null && !column.defaultValue().isEmpty()) {
 						value = column.defaultValue();
+					}
+					if (value == null && column.required()) {
+						throw new CsvValueException(String.format("%s must not be null", columnNames.get(pos)), values);
 					}
 					object = template.stringToObject(field, value);
 				}
