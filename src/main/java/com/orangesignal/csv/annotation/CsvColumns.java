@@ -38,6 +38,4 @@ public @interface CsvColumns {
 	 */
 	CsvColumn[] value();
 
-//	String separator() default "";		// XXX - 後で検討する
-
 }
