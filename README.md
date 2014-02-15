@@ -24,6 +24,27 @@ If you are using Maven, simply copy the following dependency into your pom.xml f
 </dependency>
 ```
 
+## Examples
+
+```java
+CsvConfig cfg = new CsvConfig(',', '"', '"');
+cfg.setNullString("NULL");
+cfg.setIgnoreLeadingWhitespaces(true);
+cfg.setIgnoreTrailingWhitespaces(true);
+cfg.setIgnoreEmptyLines(true);
+cfg.setIgnoreLinePatterns(Pattern.compile("^#.*$"));
+cfg.setVariableColumns(false);
+
+List<Customer> list = new CsvEntityManager()
+    .config(cfg)
+    .load(Customer.class)
+    .filter(new SimpleBeanFilter().in("name", "Smith", "Johnson").gt("age", 21))
+    .offset(10)
+    .limit(1000)
+    .order(BeanOrder.desc("age"))
+    .from(reader);
+```
+
 ## How to use
 
 * [User guide](http://orangesignal.github.io/orangesignal-csv/userguide.html)
