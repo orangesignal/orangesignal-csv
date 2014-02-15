@@ -29,7 +29,7 @@ If you are using Maven, simply copy the following dependency into your pom.xml f
 CSV entity class
 
 ```java
-@CsvEntity
+@CsvEntity(header = true)
 public class Customer {
 
     @CsvColumn(name = "name")
