@@ -128,6 +128,7 @@ public @interface CsvColumn {
 	 * 
 	 * @return 判定する正規表現
 	 * @since 2.2
+	 * @deprecated
 	 */
 	String pattern() default "";
 
