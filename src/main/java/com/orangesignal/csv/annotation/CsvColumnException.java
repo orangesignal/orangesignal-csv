@@ -19,7 +19,7 @@ package com.orangesignal.csv.annotation;
 import java.io.IOException;
 
 /**
- * 区切り文字形式データの Java プログラム要素に関しての例外が発生した場合にスローされる例外を提供します。
+ * {@link CsvColumn#required()} 制約に違反した場合にスローされる例外を提供します。
  * 
  * @author Koji Sugisawa
  * @since 2.2
@@ -29,28 +29,28 @@ public class CsvColumnException extends IOException {
 	private static final long serialVersionUID = -4822064613042281469L;
 
 	/**
-	 * Java プログラム要素を保持します。
+	 * 原因となったオブジェクトを保持します。
 	 */
-	private final Object entity;
+	private final Object object;
 
 	/**
-	 * 指定された詳細メッセージと区切り文字形式データの Java プログラム要素を持つ {@link CsvColumnException} を構築します。
+	 * 指定された詳細メッセージと原因となったオブジェクトを持つ {@link CsvColumnException} を構築します。
 	 * 
 	 * @param message 詳細メッセージ
-	 * @param entity 区切り文字形式データの Java プログラム要素
+	 * @param object 原因となったオブジェクト
 	 */
-	public CsvColumnException(final String message, final Object entity) {
+	public CsvColumnException(final String message, final Object object) {
 		super(message);
-		this.entity = entity;
+		this.object = object;
 	}
 
 	/**
-	 * 区切り文字形式データの Java プログラム要素を返します。
+	 * 原因となったオブジェクトを返します。
 	 * 
-	 * @return 区切り文字形式データの Java プログラム要素
+	 * @return 原因となったオブジェクトまたは {@code null}
 	 */
-	public Object getEntity() {
-		return entity;
+	public Object getObject() {
+		return object;
 	}
 
 }
