@@ -3,6 +3,7 @@
 *.jar
 
 # Maven Files
+/target
 target/*
 core/target/*
 legacy/target/*
