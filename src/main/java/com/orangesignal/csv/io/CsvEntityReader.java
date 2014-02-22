@@ -27,7 +27,6 @@ import java.util.Collections;
 import java.util.List;
 
 import com.orangesignal.csv.CsvReader;
-import com.orangesignal.csv.CsvValueException;
 import com.orangesignal.csv.annotation.CsvColumn;
 import com.orangesignal.csv.annotation.CsvColumnException;
 import com.orangesignal.csv.annotation.CsvColumns;
