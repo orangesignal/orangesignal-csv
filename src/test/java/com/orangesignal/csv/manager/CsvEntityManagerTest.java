@@ -38,8 +38,8 @@ import com.orangesignal.csv.Constants;
 import com.orangesignal.csv.CsvConfig;
 import com.orangesignal.csv.entity.IntArrayEntity;
 import com.orangesignal.csv.entity.IntegerArrayEntity;
-import com.orangesignal.csv.entity.StringArrayEntity;
 import com.orangesignal.csv.entity.Price;
+import com.orangesignal.csv.entity.StringArrayEntity;
 import com.orangesignal.csv.filters.SimpleBeanFilter;
 import com.orangesignal.csv.filters.SimpleCsvNamedValueFilter;
 
@@ -317,6 +317,77 @@ public class CsvEntityManagerTest {
 			assertThat(o2.str, is("エオ"));
 		} finally {
 			reader.close();
+		}
+	}
+
+	@Test
+	public void testWriteDisableHeader1() throws Exception {
+		final StringWriter sw = new StringWriter();
+		try {
+			// Arrange
+			sw.append("シンボル,名称,価格,出来高,日付,時刻\r\nAAAA,aaa,10\\,000,10,2008/10/28,10:24:00\r\nBBBB,bbb,NULL,0,NULL,NULL\r\nCCCC,ccc,20\\,000,100,2008/10/26,14:20:10\r\n");
+			assertThat(sw.getBuffer().toString(), is("シンボル,名称,価格,出来高,日付,時刻\r\nAAAA,aaa,10\\,000,10,2008/10/28,10:24:00\r\nBBBB,bbb,NULL,0,NULL,NULL\r\nCCCC,ccc,20\\,000,100,2008/10/26,14:20:10\r\n"));
+
+			final DateFormat df = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+			df.setTimeZone(TimeZone.getTimeZone("Asia/Tokyo"));
+
+			final List<Price> list = new ArrayList<Price>();
+			list.add(new Price("AAAA", "aaa", 10000, 10, df.parse("2008/10/28 10:24:00")));
+			list.add(new Price("BBBB", "bbb", null, 0, null));
+			list.add(new Price("CCCC", "ccc", 20000, 100, df.parse("2008/10/26 14:20:10")));
+
+			// Act
+			new CsvEntityManager(cfg).save(list, Price.class).disableWriteHeader(true).to(sw);
+			sw.flush();
+
+			// Assert
+			assertThat(sw.getBuffer().toString(), is(
+					"シンボル,名称,価格,出来高,日付,時刻\r\n" +
+					"AAAA,aaa,10\\,000,10,2008/10/28,10:24:00\r\n" +
+					"BBBB,bbb,NULL,0,NULL,NULL\r\n" +
+					"CCCC,ccc,20\\,000,100,2008/10/26,14:20:10\r\n" +
+					"AAAA,aaa,10\\,000,10,2008/10/28,10:24:00\r\n" +
+					"BBBB,bbb,NULL,0,NULL,NULL\r\n" +
+					"CCCC,ccc,20\\,000,100,2008/10/26,14:20:10\r\n"
+				));
+		} finally {
+			sw.close();
+		}
+	}
+
+	@Test
+	public void testWriteDisableHeader2() throws Exception {
+		final StringWriter sw = new StringWriter();
+		try {
+			// Arrange
+			sw.append("シンボル,名称,価格,出来高,日付,時刻\r\nAAAA,aaa,10\\,000,10,2008/10/28,10:24:00\r\nBBBB,bbb,NULL,0,NULL,NULL\r\nCCCC,ccc,20\\,000,100,2008/10/26,14:20:10\r\n");
+			assertThat(sw.getBuffer().toString(), is("シンボル,名称,価格,出来高,日付,時刻\r\nAAAA,aaa,10\\,000,10,2008/10/28,10:24:00\r\nBBBB,bbb,NULL,0,NULL,NULL\r\nCCCC,ccc,20\\,000,100,2008/10/26,14:20:10\r\n"));
+
+			final DateFormat df = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+			df.setTimeZone(TimeZone.getTimeZone("Asia/Tokyo"));
+
+			final List<Price> list = new ArrayList<Price>();
+			list.add(new Price("AAAA", "aaa", 10000, 10, df.parse("2008/10/28 10:24:00")));
+			list.add(new Price("BBBB", "bbb", null, 0, null));
+			list.add(new Price("CCCC", "ccc", 20000, 100, df.parse("2008/10/26 14:20:10")));
+
+			// Act
+			new CsvEntityManager(cfg).save(list, Price.class).to(sw);
+			sw.flush();
+
+			// Assert
+			assertThat(sw.getBuffer().toString(), is(
+					"シンボル,名称,価格,出来高,日付,時刻\r\n" +
+					"AAAA,aaa,10\\,000,10,2008/10/28,10:24:00\r\n" +
+					"BBBB,bbb,NULL,0,NULL,NULL\r\n" +
+					"CCCC,ccc,20\\,000,100,2008/10/26,14:20:10\r\n" +
+					"シンボル,名称,価格,出来高,日付,時刻\r\n" +
+					"AAAA,aaa,10\\,000,10,2008/10/28,10:24:00\r\n" +
+					"BBBB,bbb,NULL,0,NULL,NULL\r\n" +
+					"CCCC,ccc,20\\,000,100,2008/10/26,14:20:10\r\n"
+				));
+		} finally {
+			sw.close();
 		}
 	}
 

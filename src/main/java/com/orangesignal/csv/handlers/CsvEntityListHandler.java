@@ -41,6 +41,13 @@ import com.orangesignal.csv.io.CsvEntityWriter;
 public class CsvEntityListHandler<T> extends AbstractBeanListHandler<T, CsvEntityTemplate<T>, CsvEntityListHandler<T>> implements CsvEntityOperation<CsvEntityListHandler<T>> {
 
 	/**
+	 * 区切り文字形式データの列見出し (ヘッダ) 行の出力を無効化するかどうかを保持します。
+	 * 
+	 * @since 2.2
+	 */
+	private boolean disableWriteHeader;
+
+	/**
 	 * コンストラクタです。
 	 * 
 	 * @param entityClass 区切り文字形式データ注釈要素 {@link com.orangesignal.csv.annotation.CsvEntity} で注釈付けされた Java プログラム要素の型
@@ -48,6 +55,28 @@ public class CsvEntityListHandler<T> extends AbstractBeanListHandler<T, CsvEntit
 	 */
 	public CsvEntityListHandler(final Class<T> entityClass) {
 		super(CsvEntityTemplate.newInstance(entityClass));
+	}
+
+	/**
+	 * 区切り文字形式データの列見出し (ヘッダ) 行の出力を無効化するかどうかを設定します。
+	 * 
+	 * @param disableWriteHeader 区切り文字形式データの列見出し (ヘッダ) 行の出力を無効化するかどうか
+	 * @return このオブジェクトへの参照
+	 * @since 2.2
+	 */
+	public CsvEntityListHandler<T> disableWriteHeader(final boolean disableWriteHeader) {
+		setDisableWriteHeader(disableWriteHeader);
+		return this;
+	}
+
+	/**
+	 * 区切り文字形式データの列見出し (ヘッダ) 行の出力を無効化するかどうかを設定します。
+	 * 
+	 * @param disableWriteHeader 区切り文字形式データの列見出し (ヘッダ) 行の出力を無効化するかどうか
+	 * @since 2.2
+	 */
+	public void setDisableWriteHeader(final boolean disableWriteHeader) {
+		this.disableWriteHeader = disableWriteHeader;
 	}
 
 	@Override
@@ -98,7 +127,7 @@ public class CsvEntityListHandler<T> extends AbstractBeanListHandler<T, CsvEntit
 		}
 
 		@SuppressWarnings("resource")
-		final CsvEntityWriter<T> w = new CsvEntityWriter<T>(writer, template);
+		final CsvEntityWriter<T> w = new CsvEntityWriter<T>(writer, template, disableWriteHeader);
 
 		// データ出力
 		for (final T entity : entities) {

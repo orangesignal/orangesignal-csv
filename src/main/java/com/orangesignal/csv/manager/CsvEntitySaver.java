@@ -49,6 +49,18 @@ public class CsvEntitySaver<T> extends AbstractCsvSaver<T, CsvEntityListHandler<
 		this.handler = new CsvEntityListHandler<T>(entityClass);
 	}
 
+	/**
+	 * 区切り文字形式データの列見出し (ヘッダ) 行の出力を無効化するかどうかを設定します。
+	 * 
+	 * @param disableWriteHeader 区切り文字形式データの列見出し (ヘッダ) 行の出力を無効化するかどうか
+	 * @return このオブジェクトへの参照
+	 * @since 2.2
+	 */
+	public CsvEntitySaver<T> disableWriteHeader(final boolean disableWriteHeader) {
+		handler.disableWriteHeader(disableWriteHeader);
+		return this;
+	}
+
 	@Override
 	public CsvEntitySaver<T> filter(final CsvNamedValueFilter filter) {
 		handler.filter(filter);

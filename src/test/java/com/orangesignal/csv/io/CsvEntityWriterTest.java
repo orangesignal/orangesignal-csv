@@ -17,20 +17,20 @@
 package com.orangesignal.csv.io;
 
 import static org.hamcrest.core.Is.is;
+import static org.hamcrest.core.IsNull.notNullValue;
 import static org.junit.Assert.assertThat;
 
 import java.io.IOException;
 import java.io.StringWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.TimeZone;
 
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.junit.rules.TemporaryFolder;
 
 import com.orangesignal.csv.Constants;
 import com.orangesignal.csv.CsvConfig;
@@ -38,7 +38,6 @@ import com.orangesignal.csv.CsvWriter;
 import com.orangesignal.csv.bean.CsvEntityTemplate;
 import com.orangesignal.csv.entity.DefaultValuePrice;
 import com.orangesignal.csv.entity.Price;
-import com.orangesignal.csv.entity.StringArrayEntity;
 import com.orangesignal.csv.entity.WritableEntity;
 import com.orangesignal.csv.entity.WritableNoHeaderEntity;
 import com.orangesignal.csv.filters.SimpleCsvNamedValueFilter;
@@ -53,6 +52,9 @@ public class CsvEntityWriterTest {
 
 	@Rule
 	public ExpectedException exception = ExpectedException.none();
+
+	@Rule
+	public TemporaryFolder folder = new TemporaryFolder();
 
 	private static CsvConfig cfg;
 
@@ -270,12 +272,9 @@ public class CsvEntityWriterTest {
 	// パブリック メソッド
 
 	@Test
-	public void testWriteHeader() throws Exception {
+	public void testWriteHeader1() throws Exception {
 		final StringWriter sw = new StringWriter();
-		final CsvEntityWriter<Price> writer = CsvEntityWriter.newInstance(
-				new CsvWriter(sw, cfg),
-				Price.class
-			);
+		final CsvEntityWriter<Price> writer = CsvEntityWriter.newInstance(new CsvWriter(sw, cfg), Price.class);
 		try {
 			final DateFormat df = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 			df.setTimeZone(TimeZone.getTimeZone("Asia/Tokyo"));
@@ -311,6 +310,113 @@ public class CsvEntityWriterTest {
 			writer.close();
 		}
 		assertThat(sw.getBuffer().toString(), is("シンボル,名称,価格,出来高,日付,時刻\r\nAAAA,aaa,10\\,000,10,2008/10/28,10:24:00\r\nBBBB,bbb,NULL,0,NULL,NULL\r\nCCCC,ccc,20\\,000,100,2008/10/26,14:20:10\r\n"));
+	}
+
+	@Test
+	public void testWriteHeader2() throws Exception {
+		final StringWriter sw = new StringWriter();
+		final CsvEntityWriter<Price> writer = CsvEntityWriter.newInstance(new CsvWriter(sw, cfg), Price.class, true);
+		try {
+			final DateFormat df = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+			df.setTimeZone(TimeZone.getTimeZone("Asia/Tokyo"));
+
+			writer.writeHeader();
+			writer.flush();
+			assertThat(sw.getBuffer().toString(), is(""));
+
+			writer.write(new Price("AAAA", "aaa", 10000, 10, df.parse("2008/10/28 10:24:00")));
+			writer.flush();
+			assertThat(sw.getBuffer().toString(), is("AAAA,aaa,10\\,000,10,2008/10/28,10:24:00\r\n"));
+
+			writer.writeHeader();
+			writer.flush();
+			assertThat(sw.getBuffer().toString(), is("AAAA,aaa,10\\,000,10,2008/10/28,10:24:00\r\n"));
+
+			writer.write(new Price("BBBB", "bbb", null, 0, null));
+			writer.flush();
+			assertThat(sw.getBuffer().toString(), is("AAAA,aaa,10\\,000,10,2008/10/28,10:24:00\r\nBBBB,bbb,NULL,0,NULL,NULL\r\n"));
+
+			writer.writeHeader();
+			writer.flush();
+			assertThat(sw.getBuffer().toString(), is("AAAA,aaa,10\\,000,10,2008/10/28,10:24:00\r\nBBBB,bbb,NULL,0,NULL,NULL\r\n"));
+
+			writer.write(new Price("CCCC", "ccc", 20000, 100, df.parse("2008/10/26 14:20:10")));
+			writer.flush();
+			assertThat(sw.getBuffer().toString(), is("AAAA,aaa,10\\,000,10,2008/10/28,10:24:00\r\nBBBB,bbb,NULL,0,NULL,NULL\r\nCCCC,ccc,20\\,000,100,2008/10/26,14:20:10\r\n"));
+
+			writer.writeHeader();
+			writer.flush();
+			assertThat(sw.getBuffer().toString(), is("AAAA,aaa,10\\,000,10,2008/10/28,10:24:00\r\nBBBB,bbb,NULL,0,NULL,NULL\r\nCCCC,ccc,20\\,000,100,2008/10/26,14:20:10\r\n"));
+		} finally {
+			writer.close();
+		}
+		assertThat(sw.getBuffer().toString(), is("AAAA,aaa,10\\,000,10,2008/10/28,10:24:00\r\nBBBB,bbb,NULL,0,NULL,NULL\r\nCCCC,ccc,20\\,000,100,2008/10/26,14:20:10\r\n"));
+	}
+
+	@Test
+	public void testWriteDisableHeader1() throws Exception {
+		final StringWriter sw = new StringWriter();
+
+		// Arrange
+		sw.append("シンボル,名称,価格,出来高,日付,時刻\r\nAAAA,aaa,10\\,000,10,2008/10/28,10:24:00\r\nBBBB,bbb,NULL,0,NULL,NULL\r\nCCCC,ccc,20\\,000,100,2008/10/26,14:20:10\r\n");
+		assertThat(sw.getBuffer().toString(), is("シンボル,名称,価格,出来高,日付,時刻\r\nAAAA,aaa,10\\,000,10,2008/10/28,10:24:00\r\nBBBB,bbb,NULL,0,NULL,NULL\r\nCCCC,ccc,20\\,000,100,2008/10/26,14:20:10\r\n"));
+
+		// Act
+		final CsvEntityWriter<Price> writer = CsvEntityWriter.newInstance(new CsvWriter(sw, cfg), Price.class, true);
+		try {
+			final DateFormat df = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+			df.setTimeZone(TimeZone.getTimeZone("Asia/Tokyo"));
+
+			writer.write(new Price("AAAA", "aaa", 10000, 10, df.parse("2008/10/28 10:24:00")));
+			writer.write(new Price("BBBB", "bbb", null, 0, null));
+			writer.write(new Price("CCCC", "ccc", 20000, 100, df.parse("2008/10/26 14:20:10")));
+		} finally {
+			writer.close();
+		}
+
+		// Assert
+		assertThat(sw.getBuffer().toString(), is(
+				"シンボル,名称,価格,出来高,日付,時刻\r\n" +
+				"AAAA,aaa,10\\,000,10,2008/10/28,10:24:00\r\n" +
+				"BBBB,bbb,NULL,0,NULL,NULL\r\n" +
+				"CCCC,ccc,20\\,000,100,2008/10/26,14:20:10\r\n" +
+				"AAAA,aaa,10\\,000,10,2008/10/28,10:24:00\r\n" +
+				"BBBB,bbb,NULL,0,NULL,NULL\r\n" +
+				"CCCC,ccc,20\\,000,100,2008/10/26,14:20:10\r\n"
+			));
+	}
+
+	@Test
+	public void testWriteDisableHeader2() throws Exception {
+		final StringWriter sw = new StringWriter();
+
+		// Arrange
+		sw.append("シンボル,名称,価格,出来高,日付,時刻\r\nAAAA,aaa,10\\,000,10,2008/10/28,10:24:00\r\nBBBB,bbb,NULL,0,NULL,NULL\r\nCCCC,ccc,20\\,000,100,2008/10/26,14:20:10\r\n");
+
+		// Act
+		final CsvEntityWriter<Price> writer = CsvEntityWriter.newInstance(new CsvWriter(sw, cfg), Price.class, false);
+		try {
+			final DateFormat df = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+			df.setTimeZone(TimeZone.getTimeZone("Asia/Tokyo"));
+
+			writer.write(new Price("AAAA", "aaa", 10000, 10, df.parse("2008/10/28 10:24:00")));
+			writer.write(new Price("BBBB", "bbb", null, 0, null));
+			writer.write(new Price("CCCC", "ccc", 20000, 100, df.parse("2008/10/26 14:20:10")));
+		} finally {
+			writer.close();
+		}
+
+		// Assert
+		assertThat(sw.getBuffer().toString(), is(
+				"シンボル,名称,価格,出来高,日付,時刻\r\n" +
+				"AAAA,aaa,10\\,000,10,2008/10/28,10:24:00\r\n" +
+				"BBBB,bbb,NULL,0,NULL,NULL\r\n" +
+				"CCCC,ccc,20\\,000,100,2008/10/26,14:20:10\r\n" +
+				"シンボル,名称,価格,出来高,日付,時刻\r\n" +
+				"AAAA,aaa,10\\,000,10,2008/10/28,10:24:00\r\n" +
+				"BBBB,bbb,NULL,0,NULL,NULL\r\n" +
+				"CCCC,ccc,20\\,000,100,2008/10/26,14:20:10\r\n"
+			));
 	}
 
 	@Test
@@ -461,6 +567,62 @@ public class CsvEntityWriterTest {
 			writer.close();
 		}
 		assertThat(sw.getBuffer().toString(), is("シンボル,名称,価格,出来高,日付,時刻\r\nGCV09,COMEX 金 2009年10月限,1\\,078,11,2008/10/06,12:00:00\r\n"));
+	}
+
+	// ------------------------------------------------------------------------
+	// getter / setter
+
+	@Test
+	public void testGetTemplate() throws Exception {
+		// Arrange
+		final CsvEntityWriter<Price> writer = new CsvEntityWriter<Price>(new CsvWriter(new StringWriter(), cfg), Price.class);
+		try {
+			// Act & Assert
+			assertThat(writer.getTemplate(), notNullValue());
+		} finally {
+			writer.close();
+		}
+	}
+
+	@Test
+	public void testIsDisableWriteHeader() throws IOException {
+		CsvEntityWriter<Price> writer;
+
+		// Arrange
+		writer = CsvEntityWriter.newInstance(new CsvWriter(new StringWriter(), cfg), Price.class);
+		try {
+			// Act & Assert
+			assertThat(writer.isDisableWriteHeader(), is(false));
+		} finally {
+			writer.close();
+		}
+
+		// Arrange
+		writer = CsvEntityWriter.newInstance(new CsvWriter(new StringWriter(), cfg), Price.class, true);
+		try {
+			// Act & Assert
+			assertThat(writer.isDisableWriteHeader(), is(true));
+		} finally {
+			writer.close();
+		}
+
+		// Arrange
+		writer = new CsvEntityWriter<Price>(new CsvWriter(new StringWriter(), cfg), Price.class, false);
+		try {
+			// Act & Assert
+			assertThat(writer.isDisableWriteHeader(), is(false));
+		} finally {
+			writer.close();
+		}
+
+		// Arrange
+		writer = new CsvEntityWriter<Price>(new CsvWriter(new StringWriter(), cfg), Price.class, true);
+		try {
+			// Act & Assert
+			assertThat(writer.isDisableWriteHeader(), is(true));
+		} finally {
+			writer.close();
+		}
 	}
 
 }

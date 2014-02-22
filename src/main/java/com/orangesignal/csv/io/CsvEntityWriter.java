@@ -53,6 +53,13 @@ public class CsvEntityWriter<T> implements Closeable, Flushable {
 	private final CsvEntityTemplate<T> template;
 
 	/**
+	 * 区切り文字形式データの列見出し (ヘッダ) 行の出力を無効化するかどうかを保持します。
+	 * 
+	 * @since 2.2
+	 */
+	private final boolean disableWriteHeader;
+
+	/**
 	 * 項目名のリストを保持します。
 	 */
 	private List<String> columnNames;
@@ -80,12 +87,42 @@ public class CsvEntityWriter<T> implements Closeable, Flushable {
 	 * このメソッドは利便性のために提供しています。
 	 * 
 	 * @param writer 区切り文字形式出力ストリーム
+	 * @param entityClass 区切り文字形式データ注釈要素 {@link CsvEntity} で注釈付けされた Java プログラム要素の型
+	 * @param disableWriteHeader 区切り文字形式データの列見出し (ヘッダ) 行の出力を無効化するかどうか
+	 * @return 新しい {@link CsvEntityWriter} のインスタンス
+	 * @throws IllegalArgumentException {@code writer} または {@code entityClass} が {@code null} の場合。
+	 * @since 2.2
+	 */
+	public static <T> CsvEntityWriter<T> newInstance(final CsvWriter writer, final Class<T> entityClass, final boolean disableWriteHeader) {
+		return new CsvEntityWriter<T>(writer, entityClass, disableWriteHeader);
+	}
+
+	/**
+	 * 新しい {@link CsvEntityWriter} のインスタンスを返します。
+	 * このメソッドは利便性のために提供しています。
+	 * 
+	 * @param writer 区切り文字形式出力ストリーム
 	 * @param template Java プログラム要素操作の簡素化ヘルパー
 	 * @return 新しい {@link CsvEntityWriter} のインスタンス
 	 * @throws IllegalArgumentException {@code writer} または {@code template} が {@code null} の場合。
 	 */
 	public static <T> CsvEntityWriter<T> newInstance(final CsvWriter writer, final CsvEntityTemplate<T> template) {
 		return new CsvEntityWriter<T>(writer, template);
+	}
+
+	/**
+	 * 新しい {@link CsvEntityWriter} のインスタンスを返します。
+	 * このメソッドは利便性のために提供しています。
+	 * 
+	 * @param writer 区切り文字形式出力ストリーム
+	 * @param template Java プログラム要素操作の簡素化ヘルパー
+	 * @param disableWriteHeader 区切り文字形式データの列見出し (ヘッダ) 行の出力を無効化するかどうか
+	 * @return 新しい {@link CsvEntityWriter} のインスタンス
+	 * @throws IllegalArgumentException {@code writer} または {@code template} が {@code null} の場合。
+	 * @since 2.2
+	 */
+	public static <T> CsvEntityWriter<T> newInstance(final CsvWriter writer, final CsvEntityTemplate<T> template, final boolean disableWriteHeader) {
+		return new CsvEntityWriter<T>(writer, template, disableWriteHeader);
 	}
 
 	// ------------------------------------------------------------------------
@@ -99,7 +136,20 @@ public class CsvEntityWriter<T> implements Closeable, Flushable {
 	 * @throws IllegalArgumentException {@code writer} または {@code entityClass} が {@code null} の場合。
 	 */
 	public CsvEntityWriter(final CsvWriter writer, final Class<T> entityClass) {
-		this(writer, new CsvEntityTemplate<T>(entityClass));
+		this(writer, new CsvEntityTemplate<T>(entityClass), false);
+	}
+
+	/**
+	 * 指定された区切り文字形式出力ストリームと Java プログラム要素の型を使用して、このクラスを構築するコンストラクタです。
+	 * 
+	 * @param writer 区切り文字形式出力ストリーム
+	 * @param entityClass 区切り文字形式データ注釈要素 {@link CsvEntity} で注釈付けされた Java プログラム要素の型
+	 * @param disableWriteHeader 区切り文字形式データの列見出し (ヘッダ) 行の出力を無効化するかどうか
+	 * @throws IllegalArgumentException {@code writer} または {@code entityClass} が {@code null} の場合。
+	 * @since 2.2
+	 */
+	public CsvEntityWriter(final CsvWriter writer, final Class<T> entityClass, final boolean disableWriteHeader) {
+		this(writer, new CsvEntityTemplate<T>(entityClass), disableWriteHeader);
 	}
 
 	/**
@@ -110,14 +160,28 @@ public class CsvEntityWriter<T> implements Closeable, Flushable {
 	 * @throws IllegalArgumentException {@code writer} または {@code template} が {@code null} の場合。
 	 */
 	public CsvEntityWriter(final CsvWriter writer, final CsvEntityTemplate<T> template) {
+		this(writer, template, false);
+	}
+
+	/**
+	 * 指定された区切り文字形式出力ストリームと Java プログラム要素操作の簡素化ヘルパーを使用して、このクラスを構築するコンストラクタです。
+	 * 
+	 * @param writer 区切り文字形式出力ストリーム
+	 * @param template Java プログラム要素操作の簡素化ヘルパー
+	 * @param disableWriteHeader 区切り文字形式データの列見出し (ヘッダ) 行の出力を無効化するかどうか
+	 * @throws IllegalArgumentException {@code writer} または {@code template} が {@code null} の場合。
+	 * @since 2.2
+	 */
+	public CsvEntityWriter(final CsvWriter writer, final CsvEntityTemplate<T> template, final boolean disableWriteHeader) {
 		if (writer == null) {
 			throw new IllegalArgumentException("CsvWriter must not be null");
 		}
 		if (template == null) {
 			throw new IllegalArgumentException("CsvEntityTemplate must not be null");
 		}
-		this.writer = writer;
-		this.template = template;
+		this.writer        = writer;
+		this.template      = template;
+		this.disableWriteHeader = disableWriteHeader;
 	}
 
 	// ------------------------------------------------------------------------
@@ -137,7 +201,7 @@ public class CsvEntityWriter<T> implements Closeable, Flushable {
 			if (columnNames == null) {
 				final List<String> names = template.createWritableColumnNames();
 				// ヘッダ行が有効な場合は項目名の一覧を出力します。
-				if (template.getType().getAnnotation(CsvEntity.class).header()) {
+				if (!disableWriteHeader && template.getType().getAnnotation(CsvEntity.class).header()) {
 					writer.writeValues(names);
 				}
 				template.prepare(names, template.getType().getDeclaredFields());
@@ -173,9 +237,11 @@ public class CsvEntityWriter<T> implements Closeable, Flushable {
 	// パブリック メソッド
 
 	/**
-	 * 可能であれば項目名を書き込みます。項目名が既に書き込まれている場合、このメソッドは何も行いません。
+	 * 可能であれば項目名を書き込みます。項目名が既に書き込まれている場合や、
+	 * 区切り文字形式データの列見出し (ヘッダ) 行の出力が無効化されている場合、このメソッドは何も行いません。
 	 * 
 	 * @throws IOException 入出力エラーが発生した場合
+	 * @see {@link #isDisableWriteHeader()}
 	 */
 	public void writeHeader() throws IOException {
 		synchronized (this) {
@@ -283,6 +349,16 @@ public class CsvEntityWriter<T> implements Closeable, Flushable {
 	 */
 	public CsvEntityTemplate<T> getTemplate() {
 		return template;
+	}
+
+	/**
+	 * 区切り文字形式データの列見出し (ヘッダ) 行の出力が無効化されているかどうかを返します。
+	 * 
+	 * @return 区切り文字形式データの列見出し (ヘッダ) 行の出力が無効化されているかどうか
+	 * @since 2.2
+	 */
+	public boolean isDisableWriteHeader() {
+		return disableWriteHeader;
 	}
 
 }
