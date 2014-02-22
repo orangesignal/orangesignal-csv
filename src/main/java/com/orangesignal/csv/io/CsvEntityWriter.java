@@ -32,6 +32,7 @@ import com.orangesignal.csv.CsvWriter;
 import com.orangesignal.csv.annotation.CsvColumn;
 import com.orangesignal.csv.annotation.CsvColumns;
 import com.orangesignal.csv.annotation.CsvEntity;
+import com.orangesignal.csv.annotation.CsvColumnException;
 import com.orangesignal.csv.bean.CsvEntityTemplate;
 
 /**
@@ -256,6 +257,7 @@ public class CsvEntityWriter<T> implements Closeable, Flushable {
 	 * 
 	 * @param entity 書き込む Java プログラム要素。または {@code null}
 	 * @return データの出力を行った場合は {@code true} それ以外の場合 (フィルタにより書き込みがスキップされた場合) は {@code false}
+	 * @throws CsvColumnException 
 	 * @throws IOException 入出力エラーが発生した場合
 	 */
 	public boolean write(final T entity) throws IOException {
@@ -314,7 +316,7 @@ public class CsvEntityWriter<T> implements Closeable, Flushable {
 						values[pos] = column.defaultValue();
 					}
 					if (values[pos] == null && column.required()) {
-						throw new IOException(String.format("%s must not be null", columnNames.get(pos)));
+						throw new CsvColumnException(String.format("%s must not be null", columnNames.get(pos)), entity);
 					}
 				}
 			}
@@ -333,7 +335,7 @@ public class CsvEntityWriter<T> implements Closeable, Flushable {
 					values[pos] = column.defaultValue();
 				}
 				if (values[pos] == null && column.required()) {
-					throw new IOException(String.format("%s must not be null", columnNames.get(pos)));
+					throw new CsvColumnException(String.format("%s must not be null", columnNames.get(pos)), entity);
 				}
 			}
 		}

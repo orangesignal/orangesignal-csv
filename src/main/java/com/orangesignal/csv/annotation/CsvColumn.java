@@ -126,15 +126,6 @@ public @interface CsvColumn {
 	boolean required() default false;
 
 	/**
-	 * 判定する正規表現を返します。
-	 * 
-	 * @return 判定する正規表現
-	 * @since 2.2
-	 * @deprecated
-	 */
-	String pattern() default "";
-
-	/**
 	 * この項目のデフォルト値を返します。
 	 * 
 	 * @return この項目のデフォルト値
