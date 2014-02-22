@@ -19,7 +19,7 @@ package com.orangesignal.csv.annotation;
 import java.io.IOException;
 
 /**
- * {@link CsvColumn#required()} 制約に違反した場合にスローされる例外を提供します。
+ * この例外は、区切り文字形式のデータ項目の検証操作実行中にエラーが発生したことを示します。
  * 
  * @author Koji Sugisawa
  * @since 2.2
