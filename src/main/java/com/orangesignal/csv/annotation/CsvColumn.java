@@ -29,7 +29,7 @@ import java.lang.annotation.Target;
  * &#064;CsvColumn(position = 0)
  * &#064;CsvColumn(name = "価格")
  * &#064;CsvColumn(position = 0, name = "価格")
- * &#064;CsvColumn(name = "価格", access = CsvColumnAccess.READ)
+ * &#064;CsvColumn(name = "価格", access = CsvColumnAccessType.READ)
  * &#064;CsvColumn(name = "銘柄", required = true, defaultValue = "日経225")
  * 
  * 
@@ -115,7 +115,7 @@ public @interface CsvColumn {
 	 * @return この項目へのアクセスモード
 	 * @since 2.2
 	 */
-	CsvColumnAccess access() default CsvColumnAccess.READ_WRITE;
+	CsvColumnAccessType access() default CsvColumnAccessType.READ_WRITE;
 
 	/**
 	 * 必須項目かどうかを返します。

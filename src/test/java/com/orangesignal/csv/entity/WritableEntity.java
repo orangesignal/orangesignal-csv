@@ -17,7 +17,7 @@
 package com.orangesignal.csv.entity;
 
 import com.orangesignal.csv.annotation.CsvColumn;
-import com.orangesignal.csv.annotation.CsvColumnAccess;
+import com.orangesignal.csv.annotation.CsvColumnAccessType;
 import com.orangesignal.csv.annotation.CsvColumns;
 import com.orangesignal.csv.annotation.CsvEntity;
 
@@ -28,13 +28,13 @@ import com.orangesignal.csv.annotation.CsvEntity;
 public class WritableEntity {
 
 	@CsvColumns({
-		@CsvColumn(name = "col1", access = CsvColumnAccess.READ),
+		@CsvColumn(name = "col1", access = CsvColumnAccessType.READ),
 		@CsvColumn(name = "col2"),
 		@CsvColumn(name = "col3")
 	})
 	public String[] array;
 
-	@CsvColumn(name = "col4", access = CsvColumnAccess.READ)
+	@CsvColumn(name = "col4", access = CsvColumnAccessType.READ)
 	public String str;
 
 }

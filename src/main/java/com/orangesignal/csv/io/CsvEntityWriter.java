@@ -310,6 +310,7 @@ public class CsvEntityWriter<T> implements Closeable, Flushable {
 					}
 					values[pos] = template.objectToString(pos, o);
 					if (values[pos] == null && !column.defaultValue().isEmpty()) {
+						// デフォルト値が指定されていて、値がない場合はデフォルト値を代入します。
 						values[pos] = column.defaultValue();
 					}
 					if (values[pos] == null && column.required()) {
@@ -328,6 +329,7 @@ public class CsvEntityWriter<T> implements Closeable, Flushable {
 				}
 				values[pos] = template.objectToString(pos, getFieldValue(entity, field));
 				if (values[pos] == null && !column.defaultValue().isEmpty()) {
+					// デフォルト値が指定されていて、値がない場合はデフォルト値を代入します。
 					values[pos] = column.defaultValue();
 				}
 				if (values[pos] == null && column.required()) {

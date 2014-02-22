@@ -257,9 +257,11 @@ public class CsvEntityReader<T> implements Closeable {
 							value = null;
 						}
 						if (value == null && !column.defaultValue().isEmpty()) {
+							// デフォルト値が指定されていて、値がない場合はデフォルト値を代入します。
 							value = column.defaultValue();
 						}
 						if (value == null && column.required()) {
+							// 必須項目の場合に、値がない場合は例外をスローします。
 							throw new CsvValueException(String.format("%s must not be null", columnNames.get(pos)), values);
 						}
 						Array.set(object, arrayIndex++, template.stringToObject(field, value));
@@ -276,8 +278,10 @@ public class CsvEntityReader<T> implements Closeable {
 							if (s != null) {
 								sb.append(s);
 							} else if (!column.defaultValue().isEmpty()) {
+								// デフォルト値が指定されていて、値がない場合はデフォルト値を代入します。
 								sb.append(column.defaultValue());
 							} else if (column.required()) {
+								// 必須項目の場合に、値がない場合は例外をスローします。
 								throw new CsvValueException(String.format("%s must not be null", columnNames.get(pos)), values);
 							}
 						}
@@ -291,9 +295,11 @@ public class CsvEntityReader<T> implements Closeable {
 				if (pos != -1) {
 					String value = values.get(pos);
 					if (value == null && !column.defaultValue().isEmpty()) {
+						// デフォルト値が指定されていて、値がない場合はデフォルト値を代入します。
 						value = column.defaultValue();
 					}
 					if (value == null && column.required()) {
+						// 必須項目の場合に、値がない場合は例外をスローします。
 						throw new CsvValueException(String.format("%s must not be null", columnNames.get(pos)), values);
 					}
 					object = template.stringToObject(field, value);
