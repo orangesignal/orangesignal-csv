@@ -34,10 +34,12 @@ import org.junit.rules.ExpectedException;
 import com.orangesignal.csv.Constants;
 import com.orangesignal.csv.CsvConfig;
 import com.orangesignal.csv.CsvReader;
+import com.orangesignal.csv.annotation.CsvColumnException;
 import com.orangesignal.csv.bean.CsvEntityTemplate;
 import com.orangesignal.csv.entity.DefaultValuePrice;
 import com.orangesignal.csv.entity.Price;
 import com.orangesignal.csv.entity.Price2;
+import com.orangesignal.csv.entity.RequiredPrice;
 import com.orangesignal.csv.filters.SimpleCsvNamedValueFilter;
 
 /**
@@ -167,6 +169,64 @@ public class CsvEntityReaderTest {
 
 	// ------------------------------------------------------------------------
 	// パブリック メソッド
+
+	@Test
+	public void testRequiredCsvColumnException() throws IOException {
+		exception.expect(CsvColumnException.class);
+		exception.expectMessage(String.format("[line: %d] %s must not be null", 3, "シンボル"));
+
+		final CsvEntityReader<RequiredPrice> reader = CsvEntityReader.newInstance(
+				new CsvReader(new StringReader("シンボル,名称,価格,出来高,日付,時刻\r\nAAAA,aaa,10\\,000,10,2009/10/28,10:24:00\r\nNULL,NULL,NULL,0,NULL,NULL"), cfg),
+				RequiredPrice.class
+			);
+		try {
+			final RequiredPrice o1 = reader.read();
+			assertThat(o1.symbol, is("AAAA"));
+			assertThat(o1.name, is("aaa"));
+			assertThat(o1.price.longValue(), is(10000L));
+			assertThat(o1.volume.longValue(), is(10L));
+
+			final SimpleDateFormat df = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+			df.setTimeZone(TimeZone.getTimeZone("Asia/Tokyo"));
+			assertThat(df.format(o1.date), is("2009/10/28 10:24:00"));
+
+			// Act
+			reader.read();
+		} finally {
+			reader.close();
+		}
+	}
+
+	@Test
+	public void testRequired() throws IOException {
+		final CsvEntityReader<RequiredPrice> reader = CsvEntityReader.newInstance(
+				new CsvReader(new StringReader("シンボル,名称,価格,出来高,日付,時刻\r\nAAAA,aaa,10\\,000,10,2009/10/28,10:24:00\r\nXXXX,xxx,NULL,0,NULL,NULL"), cfg),
+				RequiredPrice.class
+			);
+		try {
+			final RequiredPrice o1 = reader.read();
+			assertThat(o1.symbol, is("AAAA"));
+			assertThat(o1.name, is("aaa"));
+			assertThat(o1.price.longValue(), is(10000L));
+			assertThat(o1.volume.longValue(), is(10L));
+
+			final SimpleDateFormat df = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+			df.setTimeZone(TimeZone.getTimeZone("Asia/Tokyo"));
+			assertThat(df.format(o1.date), is("2009/10/28 10:24:00"));
+
+			final RequiredPrice o2 = reader.read();
+			assertThat(o2.symbol, is("XXXX"));
+			assertThat(o2.name, is("xxx"));
+			assertNull(o2.price);
+			assertThat(o2.volume.longValue(), is(0L));
+			assertThat(df.format(o2.date), is("2014/02/02 12:00:00"));
+
+			final RequiredPrice last = reader.read();
+			assertNull(last);
+		} finally {
+			reader.close();
+		}
+	}
 
 	@Test
 	public void testDefaultValue() throws IOException {

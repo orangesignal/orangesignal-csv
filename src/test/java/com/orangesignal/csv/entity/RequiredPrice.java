@@ -26,11 +26,11 @@ import com.orangesignal.csv.annotation.CsvEntity;
  * @author Koji Sugisawa
  */
 @CsvEntity(header = true)
-public class DefaultValuePrice {
+public class RequiredPrice {
 
-	public DefaultValuePrice() {}
+	public RequiredPrice() {}
 
-	public DefaultValuePrice(String symbol, String name, Number price, Number volume, Date date) {
+	public RequiredPrice(String symbol, String name, Number price, Number volume, Date date) {
 		this.symbol = symbol;
 		this.name = name;
 		this.date = date;
@@ -38,7 +38,7 @@ public class DefaultValuePrice {
 		this.volume = volume;
 	}
 
-	@CsvColumn(position = 0, name = "シンボル", required = true, defaultValue = "XXXX")
+	@CsvColumn(position = 0, name = "シンボル", required = true)
 	public String symbol;
 
 	@CsvColumns({

@@ -29,6 +29,7 @@ import java.util.List;
 import com.orangesignal.csv.CsvReader;
 import com.orangesignal.csv.CsvValueException;
 import com.orangesignal.csv.annotation.CsvColumn;
+import com.orangesignal.csv.annotation.CsvColumnException;
 import com.orangesignal.csv.annotation.CsvColumns;
 import com.orangesignal.csv.annotation.CsvEntity;
 import com.orangesignal.csv.bean.CsvEntityTemplate;
@@ -182,6 +183,7 @@ public class CsvEntityReader<T> implements Closeable {
 	 * 論理行を読込み Java プログラム要素として返します。
 	 *
 	 * @return Java プログラム要素。ストリームの終わりに達した場合は {@code null}
+	 * @throws CsvColumnException
 	 * @throws IOException 入出力エラーが発生した場合
 	 */
 	public T read() throws IOException {
@@ -215,6 +217,7 @@ public class CsvEntityReader<T> implements Closeable {
 	 * 
 	 * @param values CSV トークンの値をリスト
 	 * @return 変換された Java プログラム要素
+	 * @throws CsvColumnException 
 	 * @throws IOException 入出力エラーが発生した場合
 	 */
 	public T toEntity(final List<String> values) throws IOException {
@@ -262,7 +265,7 @@ public class CsvEntityReader<T> implements Closeable {
 						}
 						if (value == null && column.required()) {
 							// 必須項目の場合に、値がない場合は例外をスローします。
-							throw new CsvValueException(String.format("%s must not be null", columnNames.get(pos)), values);
+							throw new CsvColumnException(String.format("[line: %d] %s must not be null", reader.getStartLineNumber(), columnNames.get(pos)), values);
 						}
 						Array.set(object, arrayIndex++, template.stringToObject(field, value));
 					}
@@ -282,7 +285,7 @@ public class CsvEntityReader<T> implements Closeable {
 								sb.append(column.defaultValue());
 							} else if (column.required()) {
 								// 必須項目の場合に、値がない場合は例外をスローします。
-								throw new CsvValueException(String.format("%s must not be null", columnNames.get(pos)), values);
+								throw new CsvColumnException(String.format("[line: %d] %s must not be null", reader.getStartLineNumber(), columnNames.get(pos)), values);
 							}
 						}
 					}
@@ -300,7 +303,7 @@ public class CsvEntityReader<T> implements Closeable {
 					}
 					if (value == null && column.required()) {
 						// 必須項目の場合に、値がない場合は例外をスローします。
-						throw new CsvValueException(String.format("%s must not be null", columnNames.get(pos)), values);
+						throw new CsvColumnException(String.format("[line: %d] %s must not be null", reader.getStartLineNumber(), columnNames.get(pos)), values);
 					}
 					object = template.stringToObject(field, value);
 				}
