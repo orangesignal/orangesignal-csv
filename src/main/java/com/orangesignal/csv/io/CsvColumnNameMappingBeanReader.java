@@ -232,7 +232,7 @@ public class CsvColumnNameMappingBeanReader<T> implements Closeable {
 	}
 
 	@SuppressWarnings("null")
-	private T convert(List<String> values) throws IOException {
+	private T convert(final List<String> values) throws IOException {
 		final T bean = template.createBean();
 		for (final Field f : fields) {
 			final Object[] columns = fieldColumnsMap.get(f.getName());

@@ -71,7 +71,7 @@ public class BeanOrderComparator implements Comparator<Object>, Serializable {
 	 * @throws IllegalArgumentException {@code orders} が {@code null} の場合
 	 * @see Collections#sort(List, Comparator)
 	 */
-	public static void sort(List<?> beans, final List<BeanOrder> orders) {
+	public static void sort(final List<?> beans, final List<BeanOrder> orders) {
 		if (beans.size() > 1) {
 			Collections.sort(beans, new BeanOrderComparator(orders));
 		}

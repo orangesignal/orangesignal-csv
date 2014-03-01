@@ -450,7 +450,7 @@ public class CsvResultSet implements ResultSet {
 	}
 
 	@Override
-	public Object getObject(String columnLabel) throws SQLException {
+	public Object getObject(final String columnLabel) throws SQLException {
 		return getObject(findColumn(columnLabel));
 	}
 

@@ -129,7 +129,7 @@ public class SuffixEntryNameFilter extends AbstractEntryFilter {
 	 * @return エントリが受け入れられる場合は {@code true}、そうでない場合は {@code false}
 	 */
 	@Override
-	public boolean accept(LhaHeader entry) {
+	public boolean accept(final LhaHeader entry) {
 		return accept(entry.getPath());
 	}
 
