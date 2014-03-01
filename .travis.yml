@@ -7,4 +7,4 @@ branches:
   only:
     - master
 
-script: "mvn -e clean install"
+script: "mvn -e clean install license:add-third-party"

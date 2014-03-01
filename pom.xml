@@ -301,6 +301,16 @@
 					<tagNameFormat>@{project.version}</tagNameFormat>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>license-maven-plugin</artifactId>
+				<version>1.6</version>
+				<configuration>
+					<failIfWarning>true</failIfWarning>
+					<useMissingFile>true</useMissingFile>
+					<excludedLicenses>gpl_v1|gpl_v2|gpl_v3</excludedLicenses>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 
