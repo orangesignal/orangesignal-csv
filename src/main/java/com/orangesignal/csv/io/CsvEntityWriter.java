@@ -36,7 +36,7 @@ import com.orangesignal.csv.annotation.CsvColumnException;
 import com.orangesignal.csv.bean.CsvEntityTemplate;
 
 /**
- * 区切り文字形式データ注釈要素 {@link CsvEntity} で注釈付けされた Java プログラム要素のリストで区切り文字形式データアクセスを行う区切り文字形式出力ストリームを提供します。
+ * 区切り文字形式データ注釈要素 {@link CsvEntity} で注釈付けされた Java プログラム要素で区切り文字形式データアクセスを行う区切り文字形式出力ストリームを提供します。
  * 
  * @author Koji Sugisawa
  * @since 1.4.0
@@ -257,7 +257,7 @@ public class CsvEntityWriter<T> implements Closeable, Flushable {
 	 * 
 	 * @param entity 書き込む Java プログラム要素。または {@code null}
 	 * @return データの出力を行った場合は {@code true} それ以外の場合 (フィルタにより書き込みがスキップされた場合) は {@code false}
-	 * @throws CsvColumnException 
+	 * @throws CsvColumnException 区切り文字形式のデータ項目の検証操作実行中にエラーが発生した場合
 	 * @throws IOException 入出力エラーが発生した場合
 	 */
 	public boolean write(final T entity) throws IOException {
@@ -275,11 +275,6 @@ public class CsvEntityWriter<T> implements Closeable, Flushable {
 			if (template.isAccept(columnNames, values)) {
 				return false;
 			}
-//			for (final String value : values) {
-//				if (value == null && column.required()) {
-//					throw new CsvValueException(String.format("%s must not be null", field.getName()), values);
-//				}
-//			}
 			writer.writeValues(values);
 			return true;
 		}

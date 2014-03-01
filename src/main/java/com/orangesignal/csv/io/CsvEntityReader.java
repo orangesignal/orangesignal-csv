@@ -34,7 +34,7 @@ import com.orangesignal.csv.annotation.CsvEntity;
 import com.orangesignal.csv.bean.CsvEntityTemplate;
 
 /**
- * 区切り文字形式データ注釈要素 {@link CsvEntity} で注釈付けされた Java プログラム要素のリストで区切り文字形式データアクセスを行う区切り文字形式入力ストリームを提供します。
+ * 区切り文字形式データ注釈要素 {@link CsvEntity} で注釈付けされた Java プログラム要素で区切り文字形式データアクセスを行う区切り文字形式入力ストリームを提供します。
  * 
  * @author Koji Sugisawa
  * @since 1.4.0
@@ -182,7 +182,7 @@ public class CsvEntityReader<T> implements Closeable {
 	 * 論理行を読込み Java プログラム要素として返します。
 	 *
 	 * @return Java プログラム要素。ストリームの終わりに達した場合は {@code null}
-	 * @throws CsvColumnException
+	 * @throws CsvColumnException 区切り文字形式のデータ項目の検証操作実行中にエラーが発生した場合
 	 * @throws IOException 入出力エラーが発生した場合
 	 */
 	public T read() throws IOException {
@@ -216,7 +216,7 @@ public class CsvEntityReader<T> implements Closeable {
 	 * 
 	 * @param values CSV トークンの値をリスト
 	 * @return 変換された Java プログラム要素
-	 * @throws CsvColumnException 
+	 * @throws CsvColumnException 区切り文字形式のデータ項目の検証操作実行中にエラーが発生した場合
 	 * @throws IOException 入出力エラーが発生した場合
 	 */
 	public T toEntity(final List<String> values) throws IOException {
