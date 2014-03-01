@@ -12,6 +12,24 @@
 
 
 
+* 2.2.0 (予定)
+
+  本リリースは、ユーザーフィードバックの機能追加が主なマイナーリリースです。
+
+** 新機能
+
+   * {{{https://github.com/orangesignal/orangesignal-csv/issues/25}#25}} {{{./apidocs/com/orangesignal/csv/annotation/CsvColumn.html}CsvColumn}} アノテーションに access、required、defaultValue を追加しました。
+
+   * {{{https://github.com/orangesignal/orangesignal-csv/issues/24}#24}} CsvEntityWriter と関連クラスへ、列見出し (ヘッダ) 行の出力抑止機能 disableWriteHeader を追加しました。
+
+** 全般
+
+   * Javadoc 加筆・修正
+
+   * ダウンロード方法について FAQ へ加筆
+
+
+
 * 2.1.0 (2014-02-01)
 
   本リリースは、ユーザーフィードバックの機能追加が主なマイナーリリースです。
