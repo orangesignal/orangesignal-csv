@@ -154,7 +154,7 @@ public class CsvColumnPositionMappingBeanTemplate<T> extends AbstractCsvBeanTemp
 	 * @return {@code values} が含まれる必要がある場合は {@code true}
 	 */
 	public boolean isAccept(final List<String> values) {
-		return (filter != null && !filter.accept(values));
+		return filter != null && !filter.accept(values);
 	}
 
 	// 入力

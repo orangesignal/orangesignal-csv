@@ -66,7 +66,7 @@ public abstract class BeanLogicalExpression implements BeanFilter {
 	public String toString() {
 		final String name = getClass().getName();
 		final int period = name.lastIndexOf('.');
-		return (period > 0 ? name.substring(period + 1) : name);
+		return period > 0 ? name.substring(period + 1) : name;
 	}
 
 }

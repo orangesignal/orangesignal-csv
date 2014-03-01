@@ -92,7 +92,7 @@ public class CsvEntityListHandler<T> extends AbstractBeanListHandler<T, CsvEntit
 
 		// すべてのデータを読取って繰返し処理します。
 		final List<T> results = new ArrayList<T>();
-		final boolean order = ignoreScalar || (orders != null && !orders.isEmpty());
+		final boolean order = ignoreScalar || orders != null && !orders.isEmpty();
 		int offset = 0;
 
 		List<String> values;

@@ -112,7 +112,7 @@ public class BeanOrder implements Comparator<Object>, Serializable {
 	public int compare(final Object o1, final Object o2) {
 		Object v1 = getValue(o1);
 		Object v2 = getValue(o2);
-		if (ignoreCase && (v1 instanceof String) && (v2 instanceof String)) {
+		if (ignoreCase && v1 instanceof String && v2 instanceof String) {
 			v1 = ((String) v1).toLowerCase();
 			v2 = ((String) v2).toLowerCase();
 		}

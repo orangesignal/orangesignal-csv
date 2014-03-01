@@ -123,7 +123,7 @@ abstract class BeanExpressionUtils {
 		if (ignoreCase) {
 			return value != null && ((String) criteria).equalsIgnoreCase((String) value);
 		}
-		return value != null && criteria.equals(value);
+		return criteria.equals(value);
 	}
 
 	/**

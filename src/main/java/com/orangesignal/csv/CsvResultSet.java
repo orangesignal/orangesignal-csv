@@ -146,7 +146,7 @@ public class CsvResultSet implements ResultSet {
 			throw new SQLException(String.format("Invalid column index %d", columnIndex));
 		}
 		final String s = row.get(columnIndex - 1);
-		wasNull = (s == null);
+		wasNull = s == null;
 		return s;
 	}
 

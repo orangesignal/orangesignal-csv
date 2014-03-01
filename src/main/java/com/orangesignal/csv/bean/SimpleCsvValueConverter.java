@@ -158,7 +158,7 @@ public class SimpleCsvValueConverter implements CsvValueConverter {
 		if (value == null) {
 			return null;
 		}
-		if ((value instanceof Date) && (dateFormat != null)) {
+		if (value instanceof Date && dateFormat != null) {
 			return dateFormat.format(value);
 		}
 		return value.toString();

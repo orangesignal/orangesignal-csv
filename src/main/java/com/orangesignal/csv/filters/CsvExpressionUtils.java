@@ -103,7 +103,7 @@ abstract class CsvExpressionUtils {
 			throw new IllegalArgumentException("Criteria must not be null");
 		}
 		final String value = values.get(position);
-		return value != null && (ignoreCase ? criteria.equalsIgnoreCase(value) : criteria.equals(value));
+		return value != null && ignoreCase ? criteria.equalsIgnoreCase(value) : criteria.equals(value);
 	}
 
 	/**

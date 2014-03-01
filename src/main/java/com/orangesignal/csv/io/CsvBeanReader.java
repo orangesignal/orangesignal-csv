@@ -217,10 +217,9 @@ public class CsvBeanReader<T> implements Closeable {
 	private List<String> nextValues() throws IOException {
 		List<String> values;
 		while ((values = reader.readValues()) != null) {
-			if (template.isAccept(columnNames, values)) {
-				continue;
+			if (!template.isAccept(columnNames, values)) {
+				return values;
 			}
-			return values;
 		}
 		return null;
 	}

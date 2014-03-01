@@ -108,7 +108,7 @@ public class CsvBeanTemplate<T> extends AbstractCsvBeanTemplate<T, CsvBeanTempla
 	 * @return {@code values} が含まれる必要がある場合は {@code true}
 	 */
 	public boolean isAccept(final List<String> columnNames, final List<String> values) {
-		return (filter != null && !filter.accept(columnNames, values));
+		return filter != null && !filter.accept(columnNames, values);
 	}
 
 	/**

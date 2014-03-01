@@ -56,10 +56,9 @@ public class BeanOrderComparator implements Comparator<Object>, Serializable {
 		}
 		for (final BeanOrder order : orders) {
 			final int c = order.compare(o1, o2);
-			if (c == 0) {
-				continue;
+			if (c != 0) {
+				return c;
 			}
-			return c;
 		}
 		return 0;
 	}

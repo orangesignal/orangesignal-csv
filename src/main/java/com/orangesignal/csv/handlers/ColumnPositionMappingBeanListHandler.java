@@ -162,7 +162,7 @@ public class ColumnPositionMappingBeanListHandler<T> extends AbstractBeanListHan
 
 		// データ部を処理します。
 		final List<T> results = new ArrayList<T>();
-		final boolean order = ignoreScalar || (orders != null && !orders.isEmpty());
+		final boolean order = ignoreScalar || orders != null && !orders.isEmpty();
 		int offset = 0;
 
 		List<String> values;

@@ -104,7 +104,7 @@ public class CsvEntityTemplate<T> extends AbstractCsvBeanTemplate<T, CsvEntityTe
 	 * @return {@code values} が含まれる必要がある場合は {@code true}
 	 */
 	public boolean isAccept(final List<String> columnNames, final List<String> values) {
-		return (filter != null && !filter.accept(columnNames, values));
+		return filter != null && !filter.accept(columnNames, values);
 	}
 
 	/**
@@ -261,7 +261,7 @@ public class CsvEntityTemplate<T> extends AbstractCsvBeanTemplate<T, CsvEntityTe
 	}
 
 	public static String defaultIfEmpty(final String str, final String defaultStr) {
-		return (str == null || str.isEmpty()) ? defaultStr : str;
+		return str == null || str.isEmpty() ? defaultStr : str;
 	}
 
 	// ------------------------------------------------------------------------

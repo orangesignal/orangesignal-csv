@@ -46,7 +46,7 @@ public abstract class ColumnNameExpression implements CsvNamedValueFilter {
 	public String toString() {
 		final String className = getClass().getName();
 		final int period = className.lastIndexOf('.');
-		return (period > 0 ? className.substring(period + 1) : className);
+		return period > 0 ? className.substring(period + 1) : className;
 	}
 
 }
