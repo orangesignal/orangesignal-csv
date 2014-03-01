@@ -77,6 +77,7 @@ public abstract class AbstractCsvListHandler<T, H extends AbstractCsvListHandler
 	}
 
 	/**
+	 * {@inheritDoc}
 	 * この実装は単に {@code offset} と {@code limit} を使用して処理します。
 	 */
 	@Override
