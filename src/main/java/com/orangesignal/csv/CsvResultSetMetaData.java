@@ -59,37 +59,44 @@ public class CsvResultSetMetaData implements Serializable, ResultSetMetaData {
 	}
 
 	/**
+	 * {@inheritDoc}
 	 * この実装は常に <code>false</code> を返します。
 	 */
 	@Override public boolean isAutoIncrement(final int column) { return false; }
 
 	/**
+	 * {@inheritDoc}
 	 * この実装は常に <code>true</code> を返します。
 	 */
 	@Override public boolean isCaseSensitive(final int column) { return true; }
 
 	/**
+	 * {@inheritDoc}
 	 * この実装は常に <code>false</code> を返します。
 	 */
 	@Override
 	public boolean isSearchable(final int column) { return false; }
 
 	/**
+	 * {@inheritDoc}
 	 * この実装は常に <code>false</code> を返します。
 	 */
 	@Override public boolean isCurrency(final int column) { return false; }
 
 	/**
+	 * {@inheritDoc}
 	 * この実装は常に {@link ResultSetMetaData#columnNullableUnknown} を返します。
 	 */
 	@Override public int isNullable(final int column) { return columnNullableUnknown; }
 
 	/**
+	 * {@inheritDoc}
 	 * この実装は常に <code>false</code> を返します。
 	 */
 	@Override public boolean isSigned(final int column) { return false; }
 
 	/**
+	 * {@inheritDoc}
 	 * この実装は常に {@link Integer#MAX_VALUE} を返します。
 	 */
 	@Override public int getColumnDisplaySize(final int column) { return Integer.MAX_VALUE; }
@@ -108,56 +115,67 @@ public class CsvResultSetMetaData implements Serializable, ResultSetMetaData {
 	}
 
 	/**
+	 * {@inheritDoc}
 	 * この実装は常に空文字列 (<code>""</code>) を返します。
 	 */
 	@Override public String getSchemaName(final int column) { return ""; }
 
 	/**
+	 * {@inheritDoc}
 	 * この実装は常に <code>0</code> を返します。
 	 */
 	@Override public int getPrecision(final int column) { return 0; }
 
 	/**
+	 * {@inheritDoc}
 	 * この実装は常に <code>0</code> を返します。
 	 */
 	@Override public int getScale(final int column) { return 0; }
 
 	/**
+	 * {@inheritDoc}
 	 * この実装は常に空文字列 (<code>""</code>) を返します。
 	 */
 	@Override public String getTableName(final int column) { return ""; }
 
 	/**
+	 * {@inheritDoc}
 	 * この実装は常に空文字列 (<code>""</code>) を返します。
 	 */
 	@Override public String getCatalogName(final int column) { return ""; }
 
 	/**
+	 * {@inheritDoc}
 	 * この実装は常に {@link Types#VARCHAR} を返します。
 	 */
 	@Override public int getColumnType(final int column) { return Types.VARCHAR; }
 
 	/**
+	 * {@inheritDoc}
 	 * この実装は常に "java.lang.String" を返します。
 	 */
 	@Override public String getColumnTypeName(final int column) { return String.class.getName(); }
 
 	/**
+	 * {@inheritDoc}
 	 * この実装は常に <code>true</code> を返します。
 	 */
 	@Override public boolean isReadOnly(final int column) { return true; }
 
 	/**
+	 * {@inheritDoc}
 	 * この実装は常に <code>false</code> を返します。
 	 */
 	@Override public boolean isWritable(final int column) { return false; }
 
 	/**
+	 * {@inheritDoc}
 	 * この実装は常に <code>false</code> を返します。
 	 */
 	@Override public boolean isDefinitelyWritable(final int column) { return false; }
 
 	/**
+	 * {@inheritDoc}
 	 * この実装は常に "java.lang.String" を返します。
 	 */
 	@Override public String getColumnClassName(final int column) { return String.class.getName(); }
@@ -165,6 +183,7 @@ public class CsvResultSetMetaData implements Serializable, ResultSetMetaData {
 	// ------------------------------------------------------------------------
 
 	/**
+	 * {@inheritDoc}
 	 * この実装は常に {@link SQLFeatureNotSupportedException} をスローします。
 	 */
 	@Override
@@ -173,6 +192,7 @@ public class CsvResultSetMetaData implements Serializable, ResultSetMetaData {
 	}
 
 	/**
+	 * {@inheritDoc}
 	 * この実装は常に {@link SQLFeatureNotSupportedException} をスローします。
 	 */
 	@Override

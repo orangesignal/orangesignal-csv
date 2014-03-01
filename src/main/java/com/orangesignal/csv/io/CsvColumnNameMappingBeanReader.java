@@ -62,6 +62,7 @@ public class CsvColumnNameMappingBeanReader<T> implements Closeable {
 	 * 
 	 * @param reader 区切り文字形式入力ストリーム
 	 * @param type Java プログラム要素の型
+	 * @return {@link CsvColumnNameMappingBeanReader} の新しいインスタンス
 	 * @throws IllegalArgumentException {@code reader} または {@code type} が {@code null} の場合。
 	 */
 	public static <T> CsvColumnNameMappingBeanReader<T> newInstance(final CsvReader reader, final Class<T> type) {
@@ -74,6 +75,7 @@ public class CsvColumnNameMappingBeanReader<T> implements Closeable {
 	 * 
 	 * @param reader 区切り文字形式入力ストリーム
 	 * @param template Java プログラム要素操作の簡素化ヘルパー
+	 * @return {@link CsvColumnNameMappingBeanReader} の新しいインスタンス
 	 * @throws IllegalArgumentException {@code reader} または {@code template} が {@code null} の場合。
 	 */
 	public static <T> CsvColumnNameMappingBeanReader<T> newInstance(final CsvReader reader, final CsvColumnNameMappingBeanTemplate<T> template) {

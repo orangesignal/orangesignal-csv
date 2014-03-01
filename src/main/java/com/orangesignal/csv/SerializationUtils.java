@@ -36,7 +36,8 @@ abstract class SerializationUtils {
 	/**
 	 * デフォルトコンストラクタです。
 	 */
-	protected SerializationUtils() {}
+	protected SerializationUtils() {
+	}
 
 	/**
 	 * <p>直列化を使用したディープクローンを行います。</p>

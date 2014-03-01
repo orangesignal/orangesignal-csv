@@ -30,7 +30,8 @@ public abstract class FieldUtils {
 	/**
 	 * インスタンス化できない事を強制します。
 	 */
-	protected FieldUtils() {}
+	protected FieldUtils() {
+	}
 
 	// ------------------------------------------------------------------------
 	// フィールド操作用静的メソッド群

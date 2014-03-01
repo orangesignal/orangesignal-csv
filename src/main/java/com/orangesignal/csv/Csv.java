@@ -50,7 +50,8 @@ public abstract class Csv {
 	/**
 	 * デフォルトコンストラクタです。
 	 */
-	protected Csv() {}
+	protected Csv() {
+	}
 
 	// ------------------------------------------------------------------------
 	// static load

@@ -488,6 +488,7 @@ public class CsvConfig implements Serializable, Cloneable {
 	public void setVariableColumns(final boolean variableColumns) { this.variableColumns = variableColumns; }
 
 	/**
+	 * {@inheritDoc}
 	 * @since 1.1
 	 */
 	@Override public CsvConfig clone() { return (CsvConfig) SerializationUtils.clone(this); }

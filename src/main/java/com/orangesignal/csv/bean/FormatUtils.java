@@ -30,7 +30,8 @@ abstract class FormatUtils {
 	/**
 	 * インスタンス化できない事を強制します。
 	 */
-	protected FormatUtils() {}
+	protected FormatUtils() {
+	}
 
 	public static Format mergeFormatPattern(final Format format, final Format... formats) {
 		final StringBuilder buf = new StringBuilder();

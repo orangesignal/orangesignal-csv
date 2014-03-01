@@ -50,7 +50,8 @@ public class SimpleCsvToken implements Serializable, CsvToken {
 	/**
 	 * デフォルトコンストラクタです。
 	 */
-	protected SimpleCsvToken() {}
+	protected SimpleCsvToken() {
+	}
 
 	/**
 	 * コンストラクタです。

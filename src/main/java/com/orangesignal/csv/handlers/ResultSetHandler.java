@@ -45,7 +45,8 @@ public class ResultSetHandler implements CsvHandler<ResultSet> {
 	/**
 	 * デフォルトコンストラクタです。
 	 */
-	public ResultSetHandler() {}
+	public ResultSetHandler() {
+	}
 
 	/**
 	 * 区切り文字形式データの列見出し (ヘッダ) 行を出力するかどうかを設定します。

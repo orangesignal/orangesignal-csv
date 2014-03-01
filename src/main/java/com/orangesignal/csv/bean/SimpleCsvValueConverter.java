@@ -75,7 +75,8 @@ public class SimpleCsvValueConverter implements CsvValueConverter {
 	/**
 	 * デフォルトコンストラクタです。
 	 */
-	public SimpleCsvValueConverter() {}
+	public SimpleCsvValueConverter() {
+	}
 
 	/**
 	 * 日時書式を返します。

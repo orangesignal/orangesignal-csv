@@ -28,7 +28,8 @@ public abstract class CsvManagerFactory {
 	/**
 	 * デフォルトコンストラクタです。
 	 */
-	protected CsvManagerFactory() {}
+	protected CsvManagerFactory() {
+	}
 
 	/**
 	 * {@link CsvManager} の新しいインスタンスを取得します。

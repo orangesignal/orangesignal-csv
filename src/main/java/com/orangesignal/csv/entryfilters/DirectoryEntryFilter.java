@@ -33,7 +33,8 @@ public class DirectoryEntryFilter extends AbstractEntryFilter {
 	/**
 	 * デフォルトコンストラクタです。
 	 */
-	public DirectoryEntryFilter() {}
+	public DirectoryEntryFilter() {
+	}
 
 	/**
 	 * 指定された ZIP エントリをテストし、エントリがディレクトリエントリの場合は {@code false} そうでない場合は {@code true} を返します。

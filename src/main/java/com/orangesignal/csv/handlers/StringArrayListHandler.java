@@ -40,7 +40,8 @@ public class StringArrayListHandler extends AbstractCsvListHandler<String[], Str
 	/**
 	 * デフォルトコンストラクタです。
 	 */
-	public StringArrayListHandler() {}
+	public StringArrayListHandler() {
+	}
 
 	/**
 	 * 区切り文字形式データフィルタを設定します。

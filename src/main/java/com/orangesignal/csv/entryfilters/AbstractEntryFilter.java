@@ -34,7 +34,8 @@ public abstract class AbstractEntryFilter implements ZipEntryFilter, LhaEntryFil
 	/**
 	 * デフォルトコンストラクタです。
 	 */
-	protected AbstractEntryFilter() {}
+	protected AbstractEntryFilter() {
+	}
 
 	@Override
 	public String toString() {

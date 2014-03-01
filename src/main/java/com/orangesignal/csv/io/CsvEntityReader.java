@@ -67,6 +67,7 @@ public class CsvEntityReader<T> implements Closeable {
 	 * 
 	 * @param reader 区切り文字形式入力ストリーム
 	 * @param entityClass 区切り文字形式データ注釈要素 {@link CsvEntity} で注釈付けされた Java プログラム要素の型
+	 * @return {@link CsvEntityReader} の新しいインスタンス
 	 * @throws IllegalArgumentException {@code reader} または {@code entityClass} が {@code null} の場合。
 	 */
 	public static <T> CsvEntityReader<T> newInstance(final CsvReader reader, final Class<T> entityClass) {
@@ -79,6 +80,7 @@ public class CsvEntityReader<T> implements Closeable {
 	 * 
 	 * @param reader 区切り文字形式入力ストリーム
 	 * @param template Java プログラム要素操作の簡素化ヘルパー
+	 * @return {@link CsvEntityReader} の新しいインスタンス
 	 * @throws IllegalArgumentException {@code reader} または {@code template} が {@code null} の場合。
 	 */
 	public static <T> CsvEntityReader<T> newInstance(final CsvReader reader, final CsvEntityTemplate<T> template) {
