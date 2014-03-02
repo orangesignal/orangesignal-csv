@@ -57,12 +57,12 @@ public class CsvColumnPositionMappingBeanReader<T> implements Closeable {
 	// 利便性のための静的メソッド
 
 	/**
-	 * 指定された区切り文字形式入力ストリームと Java プログラム要素の型を使用して、{@link CsvColumnPositionMappingBeanReader} の新しいインスタンスを取得します。<p>
+	 * 新しい {@link CsvColumnPositionMappingBeanReader} のインスタンスを返します。
 	 * このメソッドは利便性のために提供しています。
 	 * 
 	 * @param reader 区切り文字形式入力ストリーム
 	 * @param type Java プログラム要素の型
-	 * @return {@link CsvColumnPositionMappingBeanReader} の新しいインスタンス
+	 * @return 新しい {@link CsvColumnPositionMappingBeanReader} のインスタンス
 	 * @throws IllegalArgumentException {@code reader} または {@code type} が {@code null} の場合。
 	 */
 	public static <T> CsvColumnPositionMappingBeanReader<T> newInstance(final CsvReader reader, final Class<T> type) {
@@ -70,12 +70,12 @@ public class CsvColumnPositionMappingBeanReader<T> implements Closeable {
 	}
 
 	/**
-	 * 指定された区切り文字形式入力ストリームと Java プログラム要素操作の簡素化ヘルパーを使用して、{@link CsvColumnPositionMappingBeanReader} の新しいインスタンスを取得します。<p>
+	 * 新しい {@link CsvColumnPositionMappingBeanReader} のインスタンスを返します。
 	 * このメソッドは利便性のために提供しています。
 	 * 
 	 * @param reader 区切り文字形式入力ストリーム
 	 * @param template Java プログラム要素操作の簡素化ヘルパー
-	 * @return {@link CsvColumnPositionMappingBeanReader} の新しいインスタンス
+	 * @return 新しい {@link CsvColumnPositionMappingBeanReader} のインスタンス
 	 * @throws IllegalArgumentException {@code reader} または {@code template} が {@code null} の場合。
 	 */
 	public static <T> CsvColumnPositionMappingBeanReader<T> newInstance(final CsvReader reader, final CsvColumnPositionMappingBeanTemplate<T> template) {

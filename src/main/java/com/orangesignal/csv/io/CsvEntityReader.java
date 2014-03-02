@@ -62,12 +62,12 @@ public class CsvEntityReader<T> implements Closeable {
 	// 利便性のための静的メソッド
 
 	/**
-	 * 指定された区切り文字形式入力ストリームと Java プログラム要素の型を使用して、{@link CsvEntityReader} の新しいインスタンスを取得します。<p>
+	 * 新しい {@link CsvEntityReader} のインスタンスを返します。
 	 * このメソッドは利便性のために提供しています。
 	 * 
 	 * @param reader 区切り文字形式入力ストリーム
 	 * @param entityClass 区切り文字形式データ注釈要素 {@link CsvEntity} で注釈付けされた Java プログラム要素の型
-	 * @return {@link CsvEntityReader} の新しいインスタンス
+	 * @return 新しい {@link CsvEntityReader} のインスタンス
 	 * @throws IllegalArgumentException {@code reader} または {@code entityClass} が {@code null} の場合。
 	 */
 	public static <T> CsvEntityReader<T> newInstance(final CsvReader reader, final Class<T> entityClass) {
@@ -75,12 +75,12 @@ public class CsvEntityReader<T> implements Closeable {
 	}
 
 	/**
-	 * 指定された区切り文字形式入力ストリームと Java プログラム要素操作の簡素化ヘルパーを使用して、{@link CsvEntityReader} の新しいインスタンスを取得します。<p>
+	 * 新しい {@link CsvEntityReader} のインスタンスを返します。
 	 * このメソッドは利便性のために提供しています。
 	 * 
 	 * @param reader 区切り文字形式入力ストリーム
 	 * @param template Java プログラム要素操作の簡素化ヘルパー
-	 * @return {@link CsvEntityReader} の新しいインスタンス
+	 * @return 新しい {@link CsvEntityReader} のインスタンス
 	 * @throws IllegalArgumentException {@code reader} または {@code template} が {@code null} の場合。
 	 */
 	public static <T> CsvEntityReader<T> newInstance(final CsvReader reader, final CsvEntityTemplate<T> template) {
