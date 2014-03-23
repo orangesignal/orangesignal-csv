@@ -361,7 +361,7 @@
 <a class="jxr_linenumber" name="L353" href="#L353">353</a> 	<strong class="jxr_keyword">public</strong> String toString() {
 <a class="jxr_linenumber" name="L354" href="#L354">354</a> 		<strong class="jxr_keyword">final</strong> String name = getClass().getName();
 <a class="jxr_linenumber" name="L355" href="#L355">355</a> 		<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> period = name.lastIndexOf('.');
-<a class="jxr_linenumber" name="L356" href="#L356">356</a> 		<strong class="jxr_keyword">return</strong> (period &gt; 0 ? name.substring(period + 1) : name);
+<a class="jxr_linenumber" name="L356" href="#L356">356</a> 		<strong class="jxr_keyword">return</strong> period &gt; 0 ? name.substring(period + 1) : name;
 <a class="jxr_linenumber" name="L357" href="#L357">357</a> 	}
 <a class="jxr_linenumber" name="L358" href="#L358">358</a> 
 <a class="jxr_linenumber" name="L359" href="#L359">359</a> }

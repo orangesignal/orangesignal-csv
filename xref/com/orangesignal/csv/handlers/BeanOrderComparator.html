@@ -64,29 +64,28 @@
 <a class="jxr_linenumber" name="L56" href="#L56">56</a>  		}
 <a class="jxr_linenumber" name="L57" href="#L57">57</a>  		<strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">final</strong> BeanOrder order : orders) {
 <a class="jxr_linenumber" name="L58" href="#L58">58</a>  			<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> c = order.compare(o1, o2);
-<a class="jxr_linenumber" name="L59" href="#L59">59</a>  			<strong class="jxr_keyword">if</strong> (c == 0) {
-<a class="jxr_linenumber" name="L60" href="#L60">60</a>  				<strong class="jxr_keyword">continue</strong>;
+<a class="jxr_linenumber" name="L59" href="#L59">59</a>  			<strong class="jxr_keyword">if</strong> (c != 0) {
+<a class="jxr_linenumber" name="L60" href="#L60">60</a>  				<strong class="jxr_keyword">return</strong> c;
 <a class="jxr_linenumber" name="L61" href="#L61">61</a>  			}
-<a class="jxr_linenumber" name="L62" href="#L62">62</a>  			<strong class="jxr_keyword">return</strong> c;
-<a class="jxr_linenumber" name="L63" href="#L63">63</a>  		}
-<a class="jxr_linenumber" name="L64" href="#L64">64</a>  		<strong class="jxr_keyword">return</strong> 0;
-<a class="jxr_linenumber" name="L65" href="#L65">65</a>  	}
-<a class="jxr_linenumber" name="L66" href="#L66">66</a>  
-<a class="jxr_linenumber" name="L67" href="#L67">67</a>  	<em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L68" href="#L68">68</a>  <em class="jxr_javadoccomment">	 * 指定された並び替え条件が示す順序に従って、指定されたリストをソートします。</em>
-<a class="jxr_linenumber" name="L69" href="#L69">69</a>  <em class="jxr_javadoccomment">	 * </em>
-<a class="jxr_linenumber" name="L70" href="#L70">70</a>  <em class="jxr_javadoccomment">	 * @param beans ソートされるリスト</em>
-<a class="jxr_linenumber" name="L71" href="#L71">71</a>  <em class="jxr_javadoccomment">	 * @param orders 並び替え条件</em>
-<a class="jxr_linenumber" name="L72" href="#L72">72</a>  <em class="jxr_javadoccomment">	 * @throws IllegalArgumentException {@code orders} が {@code null} の場合</em>
-<a class="jxr_linenumber" name="L73" href="#L73">73</a>  <em class="jxr_javadoccomment">	 * @see Collections#sort(List, Comparator)</em>
-<a class="jxr_linenumber" name="L74" href="#L74">74</a>  <em class="jxr_javadoccomment">	 */</em>
-<a class="jxr_linenumber" name="L75" href="#L75">75</a>  	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> sort(List&lt;?&gt; beans, <strong class="jxr_keyword">final</strong> List&lt;BeanOrder&gt; orders) {
-<a class="jxr_linenumber" name="L76" href="#L76">76</a>  		<strong class="jxr_keyword">if</strong> (beans.size() &gt; 1) {
-<a class="jxr_linenumber" name="L77" href="#L77">77</a>  			Collections.sort(beans, <strong class="jxr_keyword">new</strong> <a href="../../../../com/orangesignal/csv/handlers/BeanOrderComparator.html">BeanOrderComparator</a>(orders));
-<a class="jxr_linenumber" name="L78" href="#L78">78</a>  		}
-<a class="jxr_linenumber" name="L79" href="#L79">79</a>  	}
-<a class="jxr_linenumber" name="L80" href="#L80">80</a>  
-<a class="jxr_linenumber" name="L81" href="#L81">81</a>  }
+<a class="jxr_linenumber" name="L62" href="#L62">62</a>  		}
+<a class="jxr_linenumber" name="L63" href="#L63">63</a>  		<strong class="jxr_keyword">return</strong> 0;
+<a class="jxr_linenumber" name="L64" href="#L64">64</a>  	}
+<a class="jxr_linenumber" name="L65" href="#L65">65</a>  
+<a class="jxr_linenumber" name="L66" href="#L66">66</a>  	<em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L67" href="#L67">67</a>  <em class="jxr_javadoccomment">	 * 指定された並び替え条件が示す順序に従って、指定されたリストをソートします。</em>
+<a class="jxr_linenumber" name="L68" href="#L68">68</a>  <em class="jxr_javadoccomment">	 * </em>
+<a class="jxr_linenumber" name="L69" href="#L69">69</a>  <em class="jxr_javadoccomment">	 * @param beans ソートされるリスト</em>
+<a class="jxr_linenumber" name="L70" href="#L70">70</a>  <em class="jxr_javadoccomment">	 * @param orders 並び替え条件</em>
+<a class="jxr_linenumber" name="L71" href="#L71">71</a>  <em class="jxr_javadoccomment">	 * @throws IllegalArgumentException {@code orders} が {@code null} の場合</em>
+<a class="jxr_linenumber" name="L72" href="#L72">72</a>  <em class="jxr_javadoccomment">	 * @see Collections#sort(List, Comparator)</em>
+<a class="jxr_linenumber" name="L73" href="#L73">73</a>  <em class="jxr_javadoccomment">	 */</em>
+<a class="jxr_linenumber" name="L74" href="#L74">74</a>  	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> sort(<strong class="jxr_keyword">final</strong> List&lt;?&gt; beans, <strong class="jxr_keyword">final</strong> List&lt;BeanOrder&gt; orders) {
+<a class="jxr_linenumber" name="L75" href="#L75">75</a>  		<strong class="jxr_keyword">if</strong> (beans.size() &gt; 1) {
+<a class="jxr_linenumber" name="L76" href="#L76">76</a>  			Collections.sort(beans, <strong class="jxr_keyword">new</strong> <a href="../../../../com/orangesignal/csv/handlers/BeanOrderComparator.html">BeanOrderComparator</a>(orders));
+<a class="jxr_linenumber" name="L77" href="#L77">77</a>  		}
+<a class="jxr_linenumber" name="L78" href="#L78">78</a>  	}
+<a class="jxr_linenumber" name="L79" href="#L79">79</a>  
+<a class="jxr_linenumber" name="L80" href="#L80">80</a>  }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2009&#x2013;2014 OrangeSignal.com. All rights reserved.</div>
