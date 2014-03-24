@@ -20,7 +20,7 @@ If you are using Maven, simply copy the following dependency into your pom.xml f
 <dependency>
     <groupId>com.orangesignal</groupId>
     <artifactId>orangesignal-csv</artifactId>
-    <version>2.1.0</version>
+    <version>2.2.0</version>
 </dependency>
 ```
 
