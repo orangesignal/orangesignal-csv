@@ -32,8 +32,8 @@ FAQ
 
 *{バイナリファイルはどこからダウンロード可能ですか？}
 
- [Maven Central](http://search.maven.org/#search%7Cga%7C1%7Corangesignal-csv) で提供していますので、[Maven](http://maven.apache.org/) などの依存性解決ツールからのご使用をお願いします。\
- 依存性解決ツールのご使用ができない場合は、[Maven Central](http://search.maven.org/#search%7Cga%7C1%7Corangesignal-csv) より直接バイナリをダウンロードしてご使用下さい。
+ {{{http://search.maven.org/#search%7Cga%7C1%7Corangesignal-csv}Maven Central}} で提供していますので、{{{http://maven.apache.org/}Maven}} などの依存性解決ツールからのご使用をお願いします。\
+ 依存性解決ツールのご使用ができない場合は、{{{http://search.maven.org/#search%7Cga%7C1%7Corangesignal-csv}Maven Central}} より直接バイナリをダウンロードしてご使用下さい。
 
 *{文字コードの指定は可能ですか？}
 
