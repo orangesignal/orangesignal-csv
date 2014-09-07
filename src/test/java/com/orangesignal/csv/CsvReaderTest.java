@@ -194,6 +194,46 @@ public final class CsvReaderTest {
 	}
 
 	@Test
+	public void testReadTokensIssue30() throws IOException {
+		final CsvReader reader = new CsvReader(new StringReader("aaa\r\n\r\nccc"));
+		try {
+			final List<CsvToken> tokens1 = reader.readTokens();
+			assertThat(tokens1.size(), is(1));
+			assertThat(tokens1.get(0).getValue(), is("aaa"));
+
+			final List<CsvToken> tokens2 = reader.readTokens();
+			assertThat(tokens2.size(), is(1));
+			assertThat(tokens2.get(0).getValue(), is(""));
+
+			final List<CsvToken> tokens3 = reader.readTokens();
+			assertThat(tokens3.size(), is(1));
+			assertThat(tokens3.get(0).getValue(), is("ccc"));
+		} finally {
+			reader.close();
+		}
+	}
+
+	@Test
+	public void testReadValuesIssue30() throws IOException {
+		final CsvReader reader = new CsvReader(new StringReader("aaa\r\n\r\nccc"));
+		try {
+			final List<String> values1 = reader.readValues();
+			assertThat(values1.size(), is(1));
+			assertThat(values1.get(0), is("aaa"));
+
+			final List<String> values2 = reader.readValues();
+			assertThat(values2.size(), is(1));
+			assertThat(values2.get(0), is(""));
+
+			final List<String> values3 = reader.readValues();
+			assertThat(values3.size(), is(1));
+			assertThat(values3.get(0), is("ccc"));
+		} finally {
+			reader.close();
+		}
+	}
+
+	@Test
 	public void testReadValues() throws IOException {
 		final CsvConfig cfg = new CsvConfig(',', '"', '\\');
 		cfg.setNullString("NULL");

@@ -37,6 +37,7 @@ import com.orangesignal.csv.CsvReader;
 import com.orangesignal.csv.annotation.CsvColumnException;
 import com.orangesignal.csv.bean.CsvEntityTemplate;
 import com.orangesignal.csv.entity.DefaultValuePrice;
+import com.orangesignal.csv.entity.Issue30;
 import com.orangesignal.csv.entity.Price;
 import com.orangesignal.csv.entity.Price2;
 import com.orangesignal.csv.entity.RequiredPrice;
@@ -285,6 +286,26 @@ public class CsvEntityReaderTest {
 
 			final Price last = reader.read();
 			assertNull(last);
+		} finally {
+			reader.close();
+		}
+	}
+
+	@Test
+	public void testIssue30() throws IOException {
+		final CsvEntityReader<Issue30> reader = CsvEntityReader.newInstance(
+				new CsvReader(new StringReader("名称\r\naaa\r\n\r\nccc")),
+				Issue30.class
+			);
+		try {
+			final Issue30 o1 = reader.read();
+			assertThat(o1.name, is("aaa"));
+
+			final Issue30 o2 = reader.read();
+			assertThat(o2.name, is(""));
+
+			final Issue30 o3 = reader.read();
+			assertThat(o3.name, is("ccc"));
 		} finally {
 			reader.close();
 		}
