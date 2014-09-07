@@ -394,7 +394,7 @@ public class CsvReader implements Closeable {
 		arraySize = results.size();
 
 		if (cfg.isIgnoreEmptyLines() && (line.length() == 0 || isWhitespaces(line)) && arraySize == 1) {
-			return null;
+			return null;	// XXX - 空行の場合に null を返すのではなく NullObject を返すべきなのでは？
 		}
 		if (!cfg.isVariableColumns()) {
 			if (countNumberOfColumns >= 0 && countNumberOfColumns != arraySize) {
