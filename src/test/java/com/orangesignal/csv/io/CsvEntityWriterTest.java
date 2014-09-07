@@ -38,6 +38,7 @@ import com.orangesignal.csv.CsvWriter;
 import com.orangesignal.csv.bean.CsvEntityTemplate;
 import com.orangesignal.csv.entity.DefaultValuePrice;
 import com.orangesignal.csv.entity.Price;
+import com.orangesignal.csv.entity.Travel;
 import com.orangesignal.csv.entity.WritableEntity;
 import com.orangesignal.csv.entity.WritableNoHeaderEntity;
 import com.orangesignal.csv.filters.SimpleCsvNamedValueFilter;
@@ -437,6 +438,26 @@ public class CsvEntityWriterTest {
 			writer.close();
 		}
 		assertThat(sw.getBuffer().toString(), is("シンボル,名称,価格,出来高,日付,時刻\r\nAAAA,aaa,10\\,000,10,2008/10/28,10:24:00\r\nBBBB,bbb,NULL,0,NULL,NULL\r\nCCCC,ccc,20\\,000,100,2008/10/26,14:20:10\r\n"));
+	}
+
+	@Test
+	public void testIssue29() throws Exception {
+		final StringWriter sw = new StringWriter();
+		final CsvEntityWriter<Travel> writer = CsvEntityWriter.newInstance(
+				new CsvWriter(sw, cfg),
+				Travel.class
+			);
+		try {
+			final DateFormat df = new SimpleDateFormat("yyyy/MM/dd");
+			df.setTimeZone(TimeZone.getTimeZone("Asia/Tokyo"));
+
+			writer.write(new Travel("aaa", df.parse("2008/10/28")));
+			writer.write(new Travel("bbb", null));
+			writer.write(new Travel("ccc", df.parse("2008/10/26")));
+		} finally {
+			writer.close();
+		}
+		assertThat(sw.getBuffer().toString(), is("CODE,DATE\r\naaa,2008/10/28\r\nbbb,NULL\r\nccc,2008/10/26\r\n"));
 	}
 
 	@Test
