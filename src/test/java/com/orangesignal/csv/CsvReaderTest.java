@@ -18,6 +18,7 @@ package com.orangesignal.csv;
 
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.nullValue;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 
 import java.io.ByteArrayInputStream;
@@ -195,19 +196,26 @@ public final class CsvReaderTest {
 
 	@Test
 	public void testReadTokensIssue30() throws IOException {
-		final CsvReader reader = new CsvReader(new StringReader("aaa\r\n\r\nccc"));
+		final CsvConfig cfg = new CsvConfig();
+		cfg.setIgnoreEmptyLines(true);
+
+		final CsvReader reader = new CsvReader(new StringReader("aaa\r\n\r\nccc\r\n"), cfg);
 		try {
 			final List<CsvToken> tokens1 = reader.readTokens();
 			assertThat(tokens1.size(), is(1));
 			assertThat(tokens1.get(0).getValue(), is("aaa"));
 
 			final List<CsvToken> tokens2 = reader.readTokens();
-			assertThat(tokens2.size(), is(1));
-			assertThat(tokens2.get(0).getValue(), is(""));
+			assertNull(tokens2);
+			assertThat(reader.isEndOfFile(), is(false));
 
 			final List<CsvToken> tokens3 = reader.readTokens();
 			assertThat(tokens3.size(), is(1));
 			assertThat(tokens3.get(0).getValue(), is("ccc"));
+
+			final List<CsvToken> tokens4 = reader.readTokens();
+			assertNull(tokens4);
+			assertThat(reader.isEndOfFile(), is(true));
 		} finally {
 			reader.close();
 		}
@@ -215,19 +223,26 @@ public final class CsvReaderTest {
 
 	@Test
 	public void testReadValuesIssue30() throws IOException {
-		final CsvReader reader = new CsvReader(new StringReader("aaa\r\n\r\nccc"));
+		final CsvConfig cfg = new CsvConfig();
+		cfg.setIgnoreEmptyLines(true);
+
+		final CsvReader reader = new CsvReader(new StringReader("aaa\r\n\r\nccc\r\n"), cfg);
 		try {
 			final List<String> values1 = reader.readValues();
 			assertThat(values1.size(), is(1));
 			assertThat(values1.get(0), is("aaa"));
 
 			final List<String> values2 = reader.readValues();
-			assertThat(values2.size(), is(1));
-			assertThat(values2.get(0), is(""));
+			assertNull(values2);
+			assertThat(reader.isEndOfFile(), is(false));
 
 			final List<String> values3 = reader.readValues();
 			assertThat(values3.size(), is(1));
 			assertThat(values3.get(0), is("ccc"));
+
+			final List<String> values4 = reader.readValues();
+			assertNull(values4);
+			assertThat(reader.isEndOfFile(), is(true));
 		} finally {
 			reader.close();
 		}

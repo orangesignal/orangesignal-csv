@@ -22,10 +22,13 @@ import com.orangesignal.csv.annotation.CsvEntity;
 /**
  * @author Koji Sugisawa
  */
-@CsvEntity(header = true)
+@CsvEntity(header = false)
 public class Issue30 {
 
-	@CsvColumn(name = "名称")
+	@CsvColumn(position = 0)
+	public Integer no;
+
+	@CsvColumn(position = 1)
 	public String name;
 
 }

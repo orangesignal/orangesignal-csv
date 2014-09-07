@@ -293,19 +293,24 @@ public class CsvEntityReaderTest {
 
 	@Test
 	public void testIssue30() throws IOException {
+		final CsvConfig cfg = new CsvConfig();
+		cfg.setIgnoreEmptyLines(true);
+
 		final CsvEntityReader<Issue30> reader = CsvEntityReader.newInstance(
-				new CsvReader(new StringReader("名称\r\naaa\r\n\r\nccc")),
+				new CsvReader(new StringReader("1,name\r\n\r\n2,dare"), cfg),
 				Issue30.class
 			);
 		try {
 			final Issue30 o1 = reader.read();
-			assertThat(o1.name, is("aaa"));
+			assertThat(o1.no, is(1));
+			assertThat(o1.name, is("name"));
 
 			final Issue30 o2 = reader.read();
-			assertThat(o2.name, is(""));
+			assertNull(o2);
 
 			final Issue30 o3 = reader.read();
-			assertThat(o3.name, is("ccc"));
+			assertThat(o3.no, is(2));
+			assertThat(o3.name, is("dare"));
 		} finally {
 			reader.close();
 		}

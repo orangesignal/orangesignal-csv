@@ -215,6 +215,14 @@ public class CsvReader implements Closeable {
 	public int getLineNumber() { return lineNumber; }
 
 	/**
+	 * ファイルの終わりに達したかどうかを取得します。
+	 * 
+	 * @return ファイルの終わりに達したかどうか
+	 * @since 2.2.1
+	 */
+	public boolean isEndOfFile() { return endOfFile; }
+
+	/**
 	 * Checks to make sure that the stream has not been closed
 	 */
 	private void ensureOpen() throws IOException {
