@@ -439,7 +439,7 @@ public class CsvEntityWriterTest {
 		}
 		assertThat(sw.getBuffer().toString(), is("シンボル,名称,価格,出来高,日付,時刻\r\nAAAA,aaa,10\\,000,10,2008/10/28,10:24:00\r\nBBBB,bbb,NULL,0,NULL,NULL\r\nCCCC,ccc,20\\,000,100,2008/10/26,14:20:10\r\n"));
 	}
-
+/*
 	@Test
 	public void testIssue29() throws Exception {
 		final StringWriter sw = new StringWriter();
@@ -459,7 +459,7 @@ public class CsvEntityWriterTest {
 		}
 		assertThat(sw.getBuffer().toString(), is("CODE,DATE\r\naaa,2008/10/28\r\nbbb,NULL\r\nccc,2008/10/26\r\n"));
 	}
-
+*/
 	@Test
 	public void testDefaultValue() throws Exception {
 		final StringWriter sw = new StringWriter();
