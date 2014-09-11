@@ -12,6 +12,18 @@
 
 
 
+* 2.2.1 (2014-09-XX)
+
+  本リリースは、不具合対応が主なメンテナンスリリースです。
+
+** 不具合対応
+
+   * {{{https://github.com/orangesignal/orangesignal-csv/issues/30}#30}} CsvReader へ isEndOfFile メソッドを追加しました。
+
+   * {{{https://github.com/orangesignal/orangesignal-csv/issues/32}#32}} CsvConfig.setIgnoreEmptyLines(true) 使用時に CsvReader が改行コードで終了していない最終行のトークンを強制的に null として扱ってしまう問題を修正しました。
+
+
+
 * 2.2.0 (2014-03-24)
 
   本リリースは、ユーザーフィードバックの機能追加が主なマイナーリリースです。
