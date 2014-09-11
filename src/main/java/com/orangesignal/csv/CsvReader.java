@@ -401,9 +401,33 @@ public class CsvReader implements Closeable {
 
 		arraySize = results.size();
 
-		if (cfg.isIgnoreEmptyLines() && (line.length() == 0 || isWhitespaces(line)) && arraySize == 1) {
-			return null;	// XXX - 空行の場合に null を返すのではなく NullObject を返すべきなのでは？
+		// XXX - 空行の場合に null を返すのではなく NullObject を返すべきなのでは？
+		if (endOfFile) {
+			if (results.size() == 1) {
+				final String value = results.get(0).getValue();
+				if (cfg.isIgnoreEmptyLines() && isWhitespaces(value)) {
+					return null;
+				}
+				if (cfg.getIgnoreLinePatterns() != null) {
+					for (final Pattern p : cfg.getIgnoreLinePatterns()) {
+						if (p != null && p.matcher(value).matches()) {
+							return null;
+						}
+					}
+				}
+			}
+		} else {
+			if (cfg.isIgnoreEmptyLines() && arraySize == 1 && (line.length() == 0 || isWhitespaces(line))) {
+				return null;
+			}
 		}
+//		if (results.size() == 1) {
+//			final CsvToken token = results.get(0);
+////			if (cfg.isIgnoreEmptyLines() && (line.length() == 0 || isWhitespaces(line)) && arraySize == 1) {
+//			if (cfg.isIgnoreEmptyLines() && (token.getValue() == null || isWhitespaces(token.getValue()))) {
+//					return null;	// XXX - 空行の場合に null を返すのではなく NullObject を返すべきなのでは？
+//				}
+//		}
 		if (!cfg.isVariableColumns()) {
 			if (countNumberOfColumns >= 0 && countNumberOfColumns != arraySize) {
 				throw new CsvTokenException(String.format("Invalid column count in CSV input on line %d.", startLineNumber), results);

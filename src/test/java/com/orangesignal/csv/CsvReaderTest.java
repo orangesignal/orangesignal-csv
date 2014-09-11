@@ -195,6 +195,62 @@ public final class CsvReaderTest {
 	}
 
 	@Test
+	public void Issue32a() throws IOException {
+		final CsvConfig cfg = new CsvConfig();
+		cfg.setIgnoreEmptyLines(true);
+
+		final CsvReader reader = new CsvReader(new StringReader("aaa\r\n\r\nccc"), cfg);
+		try {
+			final List<CsvToken> tokens1 = reader.readTokens();
+			assertThat(tokens1.size(), is(1));
+			assertThat(tokens1.get(0).getValue(), is("aaa"));
+
+			final List<CsvToken> tokens2 = reader.readTokens();
+			assertNull(tokens2);
+			assertThat(reader.isEndOfFile(), is(false));
+
+			final List<CsvToken> tokens3 = reader.readTokens();
+			assertThat(tokens3.size(), is(1));
+			assertThat(tokens3.get(0).getValue(), is("ccc"));
+
+			final List<CsvToken> tokens4 = reader.readTokens();
+			assertNull(tokens4);
+			assertThat(reader.isEndOfFile(), is(true));
+		} finally {
+			reader.close();
+		}
+	}
+
+	@Test
+	public void Issue32b() throws IOException {
+		final CsvConfig cfg = new CsvConfig();
+		cfg.setIgnoreEmptyLines(true);
+
+		final CsvReader reader = new CsvReader(new StringReader("1,aaa\r\n\r\n3,ccc"), cfg);
+		try {
+			final List<CsvToken> tokens1 = reader.readTokens();
+			assertThat(tokens1.size(), is(2));
+			assertThat(tokens1.get(0).getValue(), is("1"));
+			assertThat(tokens1.get(1).getValue(), is("aaa"));
+
+			final List<CsvToken> tokens2 = reader.readTokens();
+			assertNull(tokens2);
+			assertThat(reader.isEndOfFile(), is(false));
+
+			final List<CsvToken> tokens3 = reader.readTokens();
+			assertThat(tokens3.size(), is(2));
+			assertThat(tokens3.get(0).getValue(), is("3"));
+			assertThat(tokens3.get(1).getValue(), is("ccc"));
+
+			final List<CsvToken> tokens4 = reader.readTokens();
+			assertNull(tokens4);
+			assertThat(reader.isEndOfFile(), is(true));
+		} finally {
+			reader.close();
+		}
+	}
+
+	@Test
 	public void testReadTokensIssue30() throws IOException {
 		final CsvConfig cfg = new CsvConfig();
 		cfg.setIgnoreEmptyLines(true);
