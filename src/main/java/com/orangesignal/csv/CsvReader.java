@@ -421,13 +421,6 @@ public class CsvReader implements Closeable {
 				return null;
 			}
 		}
-//		if (results.size() == 1) {
-//			final CsvToken token = results.get(0);
-////			if (cfg.isIgnoreEmptyLines() && (line.length() == 0 || isWhitespaces(line)) && arraySize == 1) {
-//			if (cfg.isIgnoreEmptyLines() && (token.getValue() == null || isWhitespaces(token.getValue()))) {
-//					return null;	// XXX - 空行の場合に null を返すのではなく NullObject を返すべきなのでは？
-//				}
-//		}
 		if (!cfg.isVariableColumns()) {
 			if (countNumberOfColumns >= 0 && countNumberOfColumns != arraySize) {
 				throw new CsvTokenException(String.format("Invalid column count in CSV input on line %d.", startLineNumber), results);
