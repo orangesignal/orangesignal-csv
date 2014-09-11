@@ -402,8 +402,8 @@ public class CsvReader implements Closeable {
 		arraySize = results.size();
 
 		// XXX - 空行の場合に null を返すのではなく NullObject を返すべきなのでは？
-		if (endOfFile) {
-			if (results.size() == 1) {
+		if (arraySize == 1) {
+			if (endOfFile) {
 				final String value = results.get(0).getValue();
 				if (cfg.isIgnoreEmptyLines() && isWhitespaces(value)) {
 					return null;
@@ -415,10 +415,10 @@ public class CsvReader implements Closeable {
 						}
 					}
 				}
-			}
-		} else {
-			if (cfg.isIgnoreEmptyLines() && arraySize == 1 && (line.length() == 0 || isWhitespaces(line))) {
-				return null;
+			} else {
+				if (cfg.isIgnoreEmptyLines() && (line.length() == 0 || isWhitespaces(line))) {
+					return null;
+				}
 			}
 		}
 		if (!cfg.isVariableColumns()) {
