@@ -493,8 +493,12 @@ new CsvBeanManager().save(customers, Customer.class).to(new File("customers.csv"
 // readTokens() メソッドで CSV データを読込む場合
 CsvReader reader = new CsvReader(new StringReader(...), cfg);
 try {
-   List<CsvToken> tokens;
-   while ((tokens = reader.readTokens()) != null) {
+   while (!reader.isEndOfFile()) {
+       final List<CsvToken> tokens = reader.readTokens();
+       if (tokens == null) {
+           continue;
+       }
+
        System.out.println(String.format("物理行番号: %d-%d", reader.getStartLineNumber(), reader.getEndLineNumber()));
        System.out.println(String.format("論理行番号: %d", reader.getLineNumber()));
        ...
@@ -512,8 +516,11 @@ try {
 // readValues() メソッドで CSV データを読込む場合
 CsvReader reader = new CsvReader(new StringReader(...), cfg);
 try {
-   List<String> values;
-   while ((values = reader.readValues()) != null) {
+   while (!reader.isEndOfFile()) {
+       final List<String> values = reader.readValues();
+       if (values == null) {
+           continue;
+       }
        ...
        for (String value : values) {
            System.out.println(value);
