@@ -234,6 +234,16 @@ public class CsvConfig implements Serializable, Cloneable {
 	public void setSeparator(final char separator) { this.separator = separator; }
 
 	/**
+	 * 区切り文字を設定します。
+	 *
+	 * @param separator 区切り文字
+	 */
+	public CsvConfig withSeparator(final char separator) {
+		this.separator = separator;
+		return this;
+	}
+
+	/**
 	 * 囲み文字を返します。
 	 *
 	 * @return 囲み文字
@@ -246,6 +256,16 @@ public class CsvConfig implements Serializable, Cloneable {
 	 * @param quote 囲み文字
 	 */
 	public void setQuote(final char quote) { this.quote = quote; }
+
+	/**
+	 * 囲み文字を設定します。
+	 *
+	 * @param quote 囲み文字
+	 */
+	public CsvConfig withQuote(final char quote) {
+		this.quote = quote;
+		return this;
+	}
 
 	/**
 	 * エスケープ文字を返します。
@@ -262,6 +282,16 @@ public class CsvConfig implements Serializable, Cloneable {
 	public void setEscape(final char escape) { this.escape = escape; }
 
 	/**
+	 * エスケープ文字を設定します。
+	 *
+	 * @param escape エスケープ文字
+	 */
+	public CsvConfig withEscape(final char escape) {
+		this.escape = escape;
+		return this;
+	}
+
+	/**
 	 * 囲み文字を無効にするかどうかを返します。
 	 *
 	 * @return 囲み文字を無効にするかどうか
@@ -274,6 +304,16 @@ public class CsvConfig implements Serializable, Cloneable {
 	 * @param disabled 囲み文字を無効にするかどうか
 	 */
 	public void setQuoteDisabled(final boolean disabled) { this.quoteDisabled = disabled; }
+
+	/**
+	 * 囲み文字を無効にするかどうかを設定します。
+	 *
+	 * @param disabled 囲み文字を無効にするかどうか
+	 */
+	public CsvConfig withQuoteDisabled(final boolean disabled) {
+		this.quoteDisabled = disabled;
+		return this;
+	}
 
 	/**
 	 * エスケープ文字を無効にするかどうかを返します。
@@ -290,6 +330,16 @@ public class CsvConfig implements Serializable, Cloneable {
 	public void setEscapeDisabled(final boolean disabled) { this.escapeDisabled = disabled; }
 
 	/**
+	 * エスケープ文字を無効にするかどうかを設定します。
+	 *
+	 * @param disabled エスケープ文字を無効にするかどうか
+	 */
+	public CsvConfig withEscapeDisabled(final boolean disabled) {
+		this.escapeDisabled = disabled;
+		return this;
+	}
+
+	/**
 	 * 値の改行文字列を置換える文字列を返します。
 	 * 
 	 * @return 値の改行文字列を置換える文字列
@@ -302,6 +352,16 @@ public class CsvConfig implements Serializable, Cloneable {
 	 * @param breakString 値の改行文字列を置換える文字列
 	 */
 	public void setBreakString(final String breakString) { this.breakString = breakString; }
+
+	/**
+	 * 値の改行文字列を置換える文字列を設定します。
+	 * 
+	 * @param breakString 値の改行文字列を置換える文字列
+	 */
+	public CsvConfig withBreakString(final String breakString) {
+		this.breakString = breakString;
+		return this;
+	}
 
 	/**
 	 * 値がないことを表す文字列を返します。
@@ -331,6 +391,27 @@ public class CsvConfig implements Serializable, Cloneable {
 	}
 
 	/**
+	 * 値がないことを表す文字列を設定します。
+	 *
+	 * @param nullString 値がないことを表す文字列
+	 */
+	public CsvConfig withNullString(final String nullString) {
+		return withNullString(nullString, false);
+	}
+
+	/**
+	 * 値がないことを表す文字列を設定します。
+	 *
+	 * @param nullString 値がないことを表す文字列
+	 * @param ignoreCase 大文字と小文字を区別するかどうか
+	 */
+	public CsvConfig withNullString(final String nullString, final boolean ignoreCase) {
+		this.nullString = nullString;
+		this.ignoreCaseNullString = ignoreCase;
+		return this;
+	}
+
+	/**
 	 * 値がないことを表す文字列の大文字と小文字を区別するかどうかを返します。
 	 * 
 	 * @return 値がないことを表す文字列の大文字と小文字を区別するかどうか
@@ -345,6 +426,17 @@ public class CsvConfig implements Serializable, Cloneable {
 	 */
 	public void setIgnoreCaseNullString(final boolean ignoreCaseNullString) {
 		this.ignoreCaseNullString = ignoreCaseNullString;
+	}
+
+	/**
+	 * 値がないことを表す文字列の大文字と小文字を区別するかどうかを設定します。
+	 * 
+	 * @param ignoreCaseNullString 値がないことを表す文字列の大文字と小文字を区別するかどうか
+	 * @since 1.2.2
+	 */
+	public CsvConfig withIgnoreCaseNullString(final boolean ignoreCaseNullString) {
+		this.ignoreCaseNullString = ignoreCaseNullString;
+		return this;
 	}
 
 	/**
@@ -363,6 +455,17 @@ public class CsvConfig implements Serializable, Cloneable {
 	public void setIgnoreLeadingWhitespaces(final boolean ignore) { this.ignoreLeadingWhitespaces = ignore; }
 
 	/**
+	 * 値より前のホワイトスペースを除去するかどうかを設定します。
+	 *
+	 * @param ignore 値より前のホワイトスペースを除去するかどうか
+	 * @see Character#isWhitespace(char)
+	 */
+	public CsvConfig withIgnoreLeadingWhitespaces(final boolean ignore) {
+		this.ignoreLeadingWhitespaces = ignore;
+		return this;
+	}
+
+	/**
 	 * 値より後ろのホワイトスペースを除去するかどうかを返します。
 	 *
 	 * @return 値より後ろのホワイトスペースを除去するかどうか
@@ -376,6 +479,17 @@ public class CsvConfig implements Serializable, Cloneable {
 	 * @see Character#isWhitespace(char)
 	 */
 	public void setIgnoreTrailingWhitespaces(final boolean ignore) { this.ignoreTrailingWhitespaces = ignore; }
+
+	/**
+	 * 値より後ろのホワイトスペースを除去するかどうかを設定します。
+	 *
+	 * @param ignore 値より後ろのホワイトスペースを除去するかどうか
+	 * @see Character#isWhitespace(char)
+	 */
+	public CsvConfig withIgnoreTrailingWhitespaces(final boolean ignore) {
+		this.ignoreTrailingWhitespaces = ignore;
+		return this;
+	}
 
 	/**
 	 * 空行を無視するかどうかを返します。
@@ -392,6 +506,16 @@ public class CsvConfig implements Serializable, Cloneable {
 	public void setIgnoreEmptyLines(final boolean ignore) { this.ignoreEmptyLines = ignore; }
 
 	/**
+	 * 空行を無視するかどうかを設定します。
+	 *
+	 * @param ignore 空行を無視するかどうか
+	 */
+	public CsvConfig withIgnoreEmptyLines(final boolean ignore) {
+		this.ignoreEmptyLines = ignore;
+		return this;
+	}
+
+	/**
 	 * 無視する行の正規表現パターン群を返します。
 	 *
 	 * @return 無視する行の正規表現パターン群
@@ -404,6 +528,16 @@ public class CsvConfig implements Serializable, Cloneable {
 	 * @param ignoreLinePatterns 無視する行の正規表現パターン群
 	 */
 	public void setIgnoreLinePatterns(final Pattern...ignoreLinePatterns) { this.ignoreLinePatterns = ignoreLinePatterns; }
+
+	/**
+	 * 無視する行の正規表現パターン群を設定します。
+	 *
+	 * @param ignoreLinePatterns 無視する行の正規表現パターン群
+	 */
+	public CsvConfig withIgnoreLinePatterns(final Pattern...ignoreLinePatterns) {
+		this.ignoreLinePatterns = ignoreLinePatterns;
+		return this;
+	}
 
 	/**
 	 * ファイルの先頭から読飛ばす行数を返します。
@@ -420,6 +554,16 @@ public class CsvConfig implements Serializable, Cloneable {
 	public void setSkipLines(final int skipLines) { this.skipLines = skipLines; }
 
 	/**
+	 * ファイルの先頭から読飛ばす行数を設定します。
+	 *
+	 * @param skipLines ファイルの先頭から読飛ばす行数
+	 */
+	public CsvConfig withSkipLines(final int skipLines) {
+		this.skipLines = skipLines;
+		return this;
+	}
+
+	/**
 	 * データ出力時の改行文字列を返します。
 	 *
 	 * @return データ出力時の改行文字列
@@ -432,6 +576,16 @@ public class CsvConfig implements Serializable, Cloneable {
 	 * @param lineSeparator データ出力時の改行文字列
 	 */
 	public void setLineSeparator(final String lineSeparator) { this.lineSeparator = lineSeparator; }
+
+	/**
+	 * データ出力時の改行文字列を設定します。
+	 *
+	 * @param lineSeparator データ出力時の改行文字列
+	 */
+	public CsvConfig withLineSeparator(final String lineSeparator) {
+		this.lineSeparator = lineSeparator;
+		return this;
+	}
 
 	/**
 	 * 囲み文字出力方法の種類を返します。
@@ -456,6 +610,21 @@ public class CsvConfig implements Serializable, Cloneable {
 	}
 
 	/**
+	 * 囲み文字出力方法の種類を設定します。
+	 * 
+	 * @param quotePolicy 囲み文字出力方法の種類
+	 * @throws IllegalArgumentException {@code quotePolicy} が {@code null} の場合
+	 * @since 1.1
+	 */
+	public CsvConfig withQuotePolicy(final QuotePolicy quotePolicy) {
+		if (quotePolicy == null) {
+			throw new IllegalArgumentException("QuotePolicy must not be null");
+		}
+		this.quotePolicy = quotePolicy;
+		return this;
+	}
+
+	/**
 	 * UTF-8 エンコーディングでの出力時に BOM (Byte Order Mark) を付与するかどうかを返します。
 	 * 
 	 * @return UTF-8 エンコーディングでの出力時に BOM (Byte Order Mark) を付与するかどうか
@@ -470,6 +639,17 @@ public class CsvConfig implements Serializable, Cloneable {
 	 * @since 1.2.9
 	 */
 	public void setUtf8bomPolicy(final boolean utf8bomPolicy) { this.utf8bomPolicy = utf8bomPolicy; }
+	
+	/**
+	 * UTF-8 エンコーディングでの出力時に BOM (Byte Order Mark) を付与するかどうかを設定します。
+	 * 
+	 * @param utf8bomPolicy UTF-8 エンコーディングでの出力時に BOM (Byte Order Mark) を付与するかどうか
+	 * @since 1.2.9
+	 */
+	public CsvConfig withUtf8bomPolicy(final boolean utf8bomPolicy) {
+		this.utf8bomPolicy = utf8bomPolicy;
+		return this;
+	}
 
 	/**
 	 * 可変項目数を許可するかどうかを返します。
@@ -486,6 +666,17 @@ public class CsvConfig implements Serializable, Cloneable {
 	 * @since 2.1
 	 */
 	public void setVariableColumns(final boolean variableColumns) { this.variableColumns = variableColumns; }
+
+	/**
+	 * 可変項目数を許可するかどうかを設定します。
+	 * 
+	 * @param variableColumns 可変項目数を許可するかどうか
+	 * @since 2.1
+	 */
+	public CsvConfig withVariableColumns(final boolean variableColumns) {
+		this.variableColumns = variableColumns;
+		return this;
+	}
 
 	/**
 	 * {@inheritDoc}
