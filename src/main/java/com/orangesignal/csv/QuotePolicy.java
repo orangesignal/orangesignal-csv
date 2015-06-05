@@ -32,7 +32,14 @@ public enum QuotePolicy {
 	/**
 	 * 項目内に区切り文字、囲み文字または改行文字が含まれる場合にだけ項目を囲み文字で囲むようにします。
 	 */
-	MINIMAL;
+	MINIMAL,
+
+	/**
+	 * 列全体の項目を囲み文字で囲むようにします。<p>
+	 * {@link com.orangesignal.csv.annotation.CsvColumn#columnQuote} を true にして使用して下さい。
+	 * @since 2.2
+	 */
+	COLUMN;
 
 //	NON_NUMERIC
 

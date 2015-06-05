@@ -32,7 +32,7 @@ public class QuotePolicyTest {
 		final QuotePolicy[] values = QuotePolicy.values();
 		for (final QuotePolicy value : values) {
 			switch (value) {
-				case ALL: case MINIMAL:
+				case ALL: case MINIMAL: case COLUMN:
 					break;
 				default:
 					fail();
