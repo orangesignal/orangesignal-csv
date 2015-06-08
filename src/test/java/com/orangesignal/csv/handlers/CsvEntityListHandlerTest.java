@@ -244,7 +244,7 @@ public class CsvEntityListHandlerTest {
 		} finally {
 			writer.close();
 		}
-		assertThat(sw.getBuffer().toString(), is("No.,ラベル\r\n1,\"aaa\"\r\n2,\r\n3,NULL\r\n4,\"d\\\"d\\\"d\"\r\n"));
+		assertThat(sw.getBuffer().toString(), is("No.,ラベル\r\n1,\"aaa\"\r\n2,NULL\r\n3,NULL\r\n4,\"d\\\"d\\\"d\"\r\n"));
 	}
 
 }

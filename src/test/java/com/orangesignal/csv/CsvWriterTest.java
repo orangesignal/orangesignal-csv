@@ -222,7 +222,7 @@ public class CsvWriterTest {
 			writer.writeValues(Arrays.asList(new String[]{ "zzz", "", null }));
 			writer.flush();
 			// Assert
-			assertThat(sw.getBuffer().toString(), is("aaa,\"b,\\\"b\",ccc\r\nzzz,,NULL\r\n"));
+			assertThat(sw.getBuffer().toString(), is("aaa,\"b,\\\"b\",ccc\r\nzzz,NULL,NULL\r\n"));
 		} finally {
 			writer.close();
 		}

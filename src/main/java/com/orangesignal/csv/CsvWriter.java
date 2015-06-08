@@ -190,9 +190,9 @@ public class CsvWriter implements Closeable, Flushable {
 
 					String value = values.get(i);
 					boolean enclose = false;	// 項目を囲み文字で囲むかどうか
-					if (value == null) {
-						// 項目値が null の場合に NULL 文字列が有効であれば NULL 文字列へ置換えます。
-						if (cfg.getNullString() == null) { 
+					if (value == null || "".equals(value)) {
+						// 項目値が null もしくは空白の場合に NULL 文字列が有効であれば NULL 文字列へ置換えます。
+						if (cfg.getNullString() == null) {
 							continue;
 						}
 						value = cfg.getNullString();
