@@ -99,16 +99,17 @@ public class SimpleCsvValueConverter implements CsvValueConverter {
 			throw new IllegalArgumentException("Class must not be null");
 		}
 
-		if (str == null) {
+		if (type.equals(String.class)) {
+			return str;
+		}
+
+		if (str == null || str.length() == 0) {
 			if (type.isPrimitive()) {
 				return PRIMITIVE_DEFAULTS.get(type);
 			}
 			return null;
 		}
-		if (type.equals(String.class)) {
-			return str;
-		}
-
+		
 		if (type.equals(Boolean.TYPE) || type.equals(Boolean.class)) {
 			for (final Map.Entry<String, Boolean> entry : BOOLEAN_DEFAULTS.entrySet()) {
 				if (entry.getKey().equalsIgnoreCase(str)) {
