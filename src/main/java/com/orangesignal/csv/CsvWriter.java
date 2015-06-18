@@ -139,6 +139,31 @@ public class CsvWriter implements Closeable, Flushable {
 	 * @throws IOException 入出力エラーが発生した場合
 	 */
 	public void writeValues(final List<String> values) throws IOException {
+		writeValuesCore(values, null);
+	}
+
+	/**
+	 * 指定された CSV トークンの値リストを書き込みます。
+	 *
+	 * @param values 書き込む CSV トークンの値リスト
+	 * @param quotes 列全体を囲み文字で囲むかどうかのリスト
+	 * @throws CsvValueException 可変項目数が禁止されている場合に項目数が一致しない場合
+	 * @throws IOException 入出力エラーが発生した場合
+	 * @since 2.2
+	 */
+	public void writeValues(final List<String> values, final List<Boolean> quotes) throws IOException {
+		writeValuesCore(values, quotes);
+	}
+
+	/**
+	 * 指定された CSV トークンの値リストを書き込みます。
+	 *
+	 * @param values 書き込む CSV トークンの値リスト
+	 * @param quotes 列全体を囲み文字で囲むかどうかのリスト
+	 * @throws CsvValueException 可変項目数が禁止されている場合に項目数が一致しない場合
+	 * @throws IOException 入出力エラーが発生した場合
+	 */
+	private void writeValuesCore(final List<String> values, List<Boolean> quotes) throws IOException {
 		synchronized (this) {
 			ensureOpen();
 
@@ -150,16 +175,24 @@ public class CsvWriter implements Closeable, Flushable {
 			final StringBuilder buf = new StringBuilder();
 			if (values != null) {
 				final int max = values.size();
+
+				if (quotes == null) {
+					quotes = new ArrayList<Boolean>();
+					for (int i = 0; i < max; i++) {
+						quotes.add(false);
+					}
+				}
+
 				for (int i = 0; i < max; i++) {
 					if (i > 0) {
 						buf.append(cfg.getSeparator());
 					}
-	
+
 					String value = values.get(i);
 					boolean enclose = false;	// 項目を囲み文字で囲むかどうか
-					if (value == null) {
-						// 項目値が null の場合に NULL 文字列が有効であれば NULL 文字列へ置換えます。
-						if (cfg.getNullString() == null) { 
+					if (value == null || "".equals(value)) {
+						// 項目値が null もしくは空白の場合に NULL 文字列が有効であれば NULL 文字列へ置換えます。
+						if (cfg.getNullString() == null) {
 							continue;
 						}
 						value = cfg.getNullString();
@@ -168,6 +201,18 @@ public class CsvWriter implements Closeable, Flushable {
 						switch (cfg.getQuotePolicy()) {
 							case ALL:
 								enclose = true;
+								break;
+
+							case COLUMN:
+								// CsvColumn の columnQuote が true の場合に列全体を囲み文字で囲みます。
+								if (quotes.get(i)) {
+									enclose = true;
+								} else {
+									// 項目値に区切り文字、囲み文字、改行文字のいずれかを含む場合は囲み文字で囲むべきと判断します。
+									enclose = value.indexOf(cfg.getSeparator()) != -1
+											|| value.indexOf(cfg.getQuote()) != -1
+											|| value.indexOf('\r') != -1 || value.indexOf('\n') != -1;
+								}
 								break;
 
 							case MINIMAL:
@@ -260,6 +305,15 @@ public class CsvWriter implements Closeable, Flushable {
 				new StringBuilder(1).append(cfg.getQuote()),
 				new StringBuilder(2).append(cfg.getEscape()).append(cfg.getQuote())
 			);
+	}
+
+	/**
+	 * 区切り文字形式情報を返します。
+	 * @return 区切り文字形式情報
+	 * @since 2.2
+	 */
+	public CsvConfig getCfg() {
+		return cfg;
 	}
 
 	@Override

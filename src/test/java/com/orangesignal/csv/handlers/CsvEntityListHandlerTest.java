@@ -36,11 +36,13 @@ import com.orangesignal.csv.Constants;
 import com.orangesignal.csv.CsvConfig;
 import com.orangesignal.csv.CsvReader;
 import com.orangesignal.csv.CsvWriter;
+import com.orangesignal.csv.QuotePolicy;
 import com.orangesignal.csv.entity.Price;
 import com.orangesignal.csv.entity.Price2;
 import com.orangesignal.csv.filters.SimpleBeanFilter;
 import com.orangesignal.csv.filters.SimpleCsvNamedValueFilter;
 import com.orangesignal.csv.model.SampleBean;
+import com.orangesignal.csv.model.SampleQuote;
 
 /**
  * {@link CsvEntityListHandler} クラスの単体テストです。
@@ -215,6 +217,34 @@ public class CsvEntityListHandlerTest {
 			writer.close();
 		}
 		assertThat(sw.getBuffer().toString(), is("シンボル,名称,価格,出来高,日付,時刻\r\nGCV09,COMEX 金 2009年10月限,1\\,078,11,2008/10/06,12:00:00\r\n"));
+	}
+
+	@Test
+	public void testSaveQuote() throws Exception {
+		CsvConfig cfg = new CsvConfig(',');
+		cfg.setEscapeDisabled(false);
+		cfg.setNullString("NULL");
+		cfg.setIgnoreTrailingWhitespaces(true);
+		cfg.setIgnoreLeadingWhitespaces(true);
+		cfg.setIgnoreEmptyLines(true);
+		cfg.setLineSeparator(Constants.CRLF);
+		cfg.setQuoteDisabled(false);
+		cfg.setQuotePolicy(QuotePolicy.COLUMN);
+
+		final List<SampleQuote> list = new ArrayList<SampleQuote>();
+		list.add(new SampleQuote(1, "aaa"));
+		list.add(new SampleQuote(2, ""));
+		list.add(new SampleQuote(3, null));
+		list.add(new SampleQuote(4, "d\"d\"d"));
+
+		final StringWriter sw = new StringWriter();
+		final CsvWriter writer = new CsvWriter(sw, cfg);
+		try {
+			new CsvEntityListHandler<SampleQuote>(SampleQuote.class).save(list, writer);
+		} finally {
+			writer.close();
+		}
+		assertThat(sw.getBuffer().toString(), is("No.,ラベル\r\n1,\"aaa\"\r\n2,NULL\r\n3,NULL\r\n4,\"d\\\"d\\\"d\"\r\n"));
 	}
 
 }

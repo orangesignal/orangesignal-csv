@@ -133,4 +133,13 @@ public @interface CsvColumn {
 	 */
 	String defaultValue() default "";
 
+	/**
+	 * 列全体に囲み文字を出力するかどうかを返します。<p>
+	 * {@link com.orangesignal.csv.QuotePolicy#COLUMN} と組み合わせて使います。
+	 * 
+	 * @return 列全体に囲み文字を出力するかどうか
+	 * @since 2.2
+	 */
+	boolean columnQuote() default false;
+
 }

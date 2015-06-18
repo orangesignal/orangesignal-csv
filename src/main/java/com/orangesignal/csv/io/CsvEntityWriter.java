@@ -271,17 +271,18 @@ public class CsvEntityWriter<T> implements Closeable, Flushable {
 				return true;
 			}
 
-			final List<String> values = toValues(entity);
-			if (template.isAccept(columnNames, values)) {
+			final Tuple2<List<String>, List<Boolean>> values = toValues(entity);
+			if (template.isAccept(columnNames, values.value1)) {
 				return false;
 			}
-			writer.writeValues(values);
+			writer.writeValues(values.value1, values.value2);
 			return true;
 		}
 	}
 
-	private List<String> toValues(final T entity) throws IOException {
+	private Tuple2<List<String>, List<Boolean>> toValues(final T entity) throws IOException {
 		final String[] values = new String[columnCount];
+		final Boolean[] quotes = new Boolean[columnCount];
 		for (final Field field : entity.getClass().getDeclaredFields()) {
 			final CsvColumns columns = field.getAnnotation(CsvColumns.class);
 			if (columns != null) {
@@ -313,6 +314,12 @@ public class CsvEntityWriter<T> implements Closeable, Flushable {
 					if (values[pos] == null && column.required()) {
 						throw new CsvColumnException(String.format("%s must not be null", columnNames.get(pos)), entity);
 					}
+					if (values[pos] != null && values[pos] != "" && column.columnQuote()) {
+						// 列全体を囲み文字で囲むためにマークします。
+						quotes[pos] = true;
+					} else {
+						quotes[pos] = false;
+					}
 				}
 			}
 			final CsvColumn column = field.getAnnotation(CsvColumn.class);
@@ -332,9 +339,15 @@ public class CsvEntityWriter<T> implements Closeable, Flushable {
 				if (values[pos] == null && column.required()) {
 					throw new CsvColumnException(String.format("%s must not be null", columnNames.get(pos)), entity);
 				}
+				if (values[pos] != null && values[pos] != "" && column.columnQuote()) {
+					// 列全体を囲み文字で囲むためにマークします。
+					quotes[pos] = true;
+				} else {
+					quotes[pos] = false;
+				}
 			}
 		}
-		return Arrays.asList(values);
+		return new Tuple2<List<String>, List<Boolean>>(Arrays.asList(values), Arrays.asList(quotes));
 	}
 
 	// ------------------------------------------------------------------------
@@ -360,4 +373,12 @@ public class CsvEntityWriter<T> implements Closeable, Flushable {
 		return disableWriteHeader;
 	}
 
+	private class Tuple2<T1, T2> {
+	  private T1 value1 = null;
+	  private T2 value2 = null;
+		public Tuple2(T1 asList, T2 asList2) {
+			this.value1 = asList;
+			this.value2 = asList2;
+		}
+	}
 }

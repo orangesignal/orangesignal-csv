@@ -35,13 +35,14 @@ import org.junit.rules.TemporaryFolder;
 import com.orangesignal.csv.Constants;
 import com.orangesignal.csv.CsvConfig;
 import com.orangesignal.csv.CsvWriter;
+import com.orangesignal.csv.QuotePolicy;
 import com.orangesignal.csv.bean.CsvEntityTemplate;
 import com.orangesignal.csv.entity.DefaultValuePrice;
 import com.orangesignal.csv.entity.Price;
-import com.orangesignal.csv.entity.Travel;
 import com.orangesignal.csv.entity.WritableEntity;
 import com.orangesignal.csv.entity.WritableNoHeaderEntity;
 import com.orangesignal.csv.filters.SimpleCsvNamedValueFilter;
+import com.orangesignal.csv.model.SampleQuote;
 
 /**
  * {@link CsvEntityWriter} クラスの単体テストです。
@@ -588,6 +589,56 @@ public class CsvEntityWriterTest {
 			writer.close();
 		}
 		assertThat(sw.getBuffer().toString(), is("シンボル,名称,価格,出来高,日付,時刻\r\nGCV09,COMEX 金 2009年10月限,1\\,078,11,2008/10/06,12:00:00\r\n"));
+	}
+
+	/**
+	 * 
+	public void testWrite() throws Exception {
+		final StringWriter sw = new StringWriter();
+		final CsvEntityWriter<Price> writer = CsvEntityWriter.newInstance(
+				new CsvWriter(sw, cfg),
+				Price.class
+			);
+		try {
+			final DateFormat df = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+			df.setTimeZone(TimeZone.getTimeZone("Asia/Tokyo"));
+
+			writer.write(new Price("AAAA", "aaa", 10000, 10, df.parse("2008/10/28 10:24:00")));
+			writer.write(new Price("BBBB", "bbb", null, 0, null));
+			writer.write(new Price("CCCC", "ccc", 20000, 100, df.parse("2008/10/26 14:20:10")));
+		} finally {
+			writer.close();
+		}
+		assertThat(sw.getBuffer().toString(), is("シンボル,名称,価格,出来高,日付,時刻\r\nAAAA,aaa,10\\,000,10,2008/10/28,10:24:00\r\nBBBB,bbb,NULL,0,NULL,NULL\r\nCCCC,ccc,20\\,000,100,2008/10/26,14:20:10\r\n"));
+	}	 * 
+	 */
+
+	@Test
+	public void testWriteQuote() throws Exception {
+		CsvConfig cfg = new CsvConfig(',');
+		cfg.setEscapeDisabled(false);
+		cfg.setNullString("NULL");
+		cfg.setIgnoreTrailingWhitespaces(true);
+		cfg.setIgnoreLeadingWhitespaces(true);
+		cfg.setIgnoreEmptyLines(true);
+		cfg.setLineSeparator(Constants.CRLF);
+		cfg.setQuoteDisabled(false);
+		cfg.setQuotePolicy(QuotePolicy.COLUMN);
+
+		final StringWriter sw = new StringWriter();
+		final CsvEntityWriter<SampleQuote> writer = CsvEntityWriter.newInstance(
+				new CsvWriter(sw, cfg),
+				SampleQuote.class
+			);
+		try {
+			writer.write(new SampleQuote(1, "aaa"));
+			writer.write(new SampleQuote(2, ""));
+			writer.write(new SampleQuote(3, null));
+			writer.write(new SampleQuote(4, "d\"d\"d"));
+		} finally {
+			writer.close();
+		}
+		assertThat(sw.getBuffer().toString(), is("No.,ラベル\r\n1,\"aaa\"\r\n2,NULL\r\n3,NULL\r\n4,\"d\\\"d\\\"d\"\r\n"));
 	}
 
 	// ------------------------------------------------------------------------

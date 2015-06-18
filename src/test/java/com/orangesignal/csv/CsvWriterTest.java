@@ -206,6 +206,29 @@ public class CsvWriterTest {
 */
 
 	@Test
+	public void testWriteNoNQuote() throws IOException {
+		final CsvConfig cfg = new CsvConfig(',', '"', '\\');
+		cfg.setEscapeDisabled(false);
+		cfg.setQuoteDisabled(false);
+		cfg.setQuotePolicy(QuotePolicy.COLUMN);
+		cfg.setNullString("NULL");
+		cfg.setLineSeparator("\r\n");
+
+		final StringWriter sw = new StringWriter();
+		final CsvWriter writer = new CsvWriter(sw, cfg);
+		try {
+			// Act
+			writer.writeValues(Arrays.asList(new String[]{ "aaa", "b,\"b", "ccc" }));
+			writer.writeValues(Arrays.asList(new String[]{ "zzz", "", null }));
+			writer.flush();
+			// Assert
+			assertThat(sw.getBuffer().toString(), is("aaa,\"b,\\\"b\",ccc\r\nzzz,NULL,NULL\r\n"));
+		} finally {
+			writer.close();
+		}
+	}
+
+	@Test
 	public void testWriteValuesCsvValueException() throws IOException {
 		final CsvConfig cfg = new CsvConfig();
 		cfg.setVariableColumns(false);
