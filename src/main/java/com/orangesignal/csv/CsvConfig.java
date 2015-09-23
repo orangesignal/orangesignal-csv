@@ -145,6 +145,11 @@ public class CsvConfig implements Serializable, Cloneable {
 	 */
 	private String lineSeparator = System.getProperty("line.separator");
 
+	/**
+	 * 空文字の場合 null に置き換えるかどうかを保持します。
+	 */
+	private boolean emptyToNull;
+
 	// ------------------------------------------------------------------------
 	// コンストラクタ
 
@@ -677,6 +682,22 @@ public class CsvConfig implements Serializable, Cloneable {
 		this.variableColumns = variableColumns;
 		return this;
 	}
+
+	/**
+	 * 空文字の場合 null に置き換えるかどうかを返します。
+	 *
+	 * @return 空文字の場合 null に置き換えるかどうか
+	 * @since 2.2.2
+	 */
+	public boolean isEmptyToNull() { return emptyToNull; }
+
+	/**
+	 * 空文字の場合 null に置き換えるかどうかを設定します。
+	 *
+	 * @param emptyToNull 空文字の場合 null に置き換えるかどうか
+	 * @since 2.2.2
+	 */
+	public void setEmptyToNull(final boolean emptyToNull) { this.emptyToNull = emptyToNull; }
 
 	/**
 	 * {@inheritDoc}

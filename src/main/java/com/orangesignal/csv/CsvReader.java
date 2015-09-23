@@ -608,6 +608,11 @@ public class CsvReader implements Closeable {
 				value = unescapeSeparator(value);
 			}
 		}
+		if (cfg.isEmptyToNull()) {
+			if (value == null || value.length() == 0) {
+				value = null;
+			}
+		}
 
 		return new SimpleCsvToken(value, startTokenLineNumber, endTokenLineNumber, enclosed);
 	}

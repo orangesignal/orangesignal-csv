@@ -166,6 +166,38 @@ public class StringArrayListHandlerTest {
 	}
 
 	@Test
+	public void testLoadNull() throws IOException {
+		final CsvConfig cfg = new CsvConfig(',', '"', '\\');
+		cfg.setNullString("NULL");
+		cfg.setBreakString("\n");
+		cfg.setIgnoreTrailingWhitespaces(true);
+		cfg.setIgnoreLeadingWhitespaces(true);
+		cfg.setIgnoreEmptyLines(true);
+		cfg.setIgnoreLinePatterns(Pattern.compile("^#.*$"));
+		cfg.setEmptyToNull(true);
+
+		final CsvReader reader = new CsvReader(new StringReader("# text/tab-separated-values   \r\n aaa , \"b\r\nb\\\\b\" , \"c\\\"cc\" \r\n zzz , yyy ,  \r\n# Copyright 2009 OrangeSignal.   "), cfg);
+		try {
+			final List<String[]> list = new StringArrayListHandler().load(reader);
+			assertThat(list.size(), is(2));
+
+			final String[] values1 = list.get(0);
+			assertThat(values1.length, is(3));
+			assertThat(values1[0], is("aaa"));
+			assertThat(values1[1], is("b\nb\\\\b"));
+			assertThat(values1[2], is("c\"cc"));
+
+			final String[] values2 = list.get(1);
+			assertThat(values2.length, is(3));
+			assertThat(values2[0], is("zzz"));
+			assertThat(values2[1], is("yyy"));
+			assertNull(values2[2]);
+		} finally {
+			reader.close();
+		}
+	}
+
+	@Test
 	public void testSave() throws IOException {
 		final CsvConfig cfg = new CsvConfig(',', '"', '\\');
 		cfg.setNullString("NULL");
