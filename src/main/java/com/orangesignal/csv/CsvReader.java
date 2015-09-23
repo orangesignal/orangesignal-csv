@@ -405,10 +405,13 @@ public class CsvReader implements Closeable {
 		if (arraySize == 1) {
 			if (endOfFile) {
 				final String value = results.get(0).getValue();
-				if (cfg.isIgnoreEmptyLines() && isWhitespaces(value)) {
+				if (cfg.isIgnoreEmptyLines() && (value == null || isWhitespaces(value))) {
 					return null;
 				}
 				if (cfg.getIgnoreLinePatterns() != null) {
+					if (value == null) {
+						return null;
+					}
 					for (final Pattern p : cfg.getIgnoreLinePatterns()) {
 						if (p != null && p.matcher(value).matches()) {
 							return null;
